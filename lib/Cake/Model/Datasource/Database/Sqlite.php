@@ -15,6 +15,12 @@
  * @since         CakePHP(tm) v 0.9.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Model\Datasource\Database;
+
+use Cake\Core\App;
+use Cake\Model\Datasource\DboSource;
+use Cake\Model\Model;
+use Cake\Utility\CakeText;
 
 App::uses('DboSource', 'Model/Datasource');
 App::uses('CakeText', 'Utility');
@@ -106,19 +112,19 @@ class Sqlite extends DboSource {
  * Connects to the database using config['database'] as a filename.
  *
  * @return bool
- * @throws MissingConnectionException
+ * @throws \Cake\Error\MissingConnectionException
  */
 	public function connect() {
 		$config = $this->config;
 		$flags = $config['flags'] + array(
-			PDO::ATTR_PERSISTENT => $config['persistent'],
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+			\PDO::ATTR_PERSISTENT => $config['persistent'],
+			\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
 		);
 		try {
-			$this->_connection = new PDO('sqlite:' . $config['database'], null, null, $flags);
+			$this->_connection = new \PDO('sqlite:' . $config['database'], null, null, $flags);
 			$this->connected = true;
-		} catch(PDOException $e) {
-			throw new MissingConnectionException(array(
+		} catch(\PDOException $e) {
+			throw new \Cake\Error\MissingConnectionException(array(
 				'class' => get_class($this),
 				'message' => $e->getMessage()
 			));
@@ -132,7 +138,7 @@ class Sqlite extends DboSource {
  * @return bool
  */
 	public function enabled() {
-		return in_array('sqlite', PDO::getAvailableDrivers());
+		return in_array('sqlite', \PDO::getAvailableDrivers());
 	}
 
 /**
@@ -298,7 +304,7 @@ class Sqlite extends DboSource {
 /**
  * Generate ResultSet
  *
- * @param PDOStatement $results The results to modify.
+ * @param \PDOStatement $results The results to modify.
  * @return void
  */
 	public function resultSet($results) {
@@ -350,7 +356,7 @@ class Sqlite extends DboSource {
 				if (!empty($metaData['sqlite:decl_type'])) {
 					$metaType = trim($metaData['sqlite:decl_type']);
 				}
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 			}
 
 			if (strpos($columnName, '.')) {
@@ -369,7 +375,7 @@ class Sqlite extends DboSource {
  * @return mixed array with results fetched and mapped to column names or false if there is no results left to fetch
  */
 	public function fetchResult() {
-		if ($row = $this->_result->fetch(PDO::FETCH_NUM)) {
+		if ($row = $this->_result->fetch(\PDO::FETCH_NUM)) {
 			$resultRow = array();
 			foreach ($this->map as $col => $meta) {
 				list($table, $column, $type) = $meta;
@@ -574,7 +580,7 @@ class Sqlite extends DboSource {
 /**
  * Generate a "drop table" statement for the given table
  *
- * @param type $table Name of the table to drop
+ * @param Model|string $table Name of the table to drop
  * @return string Drop table SQL statement
  */
 	protected function _dropTable($table) {

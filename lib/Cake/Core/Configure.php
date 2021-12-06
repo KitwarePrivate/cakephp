@@ -13,14 +13,12 @@
  * @since         CakePHP(tm) v 1.0.0.2363
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Core;
 
-App::uses('Hash', 'Utility');
-App::uses('ConfigReaderInterface', 'Configure');
-
-/**
- * Compatibility with 2.1, which expects Configure to load Set.
- */
-App::uses('Set', 'Utility');
+use Cake\Configure\PhpReader;
+use Cake\Error\ErrorHandler;
+use Cake\Utility\Hash;
+use Cake\Configure\ConfigReaderInterface;
 
 /**
  * Configuration class. Used for managing runtime configuration information.
@@ -81,15 +79,15 @@ class Configure {
 			App::build();
 
 			$exception = array(
-				'handler' => 'ErrorHandler::handleException',
+				'handler' => ErrorHandler::class . '::handleException',
 			);
 			$error = array(
-				'handler' => 'ErrorHandler::handleError',
+				'handler' => ErrorHandler::class . '::handleError',
 				'level' => E_ALL & ~E_DEPRECATED,
 			);
 			if (PHP_SAPI === 'cli') {
 				App::uses('ConsoleErrorHandler', 'Console');
-				$console = new ConsoleErrorHandler();
+				$console = new \Cake\Console\ConsoleErrorHandler();
 				$exception['handler'] = array($console, 'handleException');
 				$error['handler'] = array($console, 'handleError');
 			}
@@ -275,7 +273,7 @@ class Configure {
  * Gets the names of the configured reader objects.
  *
  * @param string|null $name Name to check. If null returns all configured reader names.
- * @return array Array of the configured reader objects.
+ * @return array|bool Array of the configured reader objects.
  */
 	public static function configured($name = null) {
 		if ($name) {
@@ -321,7 +319,7 @@ class Configure {
  * @param string $config Name of the configured reader to use to read the resource identified by $key.
  * @param bool $merge if config files should be merged instead of simply overridden
  * @return bool False if file not found, true if load successful.
- * @throws ConfigureException Will throw any exceptions the reader raises.
+ * @throws \Cake\Error\ConfigureException Will throw any exceptions the reader raises.
  * @link https://book.cakephp.org/2.0/en/development/configuration.html#Configure::load
  */
 	public static function load($key, $config = 'default', $merge = true) {
@@ -366,15 +364,15 @@ class Configure {
  * @param array $keys The name of the top-level keys you want to dump.
  *   This allows you save only some data stored in Configure.
  * @return bool success
- * @throws ConfigureException if the adapter does not implement a `dump` method.
+ * @throws \Cake\Error\ConfigureException if the adapter does not implement a `dump` method.
  */
 	public static function dump($key, $config = 'default', $keys = array()) {
 		$reader = static::_getReader($config);
 		if (!$reader) {
-			throw new ConfigureException(__d('cake_dev', 'There is no "%s" adapter.', $config));
+			throw new \Cake\Error\ConfigureException(__d('cake_dev', 'There is no "%s" adapter.', $config));
 		}
 		if (!method_exists($reader, 'dump')) {
-			throw new ConfigureException(__d('cake_dev', 'The "%s" adapter, does not have a %s method.', $config, 'dump()'));
+			throw new \Cake\Error\ConfigureException(__d('cake_dev', 'The "%s" adapter, does not have a %s method.', $config, 'dump()'));
 		}
 		$values = static::$_values;
 		if (!empty($keys) && is_array($keys)) {

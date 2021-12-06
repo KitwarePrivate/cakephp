@@ -15,6 +15,11 @@
  * @since         CakePHP(tm) v 1.2.0.6833
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\I18n;
+
+use Cake\Configure\PhpReader;
+use Cake\Core\App;
+use Cake\Core\Configure;
 
 /**
  * Multibyte handling methods.

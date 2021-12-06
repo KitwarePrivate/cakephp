@@ -16,6 +16,12 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\View;
+
+use Cake\Core\App;
+use Cake\Event\CakeEvent;
+use Cake\Event\CakeEventListener;
+use Cake\Utility\ObjectCollection;
 
 App::uses('ObjectCollection', 'Utility');
 App::uses('CakeEventListener', 'Event');
@@ -51,7 +57,7 @@ class HelperCollection extends ObjectCollection implements CakeEventListener {
  *
  * @param string $helper The helper name to be loaded
  * @return bool whether the helper could be loaded or not
- * @throws MissingHelperException When a helper could not be found.
+ * @throws \Cake\Error\MissingHelperException When a helper could not be found.
  *    App helpers are searched, and then plugin helpers.
  */
 	public function __isset($helper) {
@@ -61,7 +67,7 @@ class HelperCollection extends ObjectCollection implements CakeEventListener {
 
 		try {
 			$this->load($helper);
-		} catch (MissingHelperException $exception) {
+		} catch (\Cake\Error\MissingHelperException $exception) {
 			if ($this->_View->plugin) {
 				$this->load($this->_View->plugin . '.' . $helper);
 				return true;
@@ -110,7 +116,7 @@ class HelperCollection extends ObjectCollection implements CakeEventListener {
  * @param string $helper Helper name to load
  * @param array $settings Settings for the helper.
  * @return Helper A helper object, Either the existing loaded helper or a new one.
- * @throws MissingHelperException when the helper could not be found
+ * @throws \Cake\Error\MissingHelperException when the helper could not be found
  */
 	public function load($helper, $settings = array()) {
 		if (isset($settings['className'])) {
@@ -128,7 +134,7 @@ class HelperCollection extends ObjectCollection implements CakeEventListener {
 		$helperClass = $name . 'Helper';
 		App::uses($helperClass, $plugin . 'View/Helper');
 		if (!class_exists($helperClass)) {
-			throw new MissingHelperException(array(
+			throw new \Cake\Error\MissingHelperException(array(
 				'class' => $helperClass,
 				'plugin' => substr($plugin, 0, -1)
 			));
@@ -191,7 +197,7 @@ class HelperCollection extends ObjectCollection implements CakeEventListener {
  * @param array $params Array of parameters for the triggered callback.
  * @param array $options Array of options.
  * @return mixed Either the last result or all results if collectReturn is on.
- * @throws CakeException when modParams is used with an index that does not exist.
+ * @throws \Cake\Error\CakeException when modParams is used with an index that does not exist.
  */
 	public function trigger($callback, $params = array(), $options = array()) {
 		if ($callback instanceof CakeEvent) {

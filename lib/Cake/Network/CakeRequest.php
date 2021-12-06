@@ -14,6 +14,11 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Network;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Utility\Hash;
 
 App::uses('Hash', 'Utility');
 
@@ -32,7 +37,7 @@ App::uses('Hash', 'Utility');
  * @property array $pass        Array of passed arguments parsed from the URL.
  * @package       Cake.Network
  */
-class CakeRequest implements ArrayAccess {
+class CakeRequest implements \ArrayAccess {
 
 /**
  * Array of parameters parsed from the URL.
@@ -468,14 +473,14 @@ class CakeRequest implements ArrayAccess {
  * @param string $name The method called
  * @param array $params Array of parameters for the method call
  * @return mixed
- * @throws CakeException when an invalid method is called.
+ * @throws \Cake\Error\CakeException when an invalid method is called.
  */
 	public function __call($name, $params) {
 		if (strpos($name, 'is') === 0) {
 			$type = strtolower(substr($name, 2));
 			return $this->is($type);
 		}
-		throw new CakeException(__d('cake_dev', 'Method %s does not exist', $name));
+		throw new \Cake\Error\CakeException(__d('cake_dev', 'Method %s does not exist', $name));
 	}
 
 /**
@@ -1062,7 +1067,7 @@ class CakeRequest implements ArrayAccess {
  *
  * @param string|array $methods Allowed HTTP request methods.
  * @return bool true
- * @throws MethodNotAllowedException
+ * @throws \Cake\Error\MethodNotAllowedException
  */
 	public function allowMethod($methods) {
 		if (!is_array($methods)) {
@@ -1074,7 +1079,7 @@ class CakeRequest implements ArrayAccess {
 			}
 		}
 		$allowed = strtoupper(implode(', ', $methods));
-		$e = new MethodNotAllowedException();
+		$e = new \Cake\Error\MethodNotAllowedException();
 		$e->responseHeader('Allow', $allowed);
 		throw $e;
 	}
@@ -1084,7 +1089,7 @@ class CakeRequest implements ArrayAccess {
  *
  * @param string|array $methods Allowed HTTP request methods.
  * @return bool true
- * @throws MethodNotAllowedException
+ * @throws \Cake\Error\MethodNotAllowedException
  * @see CakeRequest::allowMethod()
  * @deprecated 3.0.0 Since 2.5, use CakeRequest::allowMethod() instead.
  */

@@ -15,6 +15,12 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Model\Datasource\Session;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Model\Model;
+use Cake\Utility\ClassRegistry;
 
 App::uses('CakeSessionHandlerInterface', 'Model/Datasource/Session');
 App::uses('ClassRegistry', 'Utility');
@@ -128,7 +134,7 @@ class DatabaseSession implements CakeSessionHandlerInterface {
 		);
 		try {
 			return (bool)$this->_model->save($record, $options);
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			return (bool)$this->_model->save($record, $options);
 		}
 	}

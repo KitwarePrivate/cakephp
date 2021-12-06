@@ -16,6 +16,11 @@
  * @since         CakePHP(tm) v 1.2.0.5012
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Console\Command;
+
+use Cake\Console\ConsoleOptionParser;
+use Cake\Core\App;
+use Cake\Utility\Inflector;
 
 App::uses('AppShell', 'Console/Command');
 App::uses('File', 'Utility');
@@ -212,7 +217,7 @@ class ApiShell extends AppShell {
 			}
 		}
 
-		$reflection = new ReflectionClass($class);
+		$reflection = new \ReflectionClass($class);
 
 		foreach ($reflection->getMethods() as $method) {
 			if (!$method->isPublic() || strpos($method->getName(), '_') === 0) {

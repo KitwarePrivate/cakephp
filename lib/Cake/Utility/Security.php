@@ -15,6 +15,10 @@
  * @since         CakePHP(tm) v .0.10.0.1233
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Utility;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
 
 App::uses('CakeText', 'Utility');
 
@@ -340,7 +344,7 @@ class Security {
  * @param string $key The 256 bit/32 byte key to use as a cipher key.
  * @param string $hmacSalt The salt to use for the HMAC process. Leave null to use Security.salt.
  * @return string Encrypted data.
- * @throws CakeException On invalid data or key.
+ * @throws \Cake\Error\CakeException On invalid data or key.
  */
 	public static function encrypt($plain, $key, $hmacSalt = null) {
 		static::_checkKey($key, 'encrypt()');
@@ -380,11 +384,11 @@ class Security {
  * @param string $key Key to check.
  * @param string $method The method the key is being checked for.
  * @return void
- * @throws CakeException When key length is not 256 bit/32 bytes
+ * @throws \Cake\Error\CakeException When key length is not 256 bit/32 bytes
  */
 	protected static function _checkKey($key, $method) {
 		if (strlen($key) < 32) {
-			throw new CakeException(__d('cake_dev', 'Invalid key for %s, key must be at least 256 bits (32 bytes) long.', $method));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'Invalid key for %s, key must be at least 256 bits (32 bytes) long.', $method));
 		}
 	}
 
@@ -395,12 +399,12 @@ class Security {
  * @param string $key The 256 bit/32 byte key to use as a cipher key.
  * @param string $hmacSalt The salt to use for the HMAC process. Leave null to use Security.salt.
  * @return string Decrypted data. Any trailing null bytes will be removed.
- * @throws CakeException On invalid data or key.
+ * @throws \Cake\Error\CakeException On invalid data or key.
  */
 	public static function decrypt($cipher, $key, $hmacSalt = null) {
 		static::_checkKey($key, 'decrypt()');
 		if (empty($cipher)) {
-			throw new CakeException(__d('cake_dev', 'The data to decrypt cannot be empty.'));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'The data to decrypt cannot be empty.'));
 		}
 		if ($hmacSalt === null) {
 			$hmacSalt = Configure::read('Security.salt');

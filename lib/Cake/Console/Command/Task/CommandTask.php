@@ -12,8 +12,14 @@
  * @since         CakePHP(tm) v 2.5
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Console\Command\Task;
 
-App::uses('AppShell', 'Console/Command');
+use Cake\Console\Command\AppShell;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Console\TaskCollection;
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\Utility\Inflector;
 
 /**
  * Base class for Shell Command reflection.
@@ -104,15 +110,15 @@ class CommandTask extends AppShell {
 		$return = array_keys($taskMap);
 		$return = array_map('Inflector::underscore', $return);
 
-		$ShellReflection = new ReflectionClass('AppShell');
-		$shellMethods = $ShellReflection->getMethods(ReflectionMethod::IS_PUBLIC);
+		$ShellReflection = new \ReflectionClass('AppShell');
+		$shellMethods = $ShellReflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 		$shellMethodNames = array('main', 'help');
 		foreach ($shellMethods as $method) {
 			$shellMethodNames[] = $method->getName();
 		}
 
-		$Reflection = new ReflectionClass($Shell);
-		$methods = $Reflection->getMethods(ReflectionMethod::IS_PUBLIC);
+		$Reflection = new \ReflectionClass($Shell);
+		$methods = $Reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 		$methodNames = array();
 		foreach ($methods as $method) {
 			$methodNames[] = $method->getName();

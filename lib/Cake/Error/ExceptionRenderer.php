@@ -18,6 +18,19 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Error;
+
+use Cake\Controller\CakeErrorController;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Event\CakeEvent;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Dispatcher;
+use Cake\Routing\Router;
+use Cake\Utility\Inflector;
+use Cake\View\View;
 
 App::uses('Sanitize', 'Utility');
 App::uses('Dispatcher', 'Routing');
@@ -80,7 +93,7 @@ class ExceptionRenderer {
 /**
  * The exception being handled.
  *
- * @var Exception
+ * @var \Exception
  */
 	public $error = null;
 
@@ -89,7 +102,7 @@ class ExceptionRenderer {
  * If the error is a CakeException it will be converted to either a 400 or a 500
  * code error depending on the code used to construct the error.
  *
- * @param Exception|ParseError $exception Exception
+ * @param \Exception|\ParseError $exception Exception
  */
 	public function __construct($exception) {
 		$this->controller = $this->_getController($exception);
@@ -108,7 +121,7 @@ class ExceptionRenderer {
 			if (empty($template) || $template === 'internalError') {
 				$template = 'error500';
 			}
-		} elseif ($exception instanceof PDOException) {
+		} elseif ($exception instanceof \PDOException) {
 			$method = 'pdoError';
 			$template = 'pdo_error';
 			$code = 500;
@@ -137,7 +150,7 @@ class ExceptionRenderer {
  * This method returns the built in `CakeErrorController` normally, or if an error is repeated
  * a bare controller will be used.
  *
- * @param Exception $exception The exception to get a controller for.
+ * @param \Exception $exception The exception to get a controller for.
  * @return Controller
  */
 	protected function _getController($exception) {
@@ -157,7 +170,7 @@ class ExceptionRenderer {
 				$controller = new CakeErrorController($request, $response);
 				$controller->startupProcess();
 				$startup = true;
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$startup = false;
 			}
 			// Retry RequestHandler, as another aspect of startupProcess()
@@ -169,7 +182,7 @@ class ExceptionRenderer {
 			) {
 				try {
 					$controller->RequestHandler->startup($controller);
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 				}
 			}
 		}
@@ -216,7 +229,7 @@ class ExceptionRenderer {
 /**
  * Convenience method to display a 400 series page.
  *
- * @param Exception $error The exception to render.
+ * @param \Exception $error The exception to render.
  * @return void
  */
 	public function error400($error) {
@@ -239,7 +252,7 @@ class ExceptionRenderer {
 /**
  * Convenience method to display a 500 page.
  *
- * @param Exception $error The exception to render.
+ * @param \Exception $error The exception to render.
  * @return void
  */
 	public function error500($error) {
@@ -263,10 +276,10 @@ class ExceptionRenderer {
 /**
  * Convenience method to display a PDOException.
  *
- * @param PDOException $error The exception to render.
+ * @param \PDOException $error The exception to render.
  * @return void
  */
-	public function pdoError(PDOException $error) {
+	public function pdoError(\PDOException $error) {
 		$url = $this->controller->request->here();
 		$code = 500;
 		$this->controller->response->statusCode($code);
@@ -305,7 +318,7 @@ class ExceptionRenderer {
 				$this->controller->plugin = null;
 			}
 			$this->_outputMessageSafe('error500');
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->_outputMessageSafe('error500');
 		}
 	}

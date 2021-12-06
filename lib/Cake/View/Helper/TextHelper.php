@@ -17,6 +17,11 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\View\Helper;
+
+use Cake\Core\App;
+use Cake\Utility\Hash;
+use Cake\View\View;
 
 App::uses('AppHelper', 'View/Helper');
 App::uses('Hash', 'Utility');
@@ -51,7 +56,7 @@ class TextHelper extends AppHelper {
 /**
  * CakeText utility instance
  *
- * @var stdClass
+ * @var \stdClass
  */
 	protected $_engine;
 
@@ -65,7 +70,7 @@ class TextHelper extends AppHelper {
  *
  * @param View $View the view object the helper is attached to.
  * @param array $settings Settings array Settings array
- * @throws CakeException when the engine class could not be found.
+ * @throws \Cake\Error\CakeException when the engine class could not be found.
  */
 	public function __construct(View $View, $settings = array()) {
 		$settings = Hash::merge(array('engine' => 'CakeText'), $settings);
@@ -75,7 +80,7 @@ class TextHelper extends AppHelper {
 		if (class_exists($engineClass)) {
 			$this->_engine = new $engineClass($settings);
 		} else {
-			throw new CakeException(__d('cake_dev', '%s could not be found', $engineClass));
+			throw new \Cake\Error\CakeException(__d('cake_dev', '%s could not be found', $engineClass));
 		}
 	}
 

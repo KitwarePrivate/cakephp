@@ -13,6 +13,10 @@
  * @since         CakePHP(tm) v 1.2.0.4667
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\TestSuite\Fixture;
+
+use Cake\Core\App;
+use Cake\Model\Model;
 
 App::uses('Model', 'Model');
 

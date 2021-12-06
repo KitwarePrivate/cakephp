@@ -17,6 +17,10 @@
  * @since         CakePHP(tm) v 0.10.x.1402
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Model;
+
+use Cake\Core\App;
+use Cake\Model\Datasource\DataSource;
 
 App::uses('DataSource', 'Model/Datasource');
 
@@ -76,7 +80,7 @@ class ConnectionManager {
  *
  * @param string $name The name of the DataSource, as defined in app/Config/database.php
  * @return DataSource Instance
- * @throws MissingDatasourceException
+ * @throws \Cake\Error\MissingDatasourceException
  */
 	public static function getDataSource($name) {
 		if (empty(static::$_init)) {
@@ -96,7 +100,7 @@ class ConnectionManager {
 		$class = $conn['classname'];
 
 		if (strpos(App::location($class), 'Datasource') === false) {
-			throw new MissingDatasourceException(array(
+			throw new \Cake\Error\MissingDatasourceException(array(
 				'class' => $class,
 				'plugin' => null,
 				'message' => 'Datasource is not found in Model/Datasource package.'
@@ -148,7 +152,7 @@ class ConnectionManager {
  *    or an array containing the filename (without extension) and class name of the object,
  *    to be found in app/Model/Datasource/ or lib/Cake/Model/Datasource/.
  * @return bool True on success, null on failure or false if the class is already loaded
- * @throws MissingDatasourceException
+ * @throws \Cake\Error\MissingDatasourceException
  */
 	public static function loadDataSource($connName) {
 		if (empty(static::$_init)) {
@@ -175,7 +179,7 @@ class ConnectionManager {
 
 		App::uses($conn['classname'], $plugin . 'Model/Datasource' . $package);
 		if (!class_exists($conn['classname'])) {
-			throw new MissingDatasourceException(array(
+			throw new \Cake\Error\MissingDatasourceException(array(
 				'class' => $conn['classname'],
 				'plugin' => substr($plugin, 0, -1)
 			));
@@ -240,13 +244,13 @@ class ConnectionManager {
  *
  * @param string $name Connection name
  * @return void
- * @throws MissingDatasourceConfigException
+ * @throws \Cake\Error\MissingDatasourceConfigException
  */
 	protected static function _getConnectionObject($name) {
 		if (!empty(static::$config->{$name})) {
 			static::$_connectionsEnum[$name] = static::_connectionData(static::$config->{$name});
 		} else {
-			throw new MissingDatasourceConfigException(array('config' => $name));
+			throw new \Cake\Error\MissingDatasourceConfigException(array('config' => $name));
 		}
 	}
 

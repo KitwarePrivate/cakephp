@@ -14,8 +14,9 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Configure;
 
-App::uses('CakePlugin', 'Core');
+use Cake\Core\CakePlugin;
 
 /**
  * PHP Reader allows Configure to load configuration values from
@@ -56,22 +57,22 @@ class PhpReader implements ConfigReaderInterface {
  * @param string $key The identifier to read from. If the key has a . it will be treated
  *  as a plugin prefix.
  * @return array Parsed configuration values.
- * @throws ConfigureException when files don't exist or they don't contain `$config`.
+ * @throws \Cake\Error\ConfigureException when files don't exist or they don't contain `$config`.
  *  Or when files contain '..' as this could lead to abusive reads.
  */
 	public function read($key) {
 		if (strpos($key, '..') !== false) {
-			throw new ConfigureException(__d('cake_dev', 'Cannot load configuration files with ../ in them.'));
+			throw new \Cake\Error\ConfigureException(__d('cake_dev', 'Cannot load configuration files with ../ in them.'));
 		}
 
 		$file = $this->_getFilePath($key);
 		if (!is_file(realpath($file))) {
-			throw new ConfigureException(__d('cake_dev', 'Could not load configuration file: %s', $file));
+			throw new \Cake\Error\ConfigureException(__d('cake_dev', 'Could not load configuration file: %s', $file));
 		}
 
 		include $file;
 		if (!isset($config)) {
-			throw new ConfigureException(__d('cake_dev', 'No variable %s found in %s', '$config', $file));
+			throw new \Cake\Error\ConfigureException(__d('cake_dev', 'No variable %s found in %s', '$config', $file));
 		}
 		return $config;
 	}

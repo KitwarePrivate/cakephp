@@ -15,6 +15,11 @@
  * @since         CakePHP(tm) v 0.10.5.1790
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Model\Datasource\Database;
+
+use Cake\Core\App;
+use Cake\Model\Datasource\DboSource;
+use Cake\Model\Model;
 
 App::uses('DboSource', 'Model/Datasource');
 
@@ -50,9 +55,9 @@ class Mysql extends DboSource {
 	);
 
 /**
- * Reference to the PDO object connection
+ * Reference to the \PDO object connection
  *
- * @var PDO
+ * @var \\PDO
  */
 	protected $_connection = null;
 
@@ -155,27 +160,27 @@ class Mysql extends DboSource {
  * - `ssl_ca` The certificate authority for SSL connections.
  *
  * @return bool True if the database could be connected, else false
- * @throws MissingConnectionException
+ * @throws \Cake\Error\MissingConnectionException
  */
 	public function connect() {
 		$config = $this->config;
 		$this->connected = false;
 
 		$flags = $config['flags'] + array(
-			PDO::ATTR_PERSISTENT => $config['persistent'],
-			PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+			\PDO::ATTR_PERSISTENT => $config['persistent'],
+			\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+			\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
 		);
 
 		if (!empty($config['encoding'])) {
-			$flags[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . $config['encoding'];
+			$flags[\PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . $config['encoding'];
 		}
 		if (!empty($config['ssl_key']) && !empty($config['ssl_cert'])) {
-			$flags[PDO::MYSQL_ATTR_SSL_KEY] = $config['ssl_key'];
-			$flags[PDO::MYSQL_ATTR_SSL_CERT] = $config['ssl_cert'];
+			$flags[\PDO::MYSQL_ATTR_SSL_KEY] = $config['ssl_key'];
+			$flags[\PDO::MYSQL_ATTR_SSL_CERT] = $config['ssl_cert'];
 		}
 		if (!empty($config['ssl_ca'])) {
-			$flags[PDO::MYSQL_ATTR_SSL_CA] = $config['ssl_ca'];
+			$flags[\PDO::MYSQL_ATTR_SSL_CA] = $config['ssl_ca'];
 		}
 		if (empty($config['unix_socket'])) {
 			$dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']}";
@@ -184,7 +189,7 @@ class Mysql extends DboSource {
 		}
 
 		try {
-			$this->_connection = new PDO(
+			$this->_connection = new \PDO(
 				$dsn,
 				$config['login'],
 				$config['password'],
@@ -196,8 +201,8 @@ class Mysql extends DboSource {
 					$this->_execute("SET $key=$value");
 				}
 			}
-		} catch (PDOException $e) {
-			throw new MissingConnectionException(array(
+		} catch (\PDOException $e) {
+			throw new \Cake\Error\MissingConnectionException(array(
 				'class' => get_class($this),
 				'message' => $e->getMessage()
 			));
@@ -215,7 +220,7 @@ class Mysql extends DboSource {
  * @return bool
  */
 	public function enabled() {
-		return in_array('mysql', PDO::getAvailableDrivers());
+		return in_array('mysql', \PDO::getAvailableDrivers());
 	}
 
 /**
@@ -237,7 +242,7 @@ class Mysql extends DboSource {
 		}
 		$tables = array();
 
-		while ($line = $result->fetch(PDO::FETCH_NUM)) {
+		while ($line = $result->fetch(\PDO::FETCH_NUM)) {
 			$tables[] = $line[0];
 		}
 
@@ -249,7 +254,7 @@ class Mysql extends DboSource {
 /**
  * Builds a map of the columns contained in a result
  *
- * @param PDOStatement $results The results to format.
+ * @param \PDOStatement $results The results to format.
  * @return void
  */
 	public function resultSet($results) {
@@ -278,7 +283,7 @@ class Mysql extends DboSource {
  * @return mixed array with results fetched and mapped to column names or false if there is no results left to fetch
  */
 	public function fetchResult() {
-		if ($row = $this->_result->fetch(PDO::FETCH_NUM)) {
+		if ($row = $this->_result->fetch(\PDO::FETCH_NUM)) {
 			$resultRow = array();
 			foreach ($this->map as $col => $meta) {
 				list($table, $column, $type) = $meta;
@@ -319,7 +324,7 @@ class Mysql extends DboSource {
 			'SELECT CHARACTER_SET_NAME FROM INFORMATION_SCHEMA.COLLATIONS WHERE COLLATION_NAME = ?',
 			array($name)
 		);
-		$cols = $r->fetch(PDO::FETCH_ASSOC);
+		$cols = $r->fetch(\PDO::FETCH_ASSOC);
 
 		if (isset($cols['CHARACTER_SET_NAME'])) {
 			$this->_charsets[$name] = $cols['CHARACTER_SET_NAME'];
@@ -334,7 +339,7 @@ class Mysql extends DboSource {
  *
  * @param Model|string $model Name of database table to inspect or model instance
  * @return array Fields in table. Keys are name and type
- * @throws CakeException
+ * @throws \Cake\Error\CakeException
  */
 	public function describe($model) {
 		$key = $this->fullTableName($model, false);
@@ -347,10 +352,10 @@ class Mysql extends DboSource {
 		$fields = false;
 		$cols = $this->_execute('SHOW FULL COLUMNS FROM ' . $table);
 		if (!$cols) {
-			throw new CakeException(__d('cake_dev', 'Could not describe table for %s', $table));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'Could not describe table for %s', $table));
 		}
 
-		while ($column = $cols->fetch(PDO::FETCH_OBJ)) {
+		while ($column = $cols->fetch(\PDO::FETCH_OBJ)) {
 			$fields[$column->Field] = array(
 				'type' => $this->column($column->Type),
 				'null' => ($column->Null === 'YES' ? true : false),
@@ -508,7 +513,7 @@ class Mysql extends DboSource {
 			$indexes = $this->_execute('SHOW INDEX FROM ' . $table);
 			// @codingStandardsIgnoreStart
 			// MySQL columns don't match the cakephp conventions.
-			while ($idx = $indexes->fetch(PDO::FETCH_OBJ)) {
+			while ($idx = $indexes->fetch(\PDO::FETCH_OBJ)) {
 				if ($old) {
 					$idx = (object)current((array)$idx);
 				}
@@ -609,7 +614,7 @@ class Mysql extends DboSource {
 /**
  * Generate a "drop table" statement for the given table
  *
- * @param type $table Name of the table to drop
+ * @param Model|string $table Name of the table to drop
  * @return string Drop table SQL statement
  */
 	protected function _dropTable($table) {
@@ -739,7 +744,7 @@ class Mysql extends DboSource {
 		if (is_string($name)) {
 			$condition = ' WHERE name = ' . $this->value($name);
 		}
-		$result = $this->_connection->query('SHOW TABLE STATUS ' . $condition, PDO::FETCH_ASSOC);
+		$result = $this->_connection->query('SHOW TABLE STATUS ' . $condition, \PDO::FETCH_ASSOC);
 
 		if (!$result) {
 			$result->closeCursor();
@@ -881,11 +886,11 @@ class Mysql extends DboSource {
 		$holder = implode(', ', array_fill(0, count($fields), '?'));
 		$fields = implode(', ', array_map(array($this, 'name'), $fields));
 		$pdoMap = array(
-			'integer' => PDO::PARAM_INT,
-			'float' => PDO::PARAM_STR,
-			'boolean' => PDO::PARAM_BOOL,
-			'string' => PDO::PARAM_STR,
-			'text' => PDO::PARAM_STR
+			'integer' => \PDO::PARAM_INT,
+			'float' => \PDO::PARAM_STR,
+			'boolean' => \PDO::PARAM_BOOL,
+			'string' => \PDO::PARAM_STR,
+			'text' => \PDO::PARAM_STR
 		);
 		$columnMap = array();
 		$rowHolder = "({$holder})";

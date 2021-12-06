@@ -14,6 +14,7 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Console;
 
 /**
  * An object to represent a single option used in the command line.

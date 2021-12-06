@@ -11,6 +11,10 @@
  * @link          https://cakephp.org CakePHP(tm) Project
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component\Auth;
+
+use Cake\Controller\ComponentCollection;
+use Cake\Core\App;
 
 App::uses('FormAuthenticate', 'Controller/Component/Auth');
 

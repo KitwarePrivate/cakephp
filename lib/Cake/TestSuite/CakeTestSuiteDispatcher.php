@@ -15,6 +15,10 @@
  * @since         CakePHP(tm) v 1.3
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\TestSuite;
+
+use Cake\Core\App;
+use Cake\TestSuite\Reporter\CakeBaseReporter;
 
 /**
  * Path to the tests directory of the app.
@@ -275,7 +279,7 @@ class CakeTestSuiteDispatcher {
 			static::time();
 			$command = new CakeTestSuiteCommand('CakeTestLoader', $commandArgs);
 			$command->run($options);
-		} catch (MissingConnectionException $exception) {
+		} catch (\Cake\Error\MissingConnectionException $exception) {
 			ob_end_clean();
 			$baseDir = $this->_baseDir;
 			include CAKE . 'TestSuite' . DS . 'templates' . DS . 'missing_connection.php';

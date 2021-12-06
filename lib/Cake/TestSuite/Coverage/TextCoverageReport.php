@@ -17,6 +17,9 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\TestSuite\Coverage;
+
+use Cake\Core\App;
 
 App::uses('BaseCoverageReport', 'TestSuite/Coverage');
 
@@ -39,6 +42,7 @@ class TextCoverageReport extends BaseCoverageReport {
 			return 'No files to generate coverage for';
 		}
 		$output = "\nCoverage Report:\n\n";
+		// TODO: seriously?
 		foreach ($coverageData as $file => $coverageData) {
 			$fileData = file($file);
 			$output .= $this->generateDiff($file, $fileData, $coverageData);

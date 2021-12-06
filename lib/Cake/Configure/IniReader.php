@@ -15,9 +15,10 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Configure;
 
-App::uses('Hash', 'Utility');
-App::uses('CakePlugin', 'Core');
+use Cake\Core\CakePlugin;
+use Cake\Utility\Hash;
 
 /**
  * Ini file configuration engine.
@@ -93,17 +94,17 @@ class IniReader implements ConfigReaderInterface {
  * @param string $key The identifier to read from. If the key has a . it will be treated
  *  as a plugin prefix. The chosen file must be on the reader's path.
  * @return array Parsed configuration values.
- * @throws ConfigureException when files don't exist.
+ * @throws \Cake\Error\ConfigureException when files don't exist.
  *  Or when files contain '..' as this could lead to abusive reads.
  */
 	public function read($key) {
 		if (strpos($key, '..') !== false) {
-			throw new ConfigureException(__d('cake_dev', 'Cannot load configuration files with ../ in them.'));
+			throw new \Cake\Error\ConfigureException(__d('cake_dev', 'Cannot load configuration files with ../ in them.'));
 		}
 
 		$file = $this->_getFilePath($key);
 		if (!is_file(realpath($file))) {
-			throw new ConfigureException(__d('cake_dev', 'Could not load configuration file: %s', $file));
+			throw new \Cake\Error\ConfigureException(__d('cake_dev', 'Could not load configuration file: %s', $file));
 		}
 
 		$contents = parse_ini_file($file, true);

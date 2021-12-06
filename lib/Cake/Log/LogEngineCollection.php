@@ -15,6 +15,11 @@
  * @since         CakePHP(tm) v 2.2
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Log;
+
+use Cake\Core\App;
+use Cake\Log\Engine\BaseLog;
+use Cake\Utility\ObjectCollection;
 
 App::uses('ObjectCollection', 'Utility');
 
@@ -31,7 +36,7 @@ class LogEngineCollection extends ObjectCollection {
  * @param string $name instance identifier
  * @param array $options Setting for the Log Engine
  * @return BaseLog BaseLog engine instance
- * @throws CakeLogException when logger class does not implement a write method
+ * @throws \Cake\Error\CakeLogException when logger class does not implement a write method
  */
 	public function load($name, $options = array()) {
 		$enable = isset($options['enabled']) ? $options['enabled'] : true;
@@ -40,7 +45,7 @@ class LogEngineCollection extends ObjectCollection {
 		$className = $this->_getLogger($loggerName);
 		$logger = new $className($options);
 		if (!$logger instanceof CakeLogInterface) {
-			throw new CakeLogException(
+			throw new \Cake\Error\CakeLogException(
 				__d('cake_dev', 'logger class %s does not implement a %s method.', $loggerName, 'write()')
 			);
 		}
@@ -57,7 +62,7 @@ class LogEngineCollection extends ObjectCollection {
  *
  * @param string $loggerName the plugin.className of the logger class you want to build.
  * @return mixed boolean false on any failures, string of classname to use if search was successful.
- * @throws CakeLogException
+ * @throws \Cake\Error\CakeLogException
  */
 	protected static function _getLogger($loggerName) {
 		list($plugin, $loggerName) = pluginSplit($loggerName, true);
@@ -66,7 +71,7 @@ class LogEngineCollection extends ObjectCollection {
 		}
 		App::uses($loggerName, $plugin . 'Log/Engine');
 		if (!class_exists($loggerName)) {
-			throw new CakeLogException(__d('cake_dev', 'Could not load class %s', $loggerName));
+			throw new \Cake\Error\CakeLogException(__d('cake_dev', 'Could not load class %s', $loggerName));
 		}
 		return $loggerName;
 	}

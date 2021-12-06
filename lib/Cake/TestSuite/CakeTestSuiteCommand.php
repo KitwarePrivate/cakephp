@@ -15,6 +15,9 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\TestSuite;
+
+use Cake\Core\App;
 
 if (!class_exists('PHPUnit_TextUI_Command')) {
 	require_once 'PHPUnit/TextUI/Command.php';
@@ -32,18 +35,18 @@ App::uses('CakeTestModel', 'TestSuite/Fixture');
  *
  * @package       Cake.TestSuite
  */
-class CakeTestSuiteCommand extends PHPUnit_TextUI_Command {
+class CakeTestSuiteCommand extends \PHPUnit_TextUI_Command {
 
 /**
  * Construct method
  *
  * @param mixed $loader The loader instance to use.
  * @param array $params list of options to be used for this run
- * @throws MissingTestLoaderException When a loader class could not be found.
+ * @throws \Cake\Error\MissingTestLoaderException When a loader class could not be found.
  */
 	public function __construct($loader, $params = array()) {
 		if ($loader && !class_exists($loader)) {
-			throw new MissingTestLoaderException(array('class' => $loader));
+			throw new \Cake\Error\MissingTestLoaderException(array('class' => $loader));
 		}
 		$this->arguments['loader'] = $loader;
 		$this->arguments['test'] = $params['case'];
@@ -67,7 +70,7 @@ class CakeTestSuiteCommand extends PHPUnit_TextUI_Command {
 		$runner = $this->getRunner($this->arguments['loader']);
 
 		if (is_object($this->arguments['test']) &&
-			$this->arguments['test'] instanceof PHPUnit_Framework_Test) {
+			$this->arguments['test'] instanceof \PHPUnit_Framework_Test) {
 			$suite = $this->arguments['test'];
 		} else {
 			$suite = $runner->getTest(
@@ -77,7 +80,7 @@ class CakeTestSuiteCommand extends PHPUnit_TextUI_Command {
 		}
 
 		if ($this->arguments['listGroups']) {
-			PHPUnit_TextUI_TestRunner::printVersionString();
+			\PHPUnit_TextUI_TestRunner::printVersionString();
 
 			print "Available test group(s):\n";
 
@@ -88,7 +91,7 @@ class CakeTestSuiteCommand extends PHPUnit_TextUI_Command {
 				print " - $group\n";
 			}
 
-			exit(PHPUnit_TextUI_TestRunner::SUCCESS_EXIT);
+			exit(\PHPUnit_TextUI_TestRunner::SUCCESS_EXIT);
 		}
 
 		unset($this->arguments['test']);
@@ -96,20 +99,20 @@ class CakeTestSuiteCommand extends PHPUnit_TextUI_Command {
 
 		try {
 			$result = $runner->doRun($suite, $this->arguments, false);
-		} catch (PHPUnit_Framework_Exception $e) {
+		} catch (\PHPUnit_Framework_Exception $e) {
 			print $e->getMessage() . "\n";
 		}
 
 		if ($exit) {
 			if (!isset($result) || $result->errorCount() > 0) {
-				exit(PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT);
+				exit(\PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT);
 			}
 			if ($result->failureCount() > 0) {
-				exit(PHPUnit_TextUI_TestRunner::FAILURE_EXIT);
+				exit(\PHPUnit_TextUI_TestRunner::FAILURE_EXIT);
 			}
 
 			// Default to success even if there are warnings to match phpunit's behavior
-			exit(PHPUnit_TextUI_TestRunner::SUCCESS_EXIT);
+			exit(\PHPUnit_TextUI_TestRunner::SUCCESS_EXIT);
 		}
 	}
 

@@ -17,6 +17,8 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+use Cake\Core\App;
+use Cake\Core\Configure;
 
 define('TIME_START', microtime(true));
 
@@ -138,8 +140,6 @@ if (!defined('JS_URL')) {
 require CAKE . 'basics.php';
 require CAKE . 'Core' . DS . 'App.php';
 require CAKE . 'Error' . DS . 'exceptions.php';
-
-spl_autoload_register(array('App', 'load'));
 
 App::uses('ErrorHandler', 'Error');
 App::uses('Configure', 'Core');

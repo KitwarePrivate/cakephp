@@ -14,6 +14,15 @@
  * @since         CakePHP(tm) v 1.3
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Console\Command\Task;
+
+use Cake\Console\ConsoleOptionParser;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Model\Model;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Inflector;
 
 App::uses('AppShell', 'Console/Command');
 App::uses('BakeTask', 'Console/Command/Task');
@@ -314,12 +323,12 @@ class TestTask extends BakeTask {
  * @param string $type The type of thing having a test generated.
  * @param string $plugin The plugin name.
  * @return string
- * @throws CakeException When invalid object types are requested.
+ * @throws \Cake\Error\CakeException When invalid object types are requested.
  */
 	public function mapType($type, $plugin) {
 		$type = ucfirst($type);
 		if (empty($this->classTypes[$type])) {
-			throw new CakeException(__d('cake_dev', 'Invalid object type.'));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'Invalid object type.'));
 		}
 		$real = $this->classTypes[$type];
 		if ($plugin) {
@@ -334,11 +343,11 @@ class TestTask extends BakeTask {
  * @param string $type The type the class having a test
  *   generated for is in.
  * @return array Array of (class, type)
- * @throws CakeException on invalid types.
+ * @throws \Cake\Error\CakeException on invalid types.
  */
 	public function getBaseType($type) {
 		if (empty($this->baseTypes[$type])) {
-			throw new CakeException(__d('cake_dev', 'Invalid type name'));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'Invalid type name'));
 		}
 		return $this->baseTypes[$type];
 	}

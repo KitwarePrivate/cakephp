@@ -12,6 +12,15 @@
  * @since         CakePHP(tm) v 2.2
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Routing\Filter;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Event\CakeEvent;
+use Cake\Network\CakeResponse;
+use Cake\Routing\DispatcherFilter;
+use Cake\Utility\Inflector;
+use Cake\View\View;
 
 App::uses('DispatcherFilter', 'Routing');
 

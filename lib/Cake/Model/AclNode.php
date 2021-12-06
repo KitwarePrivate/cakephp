@@ -13,6 +13,12 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Model;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Inflector;
 
 App::uses('Model', 'Model');
 
@@ -58,7 +64,7 @@ class AclNode extends Model {
  *
  * @param string|array|Model $ref Array with 'model' and 'foreign_key', model object, or string value
  * @return array Node found in database
- * @throws CakeException when binding to a model that doesn't exist.
+ * @throws \Cake\Error\CakeException when binding to a model that doesn't exist.
  */
 	public function node($ref = null) {
 		$db = $this->getDataSource();
@@ -135,7 +141,7 @@ class AclNode extends Model {
 			$model = ClassRegistry::init(array('class' => $name, 'alias' => $alias));
 
 			if (empty($model)) {
-				throw new CakeException('cake_dev', "Model class '%s' not found in AclNode::node() when trying to bind %s object", $type, $this->alias);
+				throw new \Cake\Error\CakeException('cake_dev', "Model class '%s' not found in AclNode::node() when trying to bind %s object", $type, $this->alias);
 			}
 
 			$tmpRef = null;
@@ -179,7 +185,7 @@ class AclNode extends Model {
 			$result = $db->read($this, $queryData, -1);
 
 			if (!$result) {
-				throw new CakeException(__d('cake_dev', "AclNode::node() - Couldn't find %s node identified by \"%s\"", $type, print_r($ref, true)));
+				throw new \Cake\Error\CakeException(__d('cake_dev', "AclNode::node() - Couldn't find %s node identified by \"%s\"", $type, print_r($ref, true)));
 			}
 		}
 		return $result;

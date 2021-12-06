@@ -18,6 +18,10 @@
  * @since         CakePHP(tm) v 1.3
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\View\Helper;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
 
 App::uses('JsBaseEngineHelper', 'View/Helper');
 

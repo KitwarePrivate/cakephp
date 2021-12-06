@@ -14,6 +14,17 @@
  * @since         CakePHP(tm) v 1.3
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Console\Command\Task;
+
+use Cake\Console\ConsoleInput;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Console\ConsoleOutput;
+use Cake\Console\Shell;
+use Cake\Core\App;
+use Cake\Model\CakeSchema;
+use Cake\Model\Model;
+use Cake\Utility\CakeText;
+use Cake\Utility\Inflector;
 
 App::uses('AppShell', 'Console/Command');
 App::uses('BakeTask', 'Console/Command/Task');
@@ -275,7 +286,7 @@ class FixtureTask extends BakeTask {
  * Generate the fixture file, and write to disk
  *
  * @param string $model name of the model being generated
- * @param string $otherVars Contents of the fixture file.
+ * @param array $otherVars Contents of the fixture file.
  * @return string Content saved into fixture file.
  */
 	public function generateFixtureFile($model, $otherVars) {

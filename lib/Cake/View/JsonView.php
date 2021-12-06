@@ -11,6 +11,12 @@
  * @link          https://cakephp.org CakePHP(tm) Project
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\View;
+
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Network\CakeResponse;
 
 App::uses('View', 'View');
 
@@ -130,7 +136,7 @@ class JsonView extends View {
  *   e.g. `JSON_HEX_TAG | JSON_HEX_APOS`.
  *
  * @param array $serialize The viewVars that need to be serialized
- * @throws CakeException
+ * @throws \Cake\Error\CakeException
  * @return string The serialized data
  */
 	protected function _serialize($serialize) {
@@ -164,10 +170,10 @@ class JsonView extends View {
 		$json = json_encode($data, $jsonOptions);
 
 		if (function_exists('json_last_error') && json_last_error() !== JSON_ERROR_NONE) {
-			throw new CakeException(json_last_error_msg());
+			throw new \Cake\Error\CakeException(json_last_error_msg());
 		}
 		if ($json === false) {
-			throw new CakeException('Failed to parse JSON');
+			throw new \Cake\Error\CakeException('Failed to parse JSON');
 		}
 		return $json;
 	}

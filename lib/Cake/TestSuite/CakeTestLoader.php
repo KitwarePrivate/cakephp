@@ -17,6 +17,9 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  * @package Cake.TestSuite
  */
+namespace Cake\TestSuite;
+
+use Cake\Core\CakePlugin;
 
 /**
  * TestLoader for CakePHP Test suite.
@@ -25,14 +28,14 @@
  *
  * @package Cake.TestSuite
  */
-class CakeTestLoader extends PHPUnit_Runner_StandardTestSuiteLoader {
+class CakeTestLoader extends \PHPUnit_Runner_StandardTestSuiteLoader {
 
 /**
  * Load a file and find the first test case / suite in that file.
  *
  * @param string $filePath The file path to load
  * @param string $params Additional parameters
- * @return ReflectionClass
+ * @return \ReflectionClass
  */
 	public function load($filePath, $params = '') {
 		$file = $this->_resolveTestFile($filePath, $params);
@@ -67,7 +70,7 @@ class CakeTestLoader extends PHPUnit_Runner_StandardTestSuiteLoader {
 				try {
 					CakePlugin::load($params['plugin']);
 					$result = CakePlugin::path($params['plugin']) . 'Test' . DS . 'Case';
-				} catch (MissingPluginException $e) {
+				} catch (\Cake\Error\MissingPluginException $e) {
 				}
 			} else {
 				$result = CakePlugin::path($params['plugin']) . 'Test' . DS . 'Case';
@@ -111,8 +114,8 @@ class CakeTestLoader extends PHPUnit_Runner_StandardTestSuiteLoader {
 			return $fileList;
 		}
 
-		$files = new RegexIterator(
-			new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)),
+		$files = new \RegexIterator(
+			new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory)),
 			'/.*Test.php$/'
 		);
 

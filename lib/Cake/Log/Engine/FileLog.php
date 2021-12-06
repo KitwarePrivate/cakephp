@@ -15,6 +15,12 @@
  * @since         CakePHP(tm) v 1.3
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Log\Engine;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Utility\CakeNumber;
+use Cake\Utility\Hash;
 
 App::uses('BaseLog', 'Log/Engine');
 App::uses('Hash', 'Utility');

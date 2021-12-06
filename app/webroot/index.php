@@ -19,6 +19,12 @@
 /**
  * Use the DS to separate the directories in other defines
  */
+
+use Cake\Core\App;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Dispatcher;
+
 if (!defined('DS')) {
 	define('DS', DIRECTORY_SEPARATOR);
 }

@@ -11,6 +11,12 @@
  * @link          https://cakephp.org CakePHP(tm) Project
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component\Auth;
+
+use Cake\Controller\ComponentCollection;
+use Cake\Core\App;
+use Cake\Network\CakeRequest;
+use Cake\Routing\Router;
 
 App::uses('BaseAuthorize', 'Controller/Component/Auth');
 App::uses('Router', 'Routing');

@@ -11,6 +11,16 @@
  * @link          https://cakephp.org CakePHP(tm) Project
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component\Auth;
+
+use Cake\Controller\ComponentCollection;
+use Cake\Core\App;
+use Cake\Event\CakeEventListener;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Hash;
+use Cake\Utility\Security;
 
 App::uses('Security', 'Utility');
 App::uses('Hash', 'Utility');
@@ -149,7 +159,7 @@ abstract class BaseAuthenticate implements CakeEventListener {
  * Return password hasher object
  *
  * @return AbstractPasswordHasher Password hasher instance
- * @throws CakeException If password hasher class not found or
+ * @throws \Cake\Error\CakeException If password hasher class not found or
  *   it does not extend AbstractPasswordHasher
  */
 	public function passwordHasher() {
@@ -169,10 +179,10 @@ abstract class BaseAuthenticate implements CakeEventListener {
 		$className = $class . 'PasswordHasher';
 		App::uses($className, $plugin . 'Controller/Component/Auth');
 		if (!class_exists($className)) {
-			throw new CakeException(__d('cake_dev', 'Password hasher class "%s" was not found.', $class));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'Password hasher class "%s" was not found.', $class));
 		}
 		if (!is_subclass_of($className, 'AbstractPasswordHasher')) {
-			throw new CakeException(__d('cake_dev', 'Password hasher must extend AbstractPasswordHasher class.'));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'Password hasher must extend AbstractPasswordHasher class.'));
 		}
 		$this->_passwordHasher = new $className($config);
 		return $this->_passwordHasher;

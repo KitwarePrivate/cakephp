@@ -15,6 +15,10 @@
  * @since         CakePHP(tm) v 2.2
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Cache\Engine;
+
+use Cake\Cache\CacheEngine;
+use Cake\Utility\Inflector;
 
 /**
  * Redis storage engine for cache.
@@ -26,7 +30,7 @@ class RedisEngine extends CacheEngine {
 /**
  * Redis wrapper.
  *
- * @var Redis
+ * @var \Redis
  */
 	protected $_Redis = null;
 
@@ -80,7 +84,7 @@ class RedisEngine extends CacheEngine {
  */
 	protected function _connect() {
 		try {
-			$this->_Redis = new Redis();
+			$this->_Redis = new \Redis();
 			if (!empty($this->settings['unix_socket'])) {
 				$return = $this->_Redis->connect($this->settings['unix_socket']);
 			} elseif (empty($this->settings['persistent'])) {
@@ -89,7 +93,7 @@ class RedisEngine extends CacheEngine {
 				$persistentId = $this->settings['port'] . $this->settings['timeout'] . $this->settings['database'];
 				$return = $this->_Redis->pconnect($this->settings['server'], $this->settings['port'], $this->settings['timeout'], $persistentId);
 			}
-		} catch (RedisException $e) {
+		} catch (\RedisException $e) {
 			$return = false;
 		}
 		if (!$return) {
@@ -148,7 +152,7 @@ class RedisEngine extends CacheEngine {
  * @param string $key Identifier for the data
  * @param int $offset How much to increment
  * @return New incremented value, false otherwise
- * @throws CacheException when you try to increment with compress = true
+ * @throws \Cake\Error\CacheException when you try to increment with compress = true
  */
 	public function increment($key, $offset = 1) {
 		return (int)$this->_Redis->incrBy($key, $offset);
@@ -160,7 +164,7 @@ class RedisEngine extends CacheEngine {
  * @param string $key Identifier for the data
  * @param int $offset How much to subtract
  * @return New decremented value, false otherwise
- * @throws CacheException when you try to decrement with compress = true
+ * @throws \Cake\Error\CacheException when you try to decrement with compress = true
  */
 	public function decrement($key, $offset = 1) {
 		return (int)$this->_Redis->decrBy($key, $offset);

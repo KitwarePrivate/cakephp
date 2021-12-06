@@ -17,6 +17,11 @@
  * @since         Cake v 0.10.0.1076
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\View;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Utility\Inflector;
 
 App::uses('View', 'View');
 
@@ -33,7 +38,7 @@ class ScaffoldView extends View {
  *
  * @param string $name name of the view file to get.
  * @return string action
- * @throws MissingViewException
+ * @throws \Cake\Error\MissingViewException
  */
 	protected function _getViewFileName($name = null) {
 		if ($name === null) {
@@ -85,7 +90,7 @@ class ScaffoldView extends View {
 			return CAKE . 'View' . DS . 'Errors' . DS . 'scaffold_error.ctp';
 		}
 
-		throw new MissingViewException($paths[0] . $name . $this->ext);
+		throw new \Cake\Error\MissingViewException($paths[0] . $name . $this->ext);
 	}
 
 }

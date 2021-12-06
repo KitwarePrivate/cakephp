@@ -17,6 +17,11 @@
  * @since         CakePHP v .0.10.3.1400
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Utility;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Network\Http\HttpSocket;
 
 App::uses('HttpSocket', 'Network/Http');
 
@@ -86,8 +91,8 @@ class Xml {
  *
  * @param string|array $input XML string, a path to a file, a URL or an array
  * @param array $options The options to use
- * @return SimpleXMLElement|DOMDocument SimpleXMLElement or DOMDocument
- * @throws XmlException
+ * @return \SimpleXMLElement|\DOMDocument SimpleXMLElement or DOMDocument
+ * @throws \Cake\Error\XmlException
  */
 	public static function build($input, $options = array()) {
 		if (!is_array($options)) {
@@ -112,16 +117,16 @@ class Xml {
 				$socket = new HttpSocket(array('request' => array('redirect' => 10)));
 				$response = $socket->get($input);
 				if (!$response->isOk()) {
-					throw new XmlException(__d('cake_dev', 'XML cannot be read.'));
+					throw new \Cake\Error\XmlException(__d('cake_dev', 'XML cannot be read.'));
 				}
 				return static::_loadXml($response->body, $options);
-			} catch (SocketException $e) {
-				throw new XmlException(__d('cake_dev', 'XML cannot be read.'));
+			} catch (\Cake\Error\SocketException $e) {
+				throw new \Cake\Error\XmlException(__d('cake_dev', 'XML cannot be read.'));
 			}
 		} elseif (!is_string($input)) {
-			throw new XmlException(__d('cake_dev', 'Invalid input.'));
+			throw new \Cake\Error\XmlException(__d('cake_dev', 'Invalid input.'));
 		}
-		throw new XmlException(__d('cake_dev', 'XML cannot be read.'));
+		throw new \Cake\Error\XmlException(__d('cake_dev', 'XML cannot be read.'));
 	}
 
 /**
@@ -129,8 +134,8 @@ class Xml {
  *
  * @param string $input The input to load.
  * @param array $options The options to use. See Xml::build()
- * @return SimpleXmlElement|DOMDocument
- * @throws XmlException
+ * @return \SimpleXmlElement|\DOMDocument
+ * @throws \Cake\Error\XmlException
  */
 	protected static function _loadXml($input, $options) {
 		$hasDisable = function_exists('libxml_disable_entity_loader');
@@ -144,12 +149,12 @@ class Xml {
 		}
 		try {
 			if ($options['return'] === 'simplexml' || $options['return'] === 'simplexmlelement') {
-				$xml = new SimpleXMLElement($input, LIBXML_NOCDATA);
+				$xml = new \SimpleXMLElement($input, LIBXML_NOCDATA);
 			} else {
-				$xml = new DOMDocument();
+				$xml = new \DOMDocument();
 				$xml->loadXML($input);
 			}
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$xml = null;
 		}
 		if ($hasDisable && !$options['loadEntities']) {
@@ -157,7 +162,7 @@ class Xml {
 		}
 		libxml_use_internal_errors($internalErrors);
 		if ($xml === null) {
-			throw new XmlException(__d('cake_dev', 'Xml cannot be read.'));
+			throw new \Cake\Error\XmlException(__d('cake_dev', 'Xml cannot be read.'));
 		}
 		return $xml;
 	}
@@ -197,16 +202,16 @@ class Xml {
  *
  * @param array $input Array with data
  * @param array $options The options to use
- * @return SimpleXMLElement|DOMDocument SimpleXMLElement or DOMDocument
- * @throws XmlException
+ * @return \SimpleXMLElement|\DOMDocument SimpleXMLElement or DOMDocument
+ * @throws \Cake\Error\XmlException
  */
 	public static function fromArray($input, $options = array()) {
 		if (!is_array($input) || count($input) !== 1) {
-			throw new XmlException(__d('cake_dev', 'Invalid input.'));
+			throw new \Cake\Error\XmlException(__d('cake_dev', 'Invalid input.'));
 		}
 		$key = key($input);
 		if (is_int($key)) {
-			throw new XmlException(__d('cake_dev', 'The key of input must be alphanumeric'));
+			throw new \Cake\Error\XmlException(__d('cake_dev', 'The key of input must be alphanumeric'));
 		}
 
 		if (!is_array($options)) {
@@ -221,7 +226,7 @@ class Xml {
 		);
 		$options += $defaults;
 
-		$dom = new DOMDocument($options['version'], $options['encoding']);
+		$dom = new \DOMDocument($options['version'], $options['encoding']);
 		if ($options['pretty']) {
 			$dom->formatOutput = true;
 		}
@@ -229,7 +234,7 @@ class Xml {
 
 		$options['return'] = strtolower($options['return']);
 		if ($options['return'] === 'simplexml' || $options['return'] === 'simplexmlelement') {
-			return new SimpleXMLElement($dom->saveXML());
+			return new \SimpleXMLElement($dom->saveXML());
 		}
 		return $dom;
 	}
@@ -237,12 +242,12 @@ class Xml {
 /**
  * Recursive method to create childs from array
  *
- * @param DOMDocument $dom Handler to DOMDocument
- * @param DOMElement $node Handler to DOMElement (child)
+ * @param \DOMDocument $dom Handler to DOMDocument
+ * @param \DOMElement $node Handler to DOMElement (child)
  * @param array &$data Array of data to append to the $node.
  * @param string $format Either 'attributes' or 'tags'. This determines where nested keys go.
  * @return void
- * @throws XmlException
+ * @throws \Cake\Error\XmlException
  */
 	protected static function _fromArray($dom, $node, &$data, $format) {
 		if (empty($data) || !is_array($data)) {
@@ -268,7 +273,7 @@ class Xml {
 							// http://www.w3.org/TR/REC-xml/#syntax
 							// https://bugs.php.net/bug.php?id=36795
 							$child = $dom->createElement($key, '');
-							$child->appendChild(new DOMText($value));
+							$child->appendChild(new \DOMText($value));
 						} else {
 							$child = $dom->createElement($key, $value);
 						}
@@ -283,7 +288,7 @@ class Xml {
 					}
 				} else {
 					if ($key[0] === '@') {
-						throw new XmlException(__d('cake_dev', 'Invalid array'));
+						throw new \Cake\Error\XmlException(__d('cake_dev', 'Invalid array'));
 					}
 					if (is_numeric(implode('', array_keys($value)))) { // List
 						foreach ($value as $item) {
@@ -296,7 +301,7 @@ class Xml {
 					}
 				}
 			} else {
-				throw new XmlException(__d('cake_dev', 'Invalid array'));
+				throw new \Cake\Error\XmlException(__d('cake_dev', 'Invalid array'));
 			}
 		}
 	}
@@ -338,16 +343,16 @@ class Xml {
 /**
  * Returns this XML structure as an array.
  *
- * @param SimpleXMLElement|DOMDocument|DOMNode $obj SimpleXMLElement, DOMDocument or DOMNode instance
+ * @param \SimpleXMLElement|\DOMDocument|\DOMNode $obj SimpleXMLElement, DOMDocument or DOMNode instance
  * @return array Array representation of the XML structure.
- * @throws XmlException
+ * @throws \Cake\Error\XmlException
  */
 	public static function toArray($obj) {
-		if ($obj instanceof DOMNode) {
+		if ($obj instanceof \DOMNode) {
 			$obj = simplexml_import_dom($obj);
 		}
-		if (!($obj instanceof SimpleXMLElement)) {
-			throw new XmlException(__d('cake_dev', 'The input is not instance of SimpleXMLElement, DOMDocument or DOMNode.'));
+		if (!($obj instanceof \SimpleXMLElement)) {
+			throw new \Cake\Error\XmlException(__d('cake_dev', 'The input is not instance of SimpleXMLElement, DOMDocument or DOMNode.'));
 		}
 		$result = array();
 		$namespaces = array_merge(array('' => ''), $obj->getNamespaces(true));
@@ -358,7 +363,7 @@ class Xml {
 /**
  * Recursive method to toArray
  *
- * @param SimpleXMLElement $xml SimpleXMLElement object
+ * @param \SimpleXMLElement $xml SimpleXMLElement object
  * @param array &$parentData Parent array with data
  * @param string $ns Namespace of current child
  * @param array $namespaces List of namespaces in XML

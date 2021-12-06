@@ -17,6 +17,12 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\View\Helper;
+
+use Cake\Core\App;
+use Cake\Utility\CakeNumber;
+use Cake\Utility\Hash;
+use Cake\View\View;
 
 App::uses('CakeNumber', 'Utility');
 App::uses('AppHelper', 'View/Helper');
@@ -50,7 +56,7 @@ class NumberHelper extends AppHelper {
  *
  * @param View $View The View this helper is being attached to.
  * @param array $settings Configuration settings for the helper
- * @throws CakeException When the engine class could not be found.
+ * @throws \Cake\Error\CakeException When the engine class could not be found.
  */
 	public function __construct(View $View, $settings = array()) {
 		$settings = Hash::merge(array('engine' => 'CakeNumber'), $settings);
@@ -60,7 +66,7 @@ class NumberHelper extends AppHelper {
 		if (class_exists($engineClass)) {
 			$this->_engine = new $engineClass($settings);
 		} else {
-			throw new CakeException(__d('cake_dev', '%s could not be found', $engineClass));
+			throw new \Cake\Error\CakeException(__d('cake_dev', '%s could not be found', $engineClass));
 		}
 	}
 

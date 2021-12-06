@@ -13,6 +13,7 @@
  * @since         CakePHP(tm) v 1.2.0.4933
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Cache;
 
 /**
  * Storage engine for CakePHP caching

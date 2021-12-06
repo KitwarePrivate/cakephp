@@ -17,6 +17,9 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Log;
+
+use Cake\Core\App;
 
 App::uses('LogEngineCollection', 'Log');
 
@@ -186,15 +189,15 @@ class CakeLog {
  *    logger later.
  * @param array $config Array of configuration information for the logger
  * @return bool success of configuration.
- * @throws CakeLogException
+ * @throws \Cake\Error\CakeLogException
  * @link https://book.cakephp.org/2.0/en/core-libraries/logging.html#creating-and-configuring-log-streams
  */
 	public static function config($key, $config) {
 		if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $key)) {
-			throw new CakeLogException(__d('cake_dev', 'Invalid key name'));
+			throw new \Cake\Error\CakeLogException(__d('cake_dev', 'Invalid key name'));
 		}
 		if (empty($config['engine'])) {
-			throw new CakeLogException(__d('cake_dev', 'Missing logger class name'));
+			throw new \Cake\Error\CakeLogException(__d('cake_dev', 'Missing logger class name'));
 		}
 		if (empty(static::$_Collection)) {
 			static::_init();
@@ -308,14 +311,14 @@ class CakeLog {
  *
  * @param string $streamName to check
  * @return bool
- * @throws CakeLogException
+ * @throws \Cake\Error\CakeLogException
  */
 	public static function enabled($streamName) {
 		if (empty(static::$_Collection)) {
 			static::_init();
 		}
 		if (!isset(static::$_Collection->{$streamName})) {
-			throw new CakeLogException(__d('cake_dev', 'Stream %s not found', $streamName));
+			throw new \Cake\Error\CakeLogException(__d('cake_dev', 'Stream %s not found', $streamName));
 		}
 		return static::$_Collection->enabled($streamName);
 	}
@@ -326,14 +329,14 @@ class CakeLog {
  *
  * @param string $streamName to enable
  * @return void
- * @throws CakeLogException
+ * @throws \Cake\Error\CakeLogException
  */
 	public static function enable($streamName) {
 		if (empty(static::$_Collection)) {
 			static::_init();
 		}
 		if (!isset(static::$_Collection->{$streamName})) {
-			throw new CakeLogException(__d('cake_dev', 'Stream %s not found', $streamName));
+			throw new \Cake\Error\CakeLogException(__d('cake_dev', 'Stream %s not found', $streamName));
 		}
 		static::$_Collection->enable($streamName);
 	}
@@ -345,14 +348,14 @@ class CakeLog {
  *
  * @param string $streamName to disable
  * @return void
- * @throws CakeLogException
+ * @throws \Cake\Error\CakeLogException
  */
 	public static function disable($streamName) {
 		if (empty(static::$_Collection)) {
 			static::_init();
 		}
 		if (!isset(static::$_Collection->{$streamName})) {
-			throw new CakeLogException(__d('cake_dev', 'Stream %s not found', $streamName));
+			throw new \Cake\Error\CakeLogException(__d('cake_dev', 'Stream %s not found', $streamName));
 		}
 		static::$_Collection->disable($streamName);
 	}

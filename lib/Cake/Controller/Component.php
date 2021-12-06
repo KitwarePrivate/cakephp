@@ -13,6 +13,10 @@
  * @since         CakePHP(tm) v 1.2
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller;
+
+use Cake\Core\App;
+use Cake\Core\CakeObject;
 
 App::uses('ComponentCollection', 'Controller');
 
@@ -74,6 +78,7 @@ class Component extends CakeObject {
  * @param array $settings Array of configuration settings.
  */
 	public function __construct(ComponentCollection $collection, $settings = array()) {
+		parent::__construct();
 		$this->_Collection = $collection;
 		$this->settings = $settings;
 		$this->_set($settings);

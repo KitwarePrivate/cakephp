@@ -15,6 +15,20 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\View;
+
+use Cake\Cache\Cache;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Core\CakePlugin;
+use Cake\Core\Configure;
+use Cake\Event\CakeEvent;
+use Cake\Event\CakeEventManager;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Router;
+use Cake\Utility\Inflector;
 
 App::uses('HelperCollection', 'View');
 App::uses('AppHelper', 'View/Helper');
@@ -460,7 +474,7 @@ class View extends CakeObject {
  * @return string|null Rendered content or null if content already rendered and returned earlier.
  * @triggers View.beforeRender $this, array($viewFileName)
  * @triggers View.afterRender $this, array($viewFileName)
- * @throws CakeException If there is an error in the view.
+ * @throws \Cake\Error\CakeException If there is an error in the view.
  */
 	public function render($view = null, $layout = null) {
 		if ($this->hasRendered) {
@@ -508,7 +522,7 @@ class View extends CakeObject {
  * @return mixed Rendered output, or false on error
  * @triggers View.beforeLayout $this, array($layoutFileName)
  * @triggers View.afterLayout $this, array($layoutFileName)
- * @throws CakeException if there is an error in the view.
+ * @throws \Cake\Error\CakeException if there is an error in the view.
  */
 	public function renderLayout($content, $layout = null) {
 		$layoutFileName = $this->_getLayoutFileName($layout);
@@ -724,8 +738,8 @@ class View extends CakeObject {
  *
  * @param string $name The view or element to 'extend' the current one with.
  * @return void
- * @throws LogicException when you extend a view with itself or make extend loops.
- * @throws LogicException when you extend an element which doesn't exist
+ * @throws \LogicException when you extend a view with itself or make extend loops.
+ * @throws \LogicException when you extend an element which doesn't exist
  */
 	public function extend($name) {
 		if ($name[0] === '/' || $this->_currentType === static::TYPE_VIEW) {
@@ -738,7 +752,7 @@ class View extends CakeObject {
 						list($plugin, $name) = $this->pluginSplit($name);
 						$paths = $this->_paths($plugin);
 						$defaultPath = $paths[0] . 'Elements' . DS;
-						throw new LogicException(__d(
+						throw new \LogicException(__d(
 							'cake_dev',
 							'You cannot extend an element which does not exist (%s).',
 							$defaultPath . $name . $this->ext
@@ -754,10 +768,10 @@ class View extends CakeObject {
 		}
 
 		if ($parent == $this->_current) {
-			throw new LogicException(__d('cake_dev', 'You cannot have views extend themselves.'));
+			throw new \LogicException(__d('cake_dev', 'You cannot have views extend themselves.'));
 		}
 		if (isset($this->_parents[$parent]) && $this->_parents[$parent] == $this->_current) {
-			throw new LogicException(__d('cake_dev', 'You cannot have views extend in a loop.'));
+			throw new \LogicException(__d('cake_dev', 'You cannot have views extend in a loop.'));
 		}
 		$this->_parents[$this->_current] = $parent;
 	}
@@ -917,7 +931,7 @@ class View extends CakeObject {
  * @return string Rendered output
  * @triggers View.beforeRenderFile $this, array($viewFile)
  * @triggers View.afterRenderFile $this, array($viewFile, $content)
- * @throws CakeException when a block is left open.
+ * @throws \Cake\Error\CakeException when a block is left open.
  */
 	protected function _render($viewFile, $data = array()) {
 		if (empty($data)) {
@@ -949,7 +963,7 @@ class View extends CakeObject {
 		$remainingBlocks = count($this->Blocks->unclosed());
 
 		if ($initialBlocks !== $remainingBlocks) {
-			throw new CakeException(__d('cake_dev', 'The "%s" block was left open. Blocks are not allowed to cross files.', $this->Blocks->active()));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'The "%s" block was left open. Blocks are not allowed to cross files.', $this->Blocks->active()));
 		}
 
 		return $content;
@@ -993,7 +1007,7 @@ class View extends CakeObject {
  *
  * @param string $name Controller action to find template filename for
  * @return string Template filename
- * @throws MissingViewException when a view file could not be found.
+ * @throws \Cake\Error\MissingViewException when a view file could not be found.
  */
 	protected function _getViewFileName($name = null) {
 		$subDir = null;
@@ -1028,7 +1042,7 @@ class View extends CakeObject {
 				}
 			}
 		}
-		throw new MissingViewException(array('file' => $name . $this->ext));
+		throw new \Cake\Error\MissingViewException(array('file' => $name . $this->ext));
 	}
 
 /**
@@ -1058,7 +1072,7 @@ class View extends CakeObject {
  *
  * @param string $name The name of the layout to find.
  * @return string Filename for layout file (.ctp).
- * @throws MissingLayoutException when a layout cannot be located
+ * @throws \Cake\Error\MissingLayoutException when a layout cannot be located
  */
 	protected function _getLayoutFileName($name = null) {
 		if ($name === null) {
@@ -1081,7 +1095,7 @@ class View extends CakeObject {
 				}
 			}
 		}
-		throw new MissingLayoutException(array('file' => $file . $this->ext));
+		throw new \Cake\Error\MissingLayoutException(array('file' => $file . $this->ext));
 	}
 
 /**

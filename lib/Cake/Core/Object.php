@@ -14,5 +14,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use Cake\Core\App;
+
 App::uses('CakeObject', 'Core');
 class_alias('CakeObject', 'Object');

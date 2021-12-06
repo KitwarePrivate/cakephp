@@ -18,6 +18,12 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\TestSuite\Coverage;
+
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\TestSuite\Reporter\CakeBaseReporter;
+use Cake\Utility\Inflector;
 
 App::uses('Inflector', 'Utility');
 App::uses('CakePlugin', 'Core');

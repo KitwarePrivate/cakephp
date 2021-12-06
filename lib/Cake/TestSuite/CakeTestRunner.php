@@ -14,6 +14,10 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\TestSuite;
+
+use Cake\Core\App;
+use Cake\TestSuite\Fixture\CakeFixtureManager;
 
 if (!class_exists('PHPUnit_TextUI_TestRunner')) {
 	require_once 'PHPUnit/TextUI/TestRunner.php';
@@ -34,7 +38,7 @@ App::uses('CakeFixtureManager', 'TestSuite/Fixture');
  *
  * @package       Cake.TestSuite
  */
-class CakeTestRunner extends PHPUnit_TextUI_TestRunner {
+class CakeTestRunner extends \PHPUnit_TextUI_TestRunner {
 
 /**
  * Lets us pass in some options needed for CakePHP's webrunner.
@@ -50,21 +54,21 @@ class CakeTestRunner extends PHPUnit_TextUI_TestRunner {
 /**
  * Actually run a suite of tests. Cake initializes fixtures here using the chosen fixture manager
  *
- * @param PHPUnit_Framework_Test $suite The test suite to run
+ * @param \PHPUnit_Framework_Test $suite The test suite to run
  * @param array $arguments The CLI arguments
  * @param bool $exit Exits by default or returns the results
  * This argument is ignored if >PHPUnit5.2.0
  * @return void
  */
-	public function doRun(PHPUnit_Framework_Test $suite, array $arguments = array(), $exit = true) {
+	public function doRun(\PHPUnit_Framework_Test $suite, array $arguments = array(), $exit = true) {
 		if (isset($arguments['printer'])) {
 			static::$versionStringPrinted = true;
 		}
 
 		$fixture = $this->_getFixtureManager($arguments);
 		$iterator = $suite->getIterator();
-		if ($iterator instanceof RecursiveIterator) {
-			$iterator = new RecursiveIteratorIterator($iterator);
+		if ($iterator instanceof \RecursiveIterator) {
+			$iterator = new \RecursiveIteratorIterator($iterator);
 		}
 		foreach ($iterator as $test) {
 			if ($test instanceof CakeTestCase) {
@@ -82,16 +86,16 @@ class CakeTestRunner extends PHPUnit_TextUI_TestRunner {
 /**
  * Create the test result and splice on our code coverage reports.
  *
- * @return PHPUnit_Framework_TestResult
+ * @return \PHPUnit_Framework_TestResult
  */
 	protected function createTestResult() {
-		$result = new PHPUnit_Framework_TestResult;
+		$result = new \PHPUnit_Framework_TestResult;
 		if (!empty($this->_params['codeCoverage'])) {
 			if (method_exists($result, 'collectCodeCoverageInformation')) {
 				$result->collectCodeCoverageInformation(true);
 			}
 			if (method_exists($result, 'setCodeCoverage')) {
-				$result->setCodeCoverage(new PHP_CodeCoverage());
+				$result->setCodeCoverage(new \PHP_CodeCoverage());
 			}
 		}
 		return $result;
@@ -103,7 +107,7 @@ class CakeTestRunner extends PHPUnit_TextUI_TestRunner {
  *
  * @param array $arguments The CLI arguments.
  * @return mixed instance of a fixture manager.
- * @throws RuntimeException When fixture manager class cannot be loaded.
+ * @throws \RuntimeException When fixture manager class cannot be loaded.
  */
 	protected function _getFixtureManager($arguments) {
 		if (!empty($arguments['fixtureManager'])) {
@@ -111,7 +115,7 @@ class CakeTestRunner extends PHPUnit_TextUI_TestRunner {
 			if (class_exists($arguments['fixtureManager'])) {
 				return new $arguments['fixtureManager'];
 			}
-			throw new RuntimeException(__d('cake_dev', 'Could not find fixture manager %s.', $arguments['fixtureManager']));
+			throw new \RuntimeException(__d('cake_dev', 'Could not find fixture manager %s.', $arguments['fixtureManager']));
 		}
 		App::uses('AppFixtureManager', 'TestSuite');
 		if (class_exists('AppFixtureManager')) {

@@ -11,6 +11,12 @@
  * @link          https://cakephp.org CakePHP(tm) Project
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component\Auth;
+
+use Cake\Controller\ComponentCollection;
+use Cake\Core\App;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
 
 App::uses('BaseAuthenticate', 'Controller/Component/Auth');
 
@@ -103,10 +109,10 @@ class BasicAuthenticate extends BaseAuthenticate {
  * @param CakeRequest $request A request object.
  * @param CakeResponse $response A response object.
  * @return void
- * @throws UnauthorizedException
+ * @throws \Cake\Error\UnauthorizedException
  */
 	public function unauthenticated(CakeRequest $request, CakeResponse $response) {
-		$Exception = new UnauthorizedException();
+		$Exception = new \Cake\Error\UnauthorizedException();
 		$Exception->responseHeader(array($this->loginHeaders()));
 		throw $Exception;
 	}

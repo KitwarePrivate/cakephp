@@ -18,6 +18,8 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use Cake\Utility\Inflector;
+
 echo "<?php\n";
 echo "App::uses('{$plugin}AppController', '{$pluginPath}Controller');\n";
 ?>
@@ -36,6 +38,8 @@ if (!$isScaffold) {
 }
 ?>
  */
+namespace Cake\Controller;
+
 class <?php echo $controllerName; ?>Controller extends <?php echo $plugin; ?>AppController {
 
 <?php if ($isScaffold): ?>

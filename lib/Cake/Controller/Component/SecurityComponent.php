@@ -15,6 +15,15 @@
  * @since         CakePHP(tm) v 0.10.8.2156
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component;
+
+use Cake\Controller\Component;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Network\CakeRequest;
+use Cake\Utility\Hash;
+use Cake\Utility\Security;
 
 App::uses('Component', 'Controller');
 App::uses('CakeText', 'Utility');
@@ -221,7 +230,7 @@ class SecurityComponent extends Component {
  * Component startup. All security checking happens here.
  *
  * @param Controller $controller Instantiating controller
- * @throws AuthSecurityException
+ * @throws \Cake\Error\AuthSecurityException
  * @return void
  */
 	public function startup(Controller $controller) {
@@ -239,7 +248,7 @@ class SecurityComponent extends Component {
 			);
 
 			if ($this->_action === $this->blackHoleCallback) {
-				throw new AuthSecurityException(sprintf('Action %s is defined as the blackhole callback.', $this->_action));
+				throw new \Cake\Error\AuthSecurityException(sprintf('Action %s is defined as the blackhole callback.', $this->_action));
 			}
 
 			if (!in_array($this->_action, (array)$this->unlockedActions) && $hasData && $isNotRequestAction) {
@@ -251,7 +260,7 @@ class SecurityComponent extends Component {
 				}
 			}
 
-		} catch (SecurityException $se) {
+		} catch (\Cake\Error\SecurityException $se) {
 			return $this->blackHole($controller, $se->getType(), $se);
 		}
 
@@ -338,13 +347,13 @@ class SecurityComponent extends Component {
  *
  * @param Controller $controller Instantiating controller
  * @param string $error Error method
- * @param SecurityException|null $exception Additional debug info describing the cause
+ * @param \Cake\Error\SecurityException|null $exception Additional debug info describing the cause
  * @return mixed If specified, controller blackHoleCallback's response, or no return otherwise
  * @see SecurityComponent::$blackHoleCallback
  * @link https://book.cakephp.org/2.0/en/core-libraries/components/security-component.html#handling-blackhole-callbacks
- * @throws BadRequestException
+ * @throws \Cake\Error\BadRequestException
  */
-	public function blackHole(Controller $controller, $error = '', SecurityException $exception = null) {
+	public function blackHole(Controller $controller, $error = '', \Cake\Error\SecurityException $exception = null) {
 		if (!$this->blackHoleCallback) {
 			$this->_throwException($exception);
 		}
@@ -354,19 +363,19 @@ class SecurityComponent extends Component {
 /**
  * Check debug status and throw an Exception based on the existing one
  *
- * @param SecurityException|null $exception Additional debug info describing the cause
- * @throws BadRequestException
+ * @param \Cake\Error\SecurityException|null $exception Additional debug info describing the cause
+ * @throws \Cake\Error\BadRequestException
  * @return void
  */
 	protected function _throwException($exception = null) {
 		if ($exception !== null) {
-			if (!Configure::read('debug') && $exception instanceof SecurityException) {
+			if (!Configure::read('debug') && $exception instanceof \Cake\Error\SecurityException) {
 				$exception->setReason($exception->getMessage());
 				$exception->setMessage(self::DEFAULT_EXCEPTION_MESSAGE);
 			}
 			throw $exception;
 		}
-		throw new BadRequestException(self::DEFAULT_EXCEPTION_MESSAGE);
+		throw new \Cake\Error\BadRequestException(self::DEFAULT_EXCEPTION_MESSAGE);
 	}
 
 /**
@@ -387,7 +396,7 @@ class SecurityComponent extends Component {
  * Check if HTTP methods are required
  *
  * @param Controller $controller Instantiating controller
- * @throws SecurityException
+ * @throws \Cake\Error\SecurityException
  * @return bool True if $method is required
  */
 	protected function _methodsRequired(Controller $controller) {
@@ -397,7 +406,7 @@ class SecurityComponent extends Component {
 				$require = $this->$property;
 				if (in_array($this->_action, $require) || $this->$property === array('*')) {
 					if (!$controller->request->is($method)) {
-						throw new SecurityException(
+						throw new \Cake\Error\SecurityException(
 							sprintf('The request method must be %s', strtoupper($method))
 						);
 					}
@@ -411,7 +420,7 @@ class SecurityComponent extends Component {
  * Check if access requires secure connection
  *
  * @param Controller $controller Instantiating controller
- * @throws SecurityException
+ * @throws \Cake\Error\SecurityException
  * @return bool True if secure connection required
  */
 	protected function _secureRequired(Controller $controller) {
@@ -420,7 +429,7 @@ class SecurityComponent extends Component {
 
 			if (in_array($this->_action, $requireSecure) || $this->requireSecure === array('*')) {
 				if (!$controller->request->is('ssl')) {
-					throw new SecurityException(
+					throw new \Cake\Error\SecurityException(
 						'Request is not SSL and the action is required to be secure'
 					);
 				}
@@ -434,7 +443,7 @@ class SecurityComponent extends Component {
  *
  * @param Controller $controller Instantiating controller
  * @return bool|null True if authentication required
- * @throws AuthSecurityException
+ * @throws \Cake\Error\AuthSecurityException
  * @deprecated 2.8.1 This feature is confusing and not useful.
  */
 	protected function _authRequired(Controller $controller) {
@@ -443,7 +452,7 @@ class SecurityComponent extends Component {
 
 			if (in_array($controller->request->params['action'], $requireAuth) || $this->requireAuth === array('*')) {
 				if (!isset($controller->request->data['_Token'])) {
-					throw new AuthSecurityException('\'_Token\' was not found in request data.');
+					throw new \Cake\Error\AuthSecurityException('\'_Token\' was not found in request data.');
 				}
 
 				if ($this->Session->check('_Token')) {
@@ -451,7 +460,7 @@ class SecurityComponent extends Component {
 
 					if (!empty($tData['allowedControllers']) &&
 						!in_array($controller->request->params['controller'], $tData['allowedControllers'])) {
-						throw new AuthSecurityException(
+						throw new \Cake\Error\AuthSecurityException(
 							sprintf(
 								'Controller \'%s\' was not found in allowed controllers: \'%s\'.',
 								$controller->request->params['controller'],
@@ -462,7 +471,7 @@ class SecurityComponent extends Component {
 					if (!empty($tData['allowedActions']) &&
 						!in_array($controller->request->params['action'], $tData['allowedActions'])
 					) {
-						throw new AuthSecurityException(
+						throw new \Cake\Error\AuthSecurityException(
 							sprintf(
 								'Action \'%s::%s\' was not found in allowed actions: \'%s\'.',
 								$controller->request->params['controller'],
@@ -472,7 +481,7 @@ class SecurityComponent extends Component {
 						);
 					}
 				} else {
-					throw new AuthSecurityException('\'_Token\' was not found in session.');
+					throw new \Cake\Error\AuthSecurityException('\'_Token\' was not found in session.');
 				}
 			}
 		}
@@ -483,7 +492,7 @@ class SecurityComponent extends Component {
  * Validate submitted form
  *
  * @param Controller $controller Instantiating controller
- * @throws AuthSecurityException
+ * @throws \Cake\Error\AuthSecurityException
  * @return bool true if submitted form is valid
  */
 	protected function _validatePost(Controller $controller) {
@@ -500,15 +509,15 @@ class SecurityComponent extends Component {
 			$msg = $this->_debugPostTokenNotMatching($controller, $hashParts);
 		}
 
-		throw new AuthSecurityException($msg);
+		throw new \Cake\Error\AuthSecurityException($msg);
 	}
 
 /**
  * Check if token is valid
  *
  * @param Controller $controller Instantiating controller
- * @throws AuthSecurityException
- * @throws SecurityException
+ * @throws \Cake\Error\AuthSecurityException
+ * @throws \Cake\Error\SecurityException
  * @return string fields token
  */
 	protected function _validToken(Controller $controller) {
@@ -516,19 +525,19 @@ class SecurityComponent extends Component {
 
 		$message = '\'%s\' was not found in request data.';
 		if (!isset($check['_Token'])) {
-			throw new AuthSecurityException(sprintf($message, '_Token'));
+			throw new \Cake\Error\AuthSecurityException(sprintf($message, '_Token'));
 		}
 		if (!isset($check['_Token']['fields'])) {
-			throw new AuthSecurityException(sprintf($message, '_Token.fields'));
+			throw new \Cake\Error\AuthSecurityException(sprintf($message, '_Token.fields'));
 		}
 		if (!isset($check['_Token']['unlocked'])) {
-			throw new AuthSecurityException(sprintf($message, '_Token.unlocked'));
+			throw new \Cake\Error\AuthSecurityException(sprintf($message, '_Token.unlocked'));
 		}
 		if (Configure::read('debug') && !isset($check['_Token']['debug'])) {
-			throw new SecurityException(sprintf($message, '_Token.debug'));
+			throw new \Cake\Error\SecurityException(sprintf($message, '_Token.debug'));
 		}
 		if (!Configure::read('debug') && isset($check['_Token']['debug'])) {
-			throw new SecurityException('Unexpected \'_Token.debug\' found in request data');
+			throw new \Cake\Error\SecurityException('Unexpected \'_Token.debug\' found in request data');
 		}
 
 		$token = urldecode($check['_Token']['fields']);
@@ -769,7 +778,7 @@ class SecurityComponent extends Component {
  * it will be removed from the list of valid tokens.
  *
  * @param Controller $controller A controller to check
- * @throws SecurityException
+ * @throws \Cake\Error\SecurityException
  * @return bool Valid csrf token.
  */
 	protected function _validateCsrf(Controller $controller) {
@@ -777,15 +786,15 @@ class SecurityComponent extends Component {
 		$requestToken = $controller->request->data('_Token.key');
 
 		if (!$requestToken) {
-			throw new SecurityException('Missing CSRF token');
+			throw new \Cake\Error\SecurityException('Missing CSRF token');
 		}
 
 		if (!isset($token['csrfTokens'][$requestToken])) {
-			throw new SecurityException('CSRF token mismatch');
+			throw new \Cake\Error\SecurityException('CSRF token mismatch');
 		}
 
 		if ($token['csrfTokens'][$requestToken] < time()) {
-			throw new SecurityException('CSRF token expired');
+			throw new \Cake\Error\SecurityException('CSRF token expired');
 		}
 
 		if ($this->csrfUseOnce) {
@@ -822,11 +831,11 @@ class SecurityComponent extends Component {
  * @param string $method Method to execute
  * @param array $params Parameters to send to method
  * @return mixed Controller callback method's response
- * @throws BadRequestException When a the blackholeCallback is not callable.
+ * @throws \Cake\Error\BadRequestException When a the blackholeCallback is not callable.
  */
 	protected function _callback(Controller $controller, $method, $params = array()) {
 		if (!is_callable(array($controller, $method))) {
-			throw new BadRequestException(__d('cake_dev', 'The request has been black-holed'));
+			throw new \Cake\Error\BadRequestException(__d('cake_dev', 'The request has been black-holed'));
 		}
 		return call_user_func_array(array(&$controller, $method), empty($params) ? null : $params);
 	}

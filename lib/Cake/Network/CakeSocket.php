@@ -15,6 +15,10 @@
  * @since		  CakePHP(tm) v 1.2.0
  * @license		  https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Network;
+
+use Cake\Core\App;
+use Cake\Utility\Validation;
 
 App::uses('Validation', 'Utility');
 
@@ -175,7 +179,7 @@ class CakeSocket {
  * Connects the socket to the given host and port.
  *
  * @return bool Success
- * @throws SocketException
+ * @throws \Cake\Error\SocketException
  */
 	public function connect() {
 		if ($this->connection) {
@@ -224,12 +228,12 @@ class CakeSocket {
 
 		if (!empty($errNum) || !empty($errStr)) {
 			$this->setLastError($errNum, $errStr);
-			throw new SocketException($errStr, $errNum);
+			throw new \Cake\Error\SocketException($errStr, $errNum);
 		}
 
 		if (!$this->connection && $this->_connectionErrors) {
 			$message = implode("\n", $this->_connectionErrors);
-			throw new SocketException($message, E_WARNING);
+			throw new \Cake\Error\SocketException($message, E_WARNING);
 		}
 
 		$this->connected = is_resource($this->connection);
@@ -490,21 +494,21 @@ class CakeSocket {
  * @param string $clientOrServer Can be one of 'client', 'server'. Default is 'client'.
  * @param bool $enable Enable or disable encryption. Default is true (enable)
  * @return bool True on success
- * @throws InvalidArgumentException When an invalid encryption scheme is chosen.
- * @throws SocketException When attempting to enable SSL/TLS fails.
+ * @throws \InvalidArgumentException When an invalid encryption scheme is chosen.
+ * @throws \Cake\Error\SocketException When attempting to enable SSL/TLS fails.
  * @see stream_socket_enable_crypto
  */
 	public function enableCrypto($type, $clientOrServer = 'client', $enable = true) {
 		if (!array_key_exists($type . '_' . $clientOrServer, $this->_encryptMethods)) {
-			throw new InvalidArgumentException(__d('cake_dev', 'Invalid encryption scheme chosen'));
+			throw new \InvalidArgumentException(__d('cake_dev', 'Invalid encryption scheme chosen'));
 		}
 		$enableCryptoResult = false;
 		try {
 			$enableCryptoResult = stream_socket_enable_crypto($this->connection, $enable,
 				$this->_encryptMethods[$type . '_' . $clientOrServer]);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->setLastError(null, $e->getMessage());
-			throw new SocketException($e->getMessage());
+			throw new \Cake\Error\SocketException($e->getMessage());
 		}
 		if ($enableCryptoResult === true) {
 			$this->encrypted = $enable;
@@ -512,6 +516,6 @@ class CakeSocket {
 		}
 		$errorMessage = __d('cake_dev', 'Unable to perform enableCrypto operation on CakeSocket');
 		$this->setLastError(null, $errorMessage);
-		throw new SocketException($errorMessage);
+		throw new \Cake\Error\SocketException($errorMessage);
 	}
 }

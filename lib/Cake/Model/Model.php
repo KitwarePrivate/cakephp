@@ -17,6 +17,21 @@
  * @since         CakePHP(tm) v 0.10.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Model;
+
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Core\Configure;
+use Cake\Event\CakeEvent;
+use Cake\Event\CakeEventListener;
+use Cake\Event\CakeEventManager;
+use Cake\Model\Datasource\DataSource;
+use Cake\Utility\CakeText;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+use Cake\Utility\Set;
+use Cake\Utility\Xml;
 
 App::uses('ClassRegistry', 'Utility');
 App::uses('Validation', 'Utility');
@@ -1155,7 +1170,7 @@ class Model extends CakeObject implements CakeEventListener {
  * Sets a custom table for your model class. Used by your controller to select a database table.
  *
  * @param string $tableName Name of the custom table
- * @throws MissingTableException when database table $tableName is not found on data source
+ * @throws \Cake\Error\MissingTableException when database table $tableName is not found on data source
  * @return void
  */
 	public function setSource($tableName) {
@@ -1169,7 +1184,7 @@ class Model extends CakeObject implements CakeEventListener {
 			$db->cacheSources = $restore;
 
 			if (is_array($sources) && !in_array(strtolower($this->tablePrefix . $tableName), array_map('strtolower', $sources))) {
-				throw new MissingTableException(array(
+				throw new \Cake\Error\MissingTableException(array(
 					'table' => $this->tablePrefix . $tableName,
 					'class' => $this->alias,
 					'ds' => $this->useDbConfig,
@@ -1195,7 +1210,7 @@ class Model extends CakeObject implements CakeEventListener {
  * (Alternative indata: two strings, which are mangled to
  * a one-item, two-dimensional array using $one for a key and $two as its value.)
  *
- * @param string|array|SimpleXmlElement|DomNode $one Array or string of data
+ * @param string|array|\SimpleXmlElement|\DomNode $one Array or string of data
  * @param string|false $two Value string for the alternative indata method
  * @return array|null Data with all of $one's keys and values, otherwise null.
  * @link https://book.cakephp.org/2.0/en/models/saving-your-data.html
@@ -1206,7 +1221,7 @@ class Model extends CakeObject implements CakeEventListener {
 		}
 
 		if (is_object($one)) {
-			if ($one instanceof SimpleXMLElement || $one instanceof DOMNode) {
+			if ($one instanceof \SimpleXMLElement || $one instanceof \DOMNode) {
 				$one = $this->_normalizeXmlData(Xml::toArray($one));
 			} else {
 				$one = Set::reverse($one);
@@ -1731,8 +1746,8 @@ class Model extends CakeObject implements CakeEventListener {
  *
  * @param array $fieldList List of fields to allow to be saved
  * @return mixed On success Model::$data if its not empty or true, false on failure
- * @throws Exception
- * @throws PDOException
+ * @throws \Exception
+ * @throws \PDOException
  * @triggers Model.beforeSave $this, array($options)
  * @triggers Model.afterSave $this, array($created, $options)
  * @link https://book.cakephp.org/2.0/en/models/saving-your-data.html
@@ -1766,7 +1781,7 @@ class Model extends CakeObject implements CakeEventListener {
 				}
 			}
 			return $success;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			if ($transactionBegun) {
 				$db->rollback();
 			}
@@ -1788,7 +1803,7 @@ class Model extends CakeObject implements CakeEventListener {
  *   - `counterCache`: Boolean to control updating of counter caches (if any)
  *
  * @return mixed On success Model::$data if its not empty or true, false on failure
- * @throws PDOException
+ * @throws \PDOException
  * @link https://book.cakephp.org/2.0/en/models/saving-your-data.html
  */
 	protected function _doSave($data = null, $options = array()) {
@@ -1924,7 +1939,7 @@ class Model extends CakeObject implements CakeEventListener {
 				$this->__safeUpdateMode = true;
 				try {
 					$success = (bool)$db->update($this, $fields, $values);
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					$this->__safeUpdateMode = false;
 					throw $e;
 				}
@@ -2094,6 +2109,7 @@ class Model extends CakeObject implements CakeEventListener {
 			}
 
 			if (!empty($newData)) {
+				// TODO: var $data used in inner and outerr loop
 				foreach ($newData as $data) {
 					$data[$habtm['foreignKey']] = $id;
 					if (empty($data[$Model->primaryKey])) {
@@ -2306,7 +2322,7 @@ class Model extends CakeObject implements CakeEventListener {
  * @return mixed If atomic: True on success, or false on failure.
  *    Otherwise: array similar to the $data array passed, but values are set to true/false
  *    depending on whether each record saved successfully.
- * @throws PDOException
+ * @throws \PDOException
  * @link https://book.cakephp.org/2.0/en/models/saving-your-data.html#model-savemany-array-data-null-array-options-array
  */
 	public function saveMany($data = null, $options = array()) {
@@ -2382,7 +2398,7 @@ class Model extends CakeObject implements CakeEventListener {
 				$db->rollback();
 			}
 			return false;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			if ($transactionBegun) {
 				$db->rollback();
 			}
@@ -2439,7 +2455,7 @@ class Model extends CakeObject implements CakeEventListener {
  * @return mixed If atomic: True on success, or false on failure.
  *    Otherwise: array similar to the $data array passed, but values are set to true/false
  *    depending on whether each record saved successfully.
- * @throws PDOException
+ * @throws \PDOException
  * @link https://book.cakephp.org/2.0/en/models/saving-your-data.html#model-saveassociated-array-data-null-array-options-array
  */
 	public function saveAssociated($data = null, $options = array()) {
@@ -2602,7 +2618,7 @@ class Model extends CakeObject implements CakeEventListener {
 				$db->rollback();
 			}
 			return false;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			if ($transactionBegun) {
 				$db->rollback();
 			}
@@ -3647,7 +3663,7 @@ class Model extends CakeObject implements CakeEventListener {
  *
  * @param string $dataSource The name of the DataSource, as defined in app/Config/database.php
  * @return void
- * @throws MissingConnectionException
+ * @throws \Cake\Error\MissingConnectionException
  */
 	public function setDataSource($dataSource = null) {
 		$oldConfig = $this->useDbConfig;

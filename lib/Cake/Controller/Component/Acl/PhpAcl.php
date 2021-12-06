@@ -15,6 +15,15 @@
  * @since         CakePHP(tm) v 2.1
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component\Acl;
+
+use Cake\Configure\PhpReader;
+use Cake\Controller\Component;
+use Cake\Controller\Component\AclComponent;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
 
 /**
  * PhpAcl implements an access control system using a plain PHP configuration file.
@@ -97,15 +106,15 @@ class PhpAcl extends CakeObject implements AclInterface {
  *
  * @param array $config configuration array, see docs
  * @return void
- * @throws AclException When required keys are missing.
+ * @throws \Cake\Error\AclException When required keys are missing.
  */
 	public function build(array $config) {
 		if (empty($config['roles'])) {
-			throw new AclException(__d('cake_dev', '"roles" section not found in configuration.'));
+			throw new \Cake\Error\AclException(__d('cake_dev', '"roles" section not found in configuration.'));
 		}
 
 		if (empty($config['rules']['allow']) && empty($config['rules']['deny'])) {
-			throw new AclException(__d('cake_dev', 'Neither "allow" nor "deny" rules were provided in configuration.'));
+			throw new \Cake\Error\AclException(__d('cake_dev', 'Neither "allow" nor "deny" rules were provided in configuration.'));
 		}
 
 		$rules['allow'] = !empty($config['rules']['allow']) ? $config['rules']['allow'] : array();

@@ -13,6 +13,11 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\View\Helper;
+
+use Cake\Core\App;
+use Cake\I18n\Multibyte;
+use Cake\Routing\Router;
 
 App::uses('AppHelper', 'View/Helper');
 

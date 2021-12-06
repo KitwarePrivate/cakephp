@@ -15,6 +15,13 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\TestSuite;
+
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Dispatcher;
 
 App::uses('Dispatcher', 'Routing');
 App::uses('CakeTestCase', 'TestSuite');

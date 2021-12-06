@@ -15,6 +15,15 @@
  * @since         CakePHP(tm) v 1.2.0.4116
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\I18n;
+
+use Cake\Cache\Cache;
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\Core\Configure;
+use Cake\Model\Datasource\CakeSession;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
 
 App::uses('CakePlugin', 'Core');
 App::uses('L10n', 'I18n');
@@ -190,7 +199,7 @@ class I18n {
  *    If null it checks for language in session followed by Config.language configuration variable.
  * @param string $context Context The context of the translation, e.g a verb or a noun.
  * @return string translated string.
- * @throws CakeException When '' is provided as a domain.
+ * @throws \Cake\Error\CakeException When '' is provided as a domain.
  */
 	public static function translate($singular, $plural = null, $domain = null, $category = self::LC_MESSAGES,
 		$count = null, $language = null, $context = null
@@ -226,7 +235,7 @@ class I18n {
 			$domain = static::$defaultDomain;
 		}
 		if ($domain === '') {
-			throw new CakeException(__d('cake_dev', 'You cannot use "" as a domain.'));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'You cannot use "" as a domain.'));
 		}
 
 		$_this->domain = $domain . '_' . $_this->l10n->lang;

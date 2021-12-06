@@ -13,6 +13,9 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+
+use Cake\Utility\Inflector;
+
 ?>
 <div class="<?php echo $pluralVar; ?> view">
 <h2><?php echo __d('cake', 'View %s', $singularHumanName); ?></h2>

@@ -16,6 +16,9 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use Cake\Core\App;
+use Cake\Utility\Debugger;
+
 App::uses('Debugger', 'Utility');
 
 ?>

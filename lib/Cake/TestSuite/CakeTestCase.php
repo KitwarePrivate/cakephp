@@ -15,6 +15,14 @@
  * @since         CakePHP(tm) v 1.2.0.4667
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\TestSuite;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Model\ConnectionManager;
+use Cake\Model\Model;
+use Cake\TestSuite\Fixture\CakeFixtureManager;
+use Cake\Utility\ClassRegistry;
 
 App::uses('CakeFixtureManager', 'TestSuite/Fixture');
 App::uses('CakeTestFixture', 'TestSuite/Fixture');
@@ -24,7 +32,7 @@ App::uses('CakeTestFixture', 'TestSuite/Fixture');
  *
  * @package       Cake.TestSuite
  */
-abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
+abstract class CakeTestCase extends \PHPUnit_Framework_TestCase {
 
 /**
  * The class responsible for managing the creation, loading and removing of fixtures
@@ -71,11 +79,11 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * If no TestResult object is passed a new one will be created.
  * This method is run for each test method in this class
  *
- * @param PHPUnit_Framework_TestResult $result The test result object
- * @return PHPUnit_Framework_TestResult
- * @throws InvalidArgumentException
+ * @param \PHPUnit_Framework_TestResult $result The test result object
+ * @return \PHPUnit_Framework_TestResult
+ * @throws \InvalidArgumentException
  */
-	public function run(PHPUnit_Framework_TestResult $result = null) {
+	public function run(\PHPUnit_Framework_TestResult $result = null) {
 		$level = ob_get_level();
 
 		if (!empty($this->fixtureManager)) {
@@ -209,11 +217,11 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  *
  * @return void
  * @see CakeTestCase::$autoFixtures
- * @throws Exception when no fixture manager is available.
+ * @throws \Exception when no fixture manager is available.
  */
 	public function loadFixtures() {
 		if (empty($this->fixtureManager)) {
-			throw new Exception(__d('cake_dev', 'No fixture manager to load the test fixture'));
+			throw new \Exception(__d('cake_dev', 'No fixture manager to load the test fixture'));
 		}
 		$args = func_get_args();
 		foreach ($args as $class) {
@@ -800,7 +808,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * @param bool $callOriginalMethods Not supported.
  * @param string $proxyTarget Not supported.
  * @return object
- * @throws InvalidArgumentException When not supported parameters are set.
+ * @throws \InvalidArgumentException When not supported parameters are set.
  * @deprecated Use `getMockBuilder()` or `createMock()` in new unit tests.
  * @see https://phpunit.de/manual/current/en/test-doubles.html
  */
@@ -816,20 +824,20 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
 		$callOriginalMethods = false,
 		$proxyTarget = null
 	) {
-		$phpUnitVersion = PHPUnit_Runner_Version::id();
+		$phpUnitVersion = \PHPUnit_Runner_Version::id();
 		if (version_compare($phpUnitVersion, '5.7.0', '<')) {
 			return parent::getMock($originalClassName, $methods, $arguments,
 					$mockClassName, $callOriginalConstructor, $callOriginalClone,
 					$callAutoload, $cloneArguments, $callOriginalMethods, $proxyTarget);
 		}
 		if ($cloneArguments) {
-			throw new InvalidArgumentException('$cloneArguments parameter is not supported');
+			throw new \InvalidArgumentException('$cloneArguments parameter is not supported');
 		}
 		if ($callOriginalMethods) {
-			throw new InvalidArgumentException('$callOriginalMethods parameter is not supported');
+			throw new \InvalidArgumentException('$callOriginalMethods parameter is not supported');
 		}
 		if ($proxyTarget !== null) {
-			throw new InvalidArgumentException('$proxyTarget parameter is not supported');
+			throw new \InvalidArgumentException('$proxyTarget parameter is not supported');
 		}
 		return $this->_buildMock(
 			$originalClassName,
@@ -848,7 +856,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * @param string $model The model to get a mock for.
  * @param mixed $methods The list of methods to mock
  * @param array $config The config data for the mock's constructor.
- * @throws MissingModelException
+ * @throws \Cake\Error\MissingModelException
  * @return Model
  */
 	public function getMockForModel($model, $methods = array(), $config = array()) {
@@ -861,7 +869,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
 		$config = array_merge($defaults, (array)$config, array('name' => $name));
 
 		if (!class_exists($name)) {
-			throw new MissingModelException(array($model));
+			throw new \Cake\Error\MissingModelException(array($model));
 		}
 		$mock = $this->getMock($name, $methods, array($config));
 

@@ -14,6 +14,17 @@
  * @since         CakePHP(tm) v 1.2
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Console\Command\Task;
+
+use Cake\Console\Command\AppShell;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Console\Shell;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Utility\CakeText;
+use Cake\Utility\File;
+use Cake\Utility\Folder;
+use Cake\Utility\Security;
 
 App::uses('AppShell', 'Console/Command');
 App::uses('File', 'Utility');

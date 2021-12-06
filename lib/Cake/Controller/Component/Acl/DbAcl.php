@@ -13,6 +13,12 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component\Acl;
+
+use Cake\Controller\Component;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Utility\ClassRegistry;
 
 App::uses('AclInterface', 'Controller/Component/Acl');
 App::uses('Hash', 'Utility');

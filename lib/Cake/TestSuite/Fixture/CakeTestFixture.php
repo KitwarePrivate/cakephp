@@ -13,6 +13,17 @@
  * @since         CakePHP(tm) v 1.2.0.4667
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\TestSuite\Fixture;
+
+use Cake\Core\App;
+use Cake\Log\CakeLog;
+use Cake\Model\CakeSchema;
+use Cake\Model\ConnectionManager;
+use Cake\Model\Datasource\DboSource;
+use Cake\Model\Model;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
 
 App::uses('CakeSchema', 'Model');
 
@@ -93,7 +104,7 @@ class CakeTestFixture {
 /**
  * Instantiate the fixture.
  *
- * @throws CakeException on invalid datasource usage.
+ * @throws \Cake\Error\CakeException on invalid datasource usage.
  */
 	public function __construct() {
 		if ($this->name === null) {
@@ -113,7 +124,7 @@ class CakeTestFixture {
 					$connection,
 					$this->name
 				);
-				throw new CakeException($message);
+				throw new \Cake\Error\CakeException($message);
 			}
 		}
 		$this->Schema = new CakeSchema(array('name' => 'TestSuite', 'connection' => $connection));
@@ -124,7 +135,7 @@ class CakeTestFixture {
  * Initialize the fixture.
  *
  * @return void
- * @throws MissingModelException Whe importing from a model that does not exist.
+ * @throws \Cake\Error\MissingModelException Whe importing from a model that does not exist.
  */
 	public function init() {
 		if (isset($this->import) && (is_string($this->import) || is_array($this->import))) {
@@ -138,7 +149,7 @@ class CakeTestFixture {
 				list($plugin, $modelClass) = pluginSplit($import['model'], true);
 				App::uses($modelClass, $plugin . 'Model');
 				if (!class_exists($modelClass)) {
-					throw new MissingModelException(array('class' => $modelClass));
+					throw new \Cake\Error\MissingModelException(array('class' => $modelClass));
 				}
 				$model = new $modelClass(null, null, $import['connection']);
 				$db = $model->getDataSource();
@@ -233,7 +244,7 @@ class CakeTestFixture {
 		try {
 			$db->execute($db->createSchema($this->Schema), array('log' => false));
 			$this->created[] = $db->configKeyName;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$msg = __d(
 				'cake_dev',
 				'Fixture creation for "%s" failed "%s"',
@@ -262,7 +273,7 @@ class CakeTestFixture {
 
 			$db->execute($db->dropSchema($this->Schema), array('log' => false));
 			$this->created = array_diff($this->created, array($db->configKeyName));
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return false;
 		}
 		return true;
@@ -274,7 +285,7 @@ class CakeTestFixture {
  *
  * @param DboSource $db An instance of the database into which the records will be inserted
  * @return bool on success or if there are no records to insert, or false on failure
- * @throws CakeException if counts of values and fields do not match.
+ * @throws \Cake\Error\CakeException if counts of values and fields do not match.
  */
 	public function insert($db) {
 		if (!isset($this->_insert)) {
@@ -298,7 +309,7 @@ class CakeTestFixture {
 							$message .= "The field '" . $field . "' is in the data fixture but not in the schema." . "\n";
 						}
 
-						throw new CakeException($message);
+						throw new \Cake\Error\CakeException($message);
 					}
 					$values[] = $merge;
 				}

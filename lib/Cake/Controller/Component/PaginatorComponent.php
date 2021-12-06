@@ -15,6 +15,13 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component;
+
+use Cake\Controller\Component;
+use Cake\Controller\ComponentCollection;
+use Cake\Core\App;
+use Cake\Model\Model;
+use Cake\Utility\Hash;
 
 App::uses('Component', 'Controller');
 App::uses('Hash', 'Utility');
@@ -138,8 +145,8 @@ class PaginatorComponent extends Component {
  *   on non-indexed, or undesirable columns. See PaginatorComponent::validateSort() for additional details
  *   on how the whitelisting and sort field validation works.
  * @return array Model query results
- * @throws MissingModelException
- * @throws NotFoundException
+ * @throws \Cake\Error\MissingModelException
+ * @throws \Cake\Error\NotFoundException
  */
 	public function paginate($object = null, $scope = array(), $whitelist = array()) {
 		if (is_array($object)) {
@@ -151,7 +158,7 @@ class PaginatorComponent extends Component {
 		$object = $this->_getObject($object);
 
 		if (!is_object($object)) {
-			throw new MissingModelException($object);
+			throw new \Cake\Error\MissingModelException($object);
 		}
 
 		$options = $this->mergeOptions($object->alias);
@@ -254,7 +261,7 @@ class PaginatorComponent extends Component {
 		);
 
 		if ($requestedPage > $page) {
-			throw new NotFoundException();
+			throw new \Cake\Error\NotFoundException();
 		}
 
 		if (!in_array('Paginator', $this->Controller->helpers) &&

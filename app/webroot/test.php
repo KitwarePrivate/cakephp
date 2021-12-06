@@ -16,6 +16,9 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use Cake\Core\Configure;
+use Cake\TestSuite\CakeTestSuiteDispatcher;
+
 set_time_limit(0);
 ini_set('display_errors', 1);
 
@@ -104,7 +107,7 @@ if (!empty($failed)) {
 }
 
 if (Configure::read('debug') < 1) {
-	throw new NotFoundException(__d('cake_dev', 'Debug setting does not allow access to this URL.'));
+	throw new \Cake\Error\NotFoundException(__d('cake_dev', 'Debug setting does not allow access to this URL.'));
 }
 
 require_once CAKE . 'TestSuite' . DS . 'CakeTestSuiteDispatcher.php';

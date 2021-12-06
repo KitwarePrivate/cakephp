@@ -15,6 +15,11 @@
  * @since         CakePHP(tm) v 0.10.0.1232
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component;
+
+use Cake\Controller\Component;
+use Cake\Core\App;
+use Cake\Model\Datasource\CakeSession;
 
 App::uses('Component', 'Controller');
 App::uses('CakeSession', 'Model/Datasource');

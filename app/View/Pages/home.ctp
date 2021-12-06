@@ -5,8 +5,12 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  */
 
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Utility\Debugger;
+
 if (!Configure::read('debug')):
-	throw new NotFoundException();
+	throw new \Cake\Error\NotFoundException();
 endif;
 
 App::uses('Debugger', 'Utility');

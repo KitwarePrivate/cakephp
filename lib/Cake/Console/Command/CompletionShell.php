@@ -13,12 +13,15 @@
  * @since         CakePHP v 2.5
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Console\Command;
+
+use Cake\Core\App;
 
 App::uses('AppShell', 'Console/Command');
 
 /**
  * Provide command completion shells such as bash.
- * 
+ *
  * @package       Cake.Console.Command
  */
 class CompletionShell extends AppShell {
@@ -88,7 +91,7 @@ class CompletionShell extends AppShell {
 
 /**
  * Guess autocomplete from the whole argument string
- * 
+ *
  * @return void
  */
 	public function fuzzy() {

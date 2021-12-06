@@ -14,6 +14,10 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Console\Command;
+
+use Cake\Console\Shell;
+use Cake\Core\App;
 
 App::uses('Shell', 'Console');
 

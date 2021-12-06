@@ -15,6 +15,14 @@
  * @since         CakePHP(tm) v 2.7.0-dev
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component;
+
+use Cake\Controller\Component;
+use Cake\Controller\ComponentCollection;
+use Cake\Core\App;
+use Cake\Model\Datasource\CakeSession;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
 
 App::uses('Component', 'Controller');
 App::uses('Inflector', 'Utility');
@@ -48,6 +56,7 @@ class FlashComponent extends Component {
  * @param array $settings Settings passed via controller
  */
 	public function __construct(ComponentCollection $collection, $settings = array()) {
+		parent::__construct($collection, $settings);
 		$this->_defaultConfig = Hash::merge($this->_defaultConfig, $settings);
 	}
 
@@ -72,7 +81,7 @@ class FlashComponent extends Component {
 	public function set($message, $options = array()) {
 		$options += $this->_defaultConfig;
 
-		if ($message instanceof Exception) {
+		if ($message instanceof \Exception) {
 			$options['params'] += array('code' => $message->getCode());
 			$message = $message->getMessage();
 		}
@@ -110,13 +119,13 @@ class FlashComponent extends Component {
  * @param string $name Element name to use.
  * @param array $args Parameters to pass when calling `FlashComponent::set()`.
  * @return void
- * @throws InternalErrorException If missing the flash message.
+ * @throws \Cake\Error\InternalErrorException If missing the flash message.
  */
 	public function __call($name, $args) {
 		$options = array('element' => Inflector::underscore($name));
 
 		if (count($args) < 1) {
-			throw new InternalErrorException('Flash message missing.');
+			throw new \Cake\Error\InternalErrorException('Flash message missing.');
 		}
 
 		if (!empty($args[1])) {

@@ -19,6 +19,18 @@
  * @since         CakePHP(tm) v 0.10.4.1076
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component;
+
+use Cake\Controller\Component;
+use Cake\Controller\ComponentCollection;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Router;
+use Cake\Utility\Inflector;
+use Cake\Utility\Xml;
 
 App::uses('Component', 'Controller');
 App::uses('Xml', 'Utility');
@@ -240,7 +252,7 @@ class RequestHandlerComponent extends Component {
 				return Xml::toArray($xml->data);
 			}
 			return Xml::toArray($xml);
-		} catch (XmlException $e) {
+		} catch (\Cake\Error\XmlException $e) {
 			return array();
 		}
 	}
@@ -763,11 +775,11 @@ class RequestHandlerComponent extends Component {
  *    be the handling callback, all other arguments should be additional parameters
  *    for the handler.
  * @return void
- * @throws CakeException
+ * @throws \Cake\Error\CakeException
  */
 	public function addInputType($type, $handler) {
 		if (!is_array($handler) || !isset($handler[0]) || !is_callable($handler[0])) {
-			throw new CakeException(__d('cake_dev', 'You must give a handler callback.'));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'You must give a handler callback.'));
 		}
 		$this->_inputTypeMap[$type] = $handler;
 	}

@@ -17,6 +17,10 @@
  * @since         CakePHP(tm) v 1.2.0.4933
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Cache\Engine;
+
+use Cake\Cache\CacheEngine;
+use Cake\Utility\Inflector;
 
 /**
  * Wincache storage engine for cache
@@ -67,7 +71,7 @@ class WincacheEngine extends CacheEngine {
 			$key . '_expires' => $expires,
 			$key => $value
 		);
-		$result = wincache_ucache_set($data, null, $duration);
+		$result = \wincache_ucache_set($data, null, $duration);
 		return empty($result);
 	}
 
@@ -80,11 +84,11 @@ class WincacheEngine extends CacheEngine {
  */
 	public function read($key) {
 		$time = time();
-		$cachetime = (int)wincache_ucache_get($key . '_expires');
+		$cachetime = (int)\wincache_ucache_get($key . '_expires');
 		if ($cachetime < $time || ($time + $this->settings['duration']) < $cachetime) {
 			return false;
 		}
-		return wincache_ucache_get($key);
+		return \wincache_ucache_get($key);
 	}
 
 /**
@@ -116,7 +120,7 @@ class WincacheEngine extends CacheEngine {
  * @return bool True if the value was successfully deleted, false if it didn't exist or couldn't be removed
  */
 	public function delete($key) {
-		return wincache_ucache_delete($key);
+		return \wincache_ucache_delete($key);
 	}
 
 /**
@@ -131,12 +135,12 @@ class WincacheEngine extends CacheEngine {
 		if ($check) {
 			return true;
 		}
-		$info = wincache_ucache_info();
+		$info = \wincache_ucache_info();
 		$cacheKeys = $info['ucache_entries'];
 		unset($info);
 		foreach ($cacheKeys as $key) {
 			if (strpos($key['key_name'], $this->settings['prefix']) === 0) {
-				wincache_ucache_delete($key['key_name']);
+				\wincache_ucache_delete($key['key_name']);
 			}
 		}
 		return true;
@@ -156,11 +160,11 @@ class WincacheEngine extends CacheEngine {
 			}
 		}
 
-		$groups = wincache_ucache_get($this->_compiledGroupNames);
+		$groups = \wincache_ucache_get($this->_compiledGroupNames);
 		if (count($groups) !== count($this->settings['groups'])) {
 			foreach ($this->_compiledGroupNames as $group) {
 				if (!isset($groups[$group])) {
-					wincache_ucache_set($group, 1);
+					\wincache_ucache_set($group, 1);
 					$groups[$group] = 1;
 				}
 			}
@@ -184,7 +188,7 @@ class WincacheEngine extends CacheEngine {
  */
 	public function clearGroup($group) {
 		$success = null;
-		wincache_ucache_inc($this->settings['prefix'] . $group, 1, $success);
+		\wincache_ucache_inc($this->settings['prefix'] . $group, 1, $success);
 		return $success;
 	}
 

@@ -16,13 +16,14 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Error;
 
 /**
  * Base class that all Exceptions extend.
  *
  * @package       Cake.Error
  */
-class CakeBaseException extends RuntimeException {
+class CakeBaseException extends \RuntimeException {
 
 /**
  * Array of headers to be passed to CakeResponse::header()
@@ -297,7 +298,7 @@ class PrivateActionException extends CakeException {
 	protected $_messageTemplate = 'Private Action %s::%s() is not directly accessible.';
 
 //@codingStandardsIgnoreStart
-	public function __construct($message, $code = 404, Exception $previous = null) {
+	public function __construct($message, $code = 404, \Exception $previous = null) {
 		parent::__construct($message, $code, $previous);
 	}
 //@codingStandardsIgnoreEnd

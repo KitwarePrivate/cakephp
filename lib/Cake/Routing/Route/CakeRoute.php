@@ -12,6 +12,11 @@
  * @since         CakePHP(tm) v 1.3
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Routing\Route;
+
+use Cake\Core\App;
+use Cake\Routing\Router;
+use Cake\Utility\Hash;
 
 App::uses('Hash', 'Utility');
 
@@ -109,7 +114,7 @@ class CakeRoute {
  * Modifies defaults property so all necessary keys are set
  * and populates $this->names with the named routing elements.
  *
- * @return array Returns a string regular expression of the compiled route.
+ * @return string Returns a string regular expression of the compiled route.
  */
 	public function compile() {
 		if ($this->compiled()) {
@@ -333,7 +338,7 @@ class CakeRoute {
  *
  * @param string $val The value of the named parameter
  * @param array $rule The rule(s) to apply, can also be a match string
- * @param string $context An array with additional context information (controller / action)
+ * @param array $context An array with additional context information (controller / action)
  * @return bool
  */
 	protected function _matchNamed($val, $rule, $context) {

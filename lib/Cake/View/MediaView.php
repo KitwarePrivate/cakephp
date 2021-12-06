@@ -15,6 +15,9 @@
  * @since         CakePHP(tm) v 1.2.0.5714
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\View;
+
+use Cake\Core\App;
 
 App::uses('View', 'View');
 App::uses('CakeRequest', 'Network');

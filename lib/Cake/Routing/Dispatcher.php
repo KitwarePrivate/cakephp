@@ -18,6 +18,17 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Routing;
+
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Event\CakeEvent;
+use Cake\Event\CakeEventListener;
+use Cake\Event\CakeEventManager;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Utility\Inflector;
 
 App::uses('Router', 'Routing');
 App::uses('CakeRequest', 'Network');
@@ -87,7 +98,7 @@ class Dispatcher implements CakeEventListener {
  *
  * @param CakeEventManager $manager Event manager instance.
  * @return void
- * @throws MissingDispatcherFilterException
+ * @throws \Cake\Error\MissingDispatcherFilterException
  */
 	protected function _attachFilters($manager) {
 		$filters = Configure::read('Dispatcher.filters');
@@ -108,7 +119,7 @@ class Dispatcher implements CakeEventListener {
 				list($plugin, $callable) = pluginSplit($filter['callable'], true);
 				App::uses($callable, $plugin . 'Routing/Filter');
 				if (!class_exists($callable)) {
-					throw new MissingDispatcherFilterException($callable);
+					throw new \Cake\Error\MissingDispatcherFilterException($callable);
 				}
 				$manager->attach(new $callable($settings));
 			} else {
@@ -140,7 +151,7 @@ class Dispatcher implements CakeEventListener {
  * @return string|null if `$request['return']` is set then it returns response body, null otherwise
  * @triggers Dispatcher.beforeDispatch $this, compact('request', 'response', 'additionalParams')
  * @triggers Dispatcher.afterDispatch $this, compact('request', 'response')
- * @throws MissingControllerException When the controller is missing.
+ * @throws \Cake\Error\MissingControllerException When the controller is missing.
  */
 	public function dispatch(CakeRequest $request, CakeResponse $response, $additionalParams = array()) {
 		$beforeEvent = new CakeEvent('Dispatcher.beforeDispatch', $this, compact('request', 'response', 'additionalParams'));
@@ -158,7 +169,7 @@ class Dispatcher implements CakeEventListener {
 		$controller = $this->_getController($request, $response);
 
 		if (!($controller instanceof Controller)) {
-			throw new MissingControllerException(array(
+			throw new \Cake\Error\MissingControllerException(array(
 				'class' => Inflector::camelize($request->params['controller']) . 'Controller',
 				'plugin' => empty($request->params['plugin']) ? null : Inflector::camelize($request->params['plugin'])
 			));
@@ -236,7 +247,7 @@ class Dispatcher implements CakeEventListener {
 		if (!$ctrlClass) {
 			return false;
 		}
-		$reflection = new ReflectionClass($ctrlClass);
+		$reflection = new \ReflectionClass($ctrlClass);
 		if ($reflection->isAbstract() || $reflection->isInterface()) {
 			return false;
 		}

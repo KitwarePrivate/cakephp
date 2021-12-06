@@ -13,6 +13,17 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\View\Helper;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Model\Model;
+use Cake\Model\Validator\CakeValidationSet;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+use Cake\Utility\Security;
+use Cake\View\View;
 
 App::uses('ClassRegistry', 'Utility');
 App::uses('AppHelper', 'View/Helper');
@@ -1716,12 +1727,12 @@ class FormHelper extends AppHelper {
  * @param string $method Method name / input type to make.
  * @param array $params Parameters for the method call
  * @return string Formatted input method.
- * @throws CakeException When there are no params for the method call.
+ * @throws \Cake\Error\CakeException When there are no params for the method call.
  */
 	public function __call($method, $params) {
 		$options = array();
 		if (empty($params)) {
-			throw new CakeException(__d('cake_dev', 'Missing field name for FormHelper::%s', $method));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'Missing field name for FormHelper::%s', $method));
 		}
 		if (isset($params[1])) {
 			$options = $params[1];
@@ -2440,13 +2451,13 @@ class FormHelper extends AppHelper {
 
 		if (strlen($attributes['value']) > 2) {
 			try {
-				$date = new DateTime($attributes['value']);
+				$date = new \DateTime($attributes['value']);
 				if ($format24Hours) {
 					$attributes['value'] = $date->format('H');
 				} else {
 					$attributes['value'] = $date->format('g');
 				}
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$attributes['value'] = null;
 			}
 		} elseif ($attributes['value'] === false) {
@@ -2640,7 +2651,7 @@ class FormHelper extends AppHelper {
 		$attributes = array_diff_key($attributes, $defaults);
 
 		if (!empty($interval) && $interval > 1 && !empty($min)) {
-			$current = new DateTime();
+			$current = new \DateTime();
 			if ($year !== null) {
 				$current->setDate($year, $month, $day);
 			}

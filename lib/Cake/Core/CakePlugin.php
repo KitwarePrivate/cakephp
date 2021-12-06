@@ -15,6 +15,9 @@
  * @since         CakePHP(tm) v 2.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Core;
+
+use Cake\Utility\Inflector;
 
 /**
  * CakePlugin is responsible for loading and unloading plugins.
@@ -87,7 +90,7 @@ class CakePlugin {
  *
  * @param string|array $plugin name of the plugin to be loaded in CamelCase format or array or plugins to load
  * @param array $config configuration options for the plugin
- * @throws MissingPluginException if the folder for the plugin to be loaded is not found
+ * @throws \Cake\Error\MissingPluginException if the folder for the plugin to be loaded is not found
  * @return void
  */
 	public static function load($plugin, $config = array()) {
@@ -118,7 +121,7 @@ class CakePlugin {
 		}
 
 		if (empty(static::$_plugins[$plugin]['path'])) {
-			throw new MissingPluginException(array('plugin' => $plugin));
+			throw new \Cake\Error\MissingPluginException(array('plugin' => $plugin));
 		}
 		if (!empty(static::$_plugins[$plugin]['bootstrap'])) {
 			static::bootstrap($plugin);
@@ -173,11 +176,11 @@ class CakePlugin {
  *
  * @param string $plugin name of the plugin in CamelCase format
  * @return string path to the plugin folder
- * @throws MissingPluginException if the folder for plugin was not found or plugin has not been loaded
+ * @throws \Cake\Error\MissingPluginException if the folder for plugin was not found or plugin has not been loaded
  */
 	public static function path($plugin) {
 		if (empty(static::$_plugins[$plugin])) {
-			throw new MissingPluginException(array('plugin' => $plugin));
+			throw new \Cake\Error\MissingPluginException(array('plugin' => $plugin));
 		}
 		return static::$_plugins[$plugin]['path'];
 	}

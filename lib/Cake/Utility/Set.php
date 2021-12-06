@@ -15,6 +15,9 @@
  * @since         CakePHP(tm) v 1.2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Utility;
+
+use Cake\Core\App;
 
 App::uses('CakeText', 'Utility');
 App::uses('Hash', 'Utility');
@@ -127,7 +130,7 @@ class Set {
  */
 	protected static function _map(&$array, $class, $primary = false) {
 		if ($class === true) {
-			$out = new stdClass;
+			$out = new \stdClass;
 		} else {
 			$out = new $class;
 		}
@@ -384,7 +387,7 @@ class Set {
 							$items = array($items);
 						}
 					}
-
+					// TODO: var $key is used in both inner and outer loops
 					foreach ($items as $key => $item) {
 						$ctext = array($context['key']);
 						if (!is_numeric($key)) {
@@ -541,7 +544,7 @@ class Set {
 			return $data;
 		}
 		if (is_object($data)) {
-			if (!($data instanceof ArrayAccess || $data instanceof Traversable)) {
+			if (!($data instanceof \ArrayAccess || $data instanceof \Traversable)) {
 				$data = get_object_vars($data);
 			}
 		}
@@ -800,7 +803,7 @@ class Set {
 		}
 
 		if (is_object($data)) {
-			if (!($data instanceof ArrayAccess || $data instanceof Traversable)) {
+			if (!($data instanceof \ArrayAccess || $data instanceof \Traversable)) {
 				$data = get_object_vars($data);
 			}
 		}
@@ -858,7 +861,7 @@ class Set {
  */
 	public static function reverse($object) {
 		$out = array();
-		if ($object instanceof SimpleXMLElement) {
+		if ($object instanceof \SimpleXMLElement) {
 			return Xml::toArray($object);
 		} elseif (is_object($object)) {
 			$keys = get_object_vars($object);
@@ -1094,7 +1097,7 @@ class Set {
  *
  * @param array $input an array
  * @param string|array $path string or array of array keys
- * @return the value at the specified position or null if it doesn't exist
+ * @return mixed value at the specified position or null if it doesn't exist
  */
 	public static function get($input, $path = null) {
 		if (is_string($path)) {

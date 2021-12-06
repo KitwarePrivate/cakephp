@@ -17,6 +17,13 @@
  * @since         CakePHP v 1.2.0.4487
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Model\Behavior;
+
+use Cake\Core\App;
+use Cake\Model\ConnectionManager;
+use Cake\Model\Model;
+use Cake\Model\ModelBehavior;
+use Cake\Utility\Hash;
 
 App::uses('ModelBehavior', 'Model');
 

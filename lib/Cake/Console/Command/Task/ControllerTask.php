@@ -14,6 +14,11 @@
  * @since         CakePHP(tm) v 1.2
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Console\Command\Task;
+
+use Cake\Core\App;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Inflector;
 
 App::uses('AppShell', 'Console/Command');
 App::uses('BakeTask', 'Console/Command/Task');
@@ -188,6 +193,7 @@ class ControllerTask extends BakeTask {
 				if (strtolower($wannaUseSession) === 'y') {
 					array_push($components, 'Session', 'Flash');
 				}
+				// TODO: ??
 				array_unique($components);
 			}
 		} else {

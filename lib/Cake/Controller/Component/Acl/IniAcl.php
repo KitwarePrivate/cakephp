@@ -13,6 +13,13 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component\Acl;
+
+use Cake\Configure\IniReader;
+use Cake\Controller\Component;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Utility\Hash;
 
 App::uses('AclInterface', 'Controller/Component/Acl');
 

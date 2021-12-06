@@ -17,6 +17,11 @@
  * @since         CakePHP(tm) v 1.2.4560
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Utility;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Log\CakeLog;
 
 App::uses('CakeLog', 'Log');
 App::uses('CakeText', 'Utility');
@@ -583,11 +588,11 @@ class Debugger {
 			}
 
 			if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
-				$ref = new ReflectionObject($var);
+				$ref = new \ReflectionObject($var);
 
 				$filters = array(
-					ReflectionProperty::IS_PROTECTED => 'protected',
-					ReflectionProperty::IS_PRIVATE => 'private',
+					\ReflectionProperty::IS_PROTECTED => 'protected',
+					\ReflectionProperty::IS_PRIVATE => 'private',
 				);
 				foreach ($filters as $filter => $visibility) {
 					$reflectionProperties = $ref->getProperties($filter);
@@ -614,7 +619,7 @@ class Debugger {
  * @param string $format The format you want errors to be output as.
  *   Leave null to get the current format.
  * @return mixed Returns null when setting. Returns the current format when getting.
- * @throws CakeException when choosing a format that doesn't exist.
+ * @throws \Cake\Error\CakeException when choosing a format that doesn't exist.
  */
 	public static function outputAs($format = null) {
 		$self = Debugger::getInstance();
@@ -622,7 +627,7 @@ class Debugger {
 			return $self->_outputFormat;
 		}
 		if ($format !== false && !isset($self->_templates[$format])) {
-			throw new CakeException(__d('cake_dev', 'Invalid Debugger output format.'));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'Invalid Debugger output format.'));
 		}
 		$self->_outputFormat = $format;
 	}
@@ -664,7 +669,7 @@ class Debugger {
  * @param string $format Format to use, including 'js' for JavaScript-enhanced HTML, 'html' for
  *    straight HTML output, or 'txt' for unformatted text.
  * @param array $strings Template strings, or a callback to be used for the output format.
- * @return The resulting format string set.
+ * @return array The resulting format string set.
  */
 	public static function addFormat($format, array $strings) {
 		$self = Debugger::getInstance();

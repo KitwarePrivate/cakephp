@@ -20,6 +20,12 @@
  * @since         CakePHP(tm) v .0.10.0.1222
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Model\Datasource;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Model\Datasource\Session\CakeSessionHandlerInterface;
+use Cake\Utility\Hash;
 
 App::uses('Hash', 'Utility');
 App::uses('Security', 'Utility');
@@ -520,7 +526,7 @@ class CakeSession {
  * Sessions can be configured with a few shortcut names as well as have any number of ini settings declared.
  *
  * @return void
- * @throws CakeSessionException Throws exceptions when ini_set() fails.
+ * @throws \Cake\Error\CakeSessionException Throws exceptions when ini_set() fails.
  */
 	protected static function _configureSession() {
 		$sessionConfig = Configure::read('Session');
@@ -579,7 +585,7 @@ class CakeSession {
 			if (!empty($sessionConfig['ini']) && is_array($sessionConfig['ini'])) {
 				foreach ($sessionConfig['ini'] as $setting => $value) {
 					if (ini_set($setting, $value) === false) {
-						throw new CakeSessionException(__d('cake_dev', 'Unable to configure the session, setting %s failed.', $setting));
+						throw new \Cake\Error\CakeSessionException(__d('cake_dev', 'Unable to configure the session, setting %s failed.', $setting));
 					}
 				}
 			}
@@ -641,19 +647,19 @@ class CakeSession {
  *
  * @param string $handler Handler name.
  * @return CakeSessionHandlerInterface
- * @throws CakeSessionException
+ * @throws \Cake\Error\CakeSessionException
  */
 	protected static function _getHandler($handler) {
 		list($plugin, $class) = pluginSplit($handler, true);
 		App::uses($class, $plugin . 'Model/Datasource/Session');
 		if (!class_exists($class)) {
-			throw new CakeSessionException(__d('cake_dev', 'Could not load %s to handle the session.', $class));
+			throw new \Cake\Error\CakeSessionException(__d('cake_dev', 'Could not load %s to handle the session.', $class));
 		}
 		$handler = new $class();
 		if ($handler instanceof CakeSessionHandlerInterface) {
 			return $handler;
 		}
-		throw new CakeSessionException(__d('cake_dev', 'Chosen SessionHandler does not implement CakeSessionHandlerInterface it cannot be used with an engine key.'));
+		throw new \Cake\Error\CakeSessionException(__d('cake_dev', 'Chosen SessionHandler does not implement CakeSessionHandlerInterface it cannot be used with an engine key.'));
 	}
 
 /**

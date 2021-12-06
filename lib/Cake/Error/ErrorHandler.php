@@ -17,6 +17,14 @@
  * @since         CakePHP(tm) v 0.10.5.1732
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Error;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Log\CakeLog;
+use Cake\Routing\Router;
+use Cake\Utility\CakeText;
+use Cake\Utility\Debugger;
 
 App::uses('Debugger', 'Utility');
 App::uses('CakeLog', 'Log');
@@ -109,7 +117,7 @@ class ErrorHandler {
  * This will either use custom exception renderer class if configured,
  * or use the default ExceptionRenderer.
  *
- * @param Exception|ParseError $exception The exception to render.
+ * @param \Exception|\ParseError $exception The exception to render.
  * @return void
  * @see http://php.net/manual/en/function.set-exception-handler.php
  */
@@ -117,15 +125,15 @@ class ErrorHandler {
 		$config = Configure::read('Exception');
 		static::_log($exception, $config);
 
-		$renderer = isset($config['renderer']) ? $config['renderer'] : 'ExceptionRenderer';
-		if ($renderer !== 'ExceptionRenderer') {
+		$renderer = isset($config['renderer']) ? $config['renderer'] : ExceptionRenderer::class;
+		if ($renderer !== ExceptionRenderer::class) {
 			list($plugin, $renderer) = pluginSplit($renderer, true);
 			App::uses($renderer, $plugin . 'Error');
 		}
 		try {
 			$error = new $renderer($exception);
 			$error->render();
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			set_error_handler(Configure::read('Error.handler')); // Should be using configured ErrorHandler
 			Configure::write('Error.trace', false); // trace is useless here since it's internal
 			$message = sprintf("[%s] %s\n%s", // Keeping same message format
@@ -142,7 +150,7 @@ class ErrorHandler {
 /**
  * Generates a formatted error message
  *
- * @param Exception $exception Exception instance
+ * @param \Exception $exception Exception instance
  * @return string Formatted message
  */
 	protected static function _getMessage($exception) {
@@ -169,7 +177,7 @@ class ErrorHandler {
 /**
  * Handles exception logging
  *
- * @param Exception|ParseError $exception The exception to render.
+ * @param \Exception|\ParseError $exception The exception to render.
  * @param array $config An array of configuration for logging.
  * @return bool
  */
@@ -329,10 +337,10 @@ class ErrorHandler {
 		if (!empty($errorConfig['trace'])) {
 			// https://bugs.php.net/bug.php?id=65322
 			if (version_compare(PHP_VERSION, '5.4.21', '<')) {
-				if (!class_exists('Debugger')) {
+				if (!class_exists(Debugger::class)) {
 					App::load('Debugger');
 				}
-				if (!class_exists('CakeText')) {
+				if (!class_exists(CakeText::class)) {
 					App::uses('CakeText', 'Utility');
 					App::load('CakeText');
 				}

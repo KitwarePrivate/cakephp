@@ -17,6 +17,12 @@
  * @since         CakePHP(tm) v 1.2.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Model;
+
+use Cake\Core\App;
+use Cake\Event\CakeEventListener;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\ObjectCollection;
 
 App::uses('ObjectCollection', 'Utility');
 App::uses('CakeEventListener', 'Event');
@@ -98,7 +104,7 @@ class BehaviorCollection extends ObjectCollection implements CakeEventListener {
  * @param string $behavior CamelCased name of the behavior to load
  * @param array $config Behavior configuration parameters
  * @return bool True on success.
- * @throws MissingBehaviorException when a behavior could not be found.
+ * @throws \Cake\Error\MissingBehaviorException when a behavior could not be found.
  */
 	public function load($behavior, $config = array()) {
 		if (isset($config['className'])) {
@@ -118,7 +124,7 @@ class BehaviorCollection extends ObjectCollection implements CakeEventListener {
 
 		App::uses($class, $plugin . 'Model/Behavior');
 		if (!class_exists($class)) {
-			throw new MissingBehaviorException(array(
+			throw new \Cake\Error\MissingBehaviorException(array(
 				'class' => $class,
 				'plugin' => substr($plugin, 0, -1)
 			));

@@ -15,6 +15,10 @@
  * @since         CakePHP(tm) v 1.2.0.6001
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Core;
+
+use Cake\Cache\Cache;
+use Cake\Utility\Inflector;
 
 App::uses('Inflector', 'Utility');
 App::uses('CakePlugin', 'Core');
@@ -63,7 +67,7 @@ App::uses('CakePlugin', 'Core');
  * @package       Cake.Core
  */
 class App {
-
+	const NAMESPACE_ROOT = 'Cake';
 /**
  * Append paths
  *
@@ -468,7 +472,7 @@ class App {
 
 			foreach ((array)$path as $dir) {
 				if ($dir != APP && is_dir($dir)) {
-					$files = new RegexIterator(new DirectoryIterator($dir), $extension);
+					$files = new \RegexIterator(new \DirectoryIterator($dir), $extension);
 					foreach ($files as $file) {
 						$fileName = basename($file);
 						if (!$file->isDot() && $fileName[0] !== '.') {
@@ -774,7 +778,7 @@ class App {
  */
 	public static function init() {
 		static::$_map += (array)Cache::read('file_map', '_cake_core_');
-		register_shutdown_function(array('App', 'shutdown'));
+		register_shutdown_function([self::class, 'shutdown']);
 	}
 
 /**
@@ -913,7 +917,7 @@ class App {
 		}
 
 		if ($units === "K") {
-			ini_set("memory_limit", ceil($current + $additionalKb) . "K");
+			ini_set("memory_limit", ceil((int)$current + (int)$additionalKb) . "K");
 		}
 	}
 

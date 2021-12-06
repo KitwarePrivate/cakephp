@@ -15,6 +15,16 @@
  * @since         CakePHP(tm) v 1.2.0.5550
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Model;
+
+use AppModel;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Core\CakePlugin;
+use Cake\Core\Configure;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\File;
+use Cake\Utility\Inflector;
 
 App::uses('Model', 'Model');
 App::uses('AppModel', 'Model');
@@ -246,7 +256,7 @@ class CakeSchema extends CakeObject {
 
 				try {
 					$Object = ClassRegistry::init(array('class' => $model, 'ds' => $options['connection']));
-				} catch (CakeException $e) {
+				} catch (\Cake\Error\CakeException $e) {
 					continue;
 				}
 
@@ -403,12 +413,12 @@ class CakeSchema extends CakeObject {
  * @param string $table Table name you want returned.
  * @param array $fields Array of field information to generate the table with.
  * @return string Variable declaration for a schema class.
- * @throws Exception
+ * @throws \Exception
  */
 	public function generateTable($table, $fields) {
 		// Valid var name regex (http://www.php.net/manual/en/language.variables.basics.php)
 		if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $table)) {
-			throw new Exception("Invalid table name '{$table}'");
+			throw new \Exception("Invalid table name '{$table}'");
 		}
 
 		$out = "\tpublic \${$table} = array(\n";
@@ -605,7 +615,7 @@ class CakeSchema extends CakeObject {
 /**
  * Formats Schema columns from Model Object.
  *
- * @param array &$Obj model object.
+ * @param Model &$Obj model object.
  * @return array Formatted columns.
  */
 	protected function _columns(&$Obj) {

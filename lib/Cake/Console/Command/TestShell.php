@@ -16,6 +16,11 @@
  * @since         CakePHP(tm) v 1.2.0.4433
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Console\Command;
+
+use Cake\Console\ConsoleOptionParser;
+use Cake\Console\Shell;
+use Cake\Core\App;
 
 App::uses('Shell', 'Console');
 App::uses('CakeTestSuiteDispatcher', 'TestSuite');
@@ -170,13 +175,13 @@ class TestShell extends Shell {
  * Initialization method installs PHPUnit and loads all plugins
  *
  * @return void
- * @throws Exception
+ * @throws \Exception
  */
 	public function initialize() {
 		$this->_dispatcher = new CakeTestSuiteDispatcher();
 		$success = $this->_dispatcher->loadTestFramework();
 		if (!$success) {
-			throw new Exception(__d('cake_dev', 'Please install PHPUnit framework v3.7 <info>(http://www.phpunit.de)</info>'));
+			throw new \Exception(__d('cake_dev', 'Please install PHPUnit framework v3.7 <info>(http://www.phpunit.de)</info>'));
 		}
 	}
 

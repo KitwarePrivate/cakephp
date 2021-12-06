@@ -15,6 +15,10 @@
  * @since         CakePHP(tm) v 1.2.0.4433
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+
+use Cake\Core\App;
+use Cake\View\View;
+
 ?>	</div>
 		</div>
 		<div id="footer">

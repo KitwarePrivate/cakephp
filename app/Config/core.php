@@ -18,6 +18,9 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use Cake\Cache\Cache;
+use Cake\Core\Configure;
+
 //setLocale(LC_ALL, 'deu');
 //Configure::write('Config.language', 'deu');
 
@@ -34,7 +37,9 @@
  * In production mode, flash messages redirect after a time interval.
  * In development mode, you need to click the flash message to continue.
  */
-	Configure::write('debug', 2);
+
+
+Configure::write('debug', 2);
 
 /**
  * Configure the Error handler used to handle errors for your application. By default

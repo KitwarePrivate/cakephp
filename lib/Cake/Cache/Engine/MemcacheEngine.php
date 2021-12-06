@@ -15,6 +15,10 @@
  * @since         CakePHP(tm) v 1.2.0.4933
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Cache\Engine;
+
+use Cake\Cache\CacheEngine;
+use Cake\Utility\Inflector;
 
 /**
  * Memcache storage engine for cache. Memcache has some limitations in the amount of
@@ -37,7 +41,7 @@ class MemcacheEngine extends CacheEngine {
 /**
  * Memcache wrapper.
  *
- * @var Memcache
+ * @var \Memcache
  */
 	protected $_Memcache = null;
 
@@ -77,7 +81,7 @@ class MemcacheEngine extends CacheEngine {
 		parent::init($settings);
 
 		if ($this->settings['compress']) {
-			$this->settings['compress'] = MEMCACHE_COMPRESSED;
+			$this->settings['compress'] = \MEMCACHE_COMPRESSED;
 		}
 		if (is_string($this->settings['servers'])) {
 			$this->settings['servers'] = array($this->settings['servers']);
@@ -158,11 +162,11 @@ class MemcacheEngine extends CacheEngine {
  * @param string $key Identifier for the data
  * @param int $offset How much to increment
  * @return New incremented value, false otherwise
- * @throws CacheException when you try to increment with compress = true
+ * @throws \Cake\Error\CacheException when you try to increment with compress = true
  */
 	public function increment($key, $offset = 1) {
 		if ($this->settings['compress']) {
-			throw new CacheException(
+			throw new \Cake\Error\CacheException(
 				__d('cake_dev', 'Method %s not implemented for compressed cache in %s', 'increment()', __CLASS__)
 			);
 		}
@@ -175,11 +179,11 @@ class MemcacheEngine extends CacheEngine {
  * @param string $key Identifier for the data
  * @param int $offset How much to subtract
  * @return New decremented value, false otherwise
- * @throws CacheException when you try to decrement with compress = true
+ * @throws \Cake\Error\CacheException when you try to decrement with compress = true
  */
 	public function decrement($key, $offset = 1) {
 		if ($this->settings['compress']) {
-			throw new CacheException(
+			throw new \Cake\Error\CacheException(
 				__d('cake_dev', 'Method %s not implemented for compressed cache in %s', 'decrement()', __CLASS__)
 			);
 		}

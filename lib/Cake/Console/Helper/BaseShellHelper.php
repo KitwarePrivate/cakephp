@@ -12,6 +12,7 @@
  * @since         2.8
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Console\Helper;
 
 abstract class BaseShellHelper {
 

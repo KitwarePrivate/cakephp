@@ -17,6 +17,9 @@
  * @since         CakePHP(tm) v 1.2.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Model;
+
+use Cake\Core\CakeObject;
 
 /**
  * Model behavior base class.

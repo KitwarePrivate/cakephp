@@ -12,6 +12,16 @@
  * @since         CakePHP(tm) v 1.2.0.5550
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Console\Command;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Model\CakeSchema;
+use Cake\Model\ConnectionManager;
+use Cake\Utility\CakeText;
+use Cake\Utility\File;
+use Cake\Utility\Folder;
+use Cake\Utility\Inflector;
 
 App::uses('AppShell', 'Console/Command');
 App::uses('File', 'Utility');

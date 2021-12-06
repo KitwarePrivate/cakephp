@@ -15,6 +15,12 @@
  * @since         CakePHP(tm) v 2.2
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Log\Engine;
+
+use Cake\Console\ConsoleOutput;
+use Cake\Core\App;
+use Cake\Error\CakeLogException;
+use Cake\Utility\Hash;
 
 App::uses('BaseLog', 'Log/Engine');
 App::uses('ConsoleOutput', 'Console');

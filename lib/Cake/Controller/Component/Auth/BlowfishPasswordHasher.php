@@ -12,6 +12,10 @@
  * @since         CakePHP(tm) v 2.4.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component\Auth;
+
+use Cake\Core\App;
+use Cake\Utility\Security;
 
 App::uses('AbstractPasswordHasher', 'Controller/Component/Auth');
 App::uses('Security', 'Utility');

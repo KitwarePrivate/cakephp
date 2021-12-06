@@ -11,6 +11,14 @@
  * @link          https://cakephp.org CakePHP(tm) Project
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component\Auth;
+
+use Cake\Controller\ComponentCollection;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Network\CakeRequest;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
 
 App::uses('Hash', 'Utility');
 
@@ -87,12 +95,12 @@ abstract class BaseAuthorize {
  *
  * @param Controller $controller null to get, a controller to set.
  * @return mixed
- * @throws CakeException
+ * @throws \Cake\Error\CakeException
  */
 	public function controller(Controller $controller = null) {
 		if ($controller) {
 			if (!$controller instanceof Controller) {
-				throw new CakeException(__d('cake_dev', '$controller needs to be an instance of Controller'));
+				throw new \Cake\Error\CakeException(__d('cake_dev', '$controller needs to be an instance of Controller'));
 			}
 			$this->_Controller = $controller;
 			return true;

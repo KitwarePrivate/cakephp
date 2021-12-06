@@ -13,8 +13,7 @@
  * @since         CakePHP(tm) v 2.2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-
-App::uses('CakeText', 'Utility');
+namespace Cake\Utility;
 
 /**
  * Library of array functions for manipulating and extracting data
@@ -38,7 +37,7 @@ class Hash {
  * @param string|array $path The path being searched for. Either a dot
  *   separated string, or an array of path segments.
  * @param mixed $default The return value when the path does not exist
- * @throws InvalidArgumentException
+ * @throws \InvalidArgumentException
  * @return mixed The value fetched from the array, or null.
  * @link https://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::get
  */
@@ -52,7 +51,7 @@ class Hash {
 			$parts = array($path);
 		} else {
 			if (!is_array($path)) {
-				throw new InvalidArgumentException(__d('cake_dev',
+				throw new \InvalidArgumentException(__d('cake_dev',
 					'Invalid path parameter: %s, should be dot separated path or array.',
 					var_export($path, true)
 				));
@@ -389,7 +388,7 @@ class Hash {
  * @param string $groupPath A dot-separated string.
  * @return array Combined array
  * @link https://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::combine
- * @throws CakeException CakeException When keys and values count is unequal.
+ * @throws \Cake\Error\CakeException CakeException When keys and values count is unequal.
  */
 	public static function combine(array $data, $keyPath, $valuePath = null, $groupPath = null) {
 		if (empty($data)) {
@@ -417,7 +416,7 @@ class Hash {
 		}
 
 		if (count($keys) !== count($vals)) {
-			throw new CakeException(__d(
+			throw new \Cake\Error\CakeException(__d(
 				'cake_dev',
 				'Hash::combine() needs an equal number of keys + values.'
 			));
@@ -1077,7 +1076,7 @@ class Hash {
  * @param array $options Options are:
  * @return array of results, nested
  * @see Hash::extract()
- * @throws InvalidArgumentException When providing invalid data.
+ * @throws \InvalidArgumentException When providing invalid data.
  * @link https://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::nest
  */
 	public static function nest(array $data, $options = array()) {
@@ -1121,7 +1120,7 @@ class Hash {
 		}
 
 		if (!$return) {
-			throw new InvalidArgumentException(__d('cake_dev',
+			throw new \InvalidArgumentException(__d('cake_dev',
 				'Invalid data array to nest.'
 			));
 		}

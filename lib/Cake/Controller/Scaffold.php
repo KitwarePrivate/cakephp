@@ -17,6 +17,13 @@
  * @since         Cake v 0.10.0.1076
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller;
+
+use Cake\Core\Configure;
+use Cake\Model\ConnectionManager;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Utility\Inflector;
 
 /**
  * Scaffolding is a set of automatic actions for starting web development work faster.
@@ -101,7 +108,7 @@ class Scaffold {
  *
  * @param Controller $controller Controller to scaffold
  * @param CakeRequest $request Request parameters.
- * @throws MissingModelException
+ * @throws \Cake\Error\MissingModelException
  */
 	public function __construct(Controller $controller, CakeRequest $request) {
 		$this->controller = $controller;
@@ -118,7 +125,7 @@ class Scaffold {
 		$this->modelKey = $controller->modelKey;
 
 		if (!is_object($this->controller->{$this->modelClass})) {
-			throw new MissingModelException($this->modelClass);
+			throw new \Cake\Error\MissingModelException($this->modelClass);
 		}
 
 		$this->ScaffoldModel = $this->controller->{$this->modelClass};
@@ -157,7 +164,7 @@ class Scaffold {
  *
  * @param CakeRequest $request Request Object for scaffolding
  * @return mixed A rendered view of a row from Models database table
- * @throws NotFoundException
+ * @throws \Cake\Error\NotFoundException
  */
 	protected function _scaffoldView(CakeRequest $request) {
 		if ($this->controller->beforeScaffold('view')) {
@@ -165,7 +172,7 @@ class Scaffold {
 				$this->ScaffoldModel->id = $request->params['pass'][0];
 			}
 			if (!$this->ScaffoldModel->exists()) {
-				throw new NotFoundException(__d('cake', 'Invalid %s', Inflector::humanize($this->modelKey)));
+				throw new \Cake\Error\NotFoundException(__d('cake', 'Invalid %s', Inflector::humanize($this->modelKey)));
 			}
 			$this->ScaffoldModel->recursive = 1;
 			$this->controller->request->data = $this->ScaffoldModel->read();
@@ -216,7 +223,7 @@ class Scaffold {
  * @param CakeRequest $request Request Object for scaffolding
  * @param string $action add or edit
  * @return mixed Success on save/update, add/edit form if data is empty or error if save or update fails
- * @throws NotFoundException
+ * @throws \Cake\Error\NotFoundException
  */
 	protected function _scaffoldSave(CakeRequest $request, $action = 'edit') {
 		$formAction = 'edit';
@@ -232,7 +239,7 @@ class Scaffold {
 					$this->ScaffoldModel->id = $request['pass'][0];
 				}
 				if (!$this->ScaffoldModel->exists()) {
-					throw new NotFoundException(__d('cake', 'Invalid %s', Inflector::humanize($this->modelKey)));
+					throw new \Cake\Error\NotFoundException(__d('cake', 'Invalid %s', Inflector::humanize($this->modelKey)));
 				}
 			}
 
@@ -287,13 +294,13 @@ class Scaffold {
  *
  * @param CakeRequest $request Request for scaffolding
  * @return mixed Success on delete, error if delete fails
- * @throws MethodNotAllowedException When HTTP method is not a DELETE
- * @throws NotFoundException When id being deleted does not exist.
+ * @throws \Cake\Error\MethodNotAllowedException When HTTP method is not a DELETE
+ * @throws \Cake\Error\NotFoundException When id being deleted does not exist.
  */
 	protected function _scaffoldDelete(CakeRequest $request) {
 		if ($this->controller->beforeScaffold('delete')) {
 			if (!$request->is('post')) {
-				throw new MethodNotAllowedException();
+				throw new \Cake\Error\MethodNotAllowedException();
 			}
 			$id = false;
 			if (isset($request->params['pass'][0])) {
@@ -301,7 +308,7 @@ class Scaffold {
 			}
 			$this->ScaffoldModel->id = $id;
 			if (!$this->ScaffoldModel->exists()) {
-				throw new NotFoundException(__d('cake', 'Invalid %s', Inflector::humanize($this->modelClass)));
+				throw new \Cake\Error\NotFoundException(__d('cake', 'Invalid %s', Inflector::humanize($this->modelClass)));
 			}
 			if ($this->ScaffoldModel->delete()) {
 				$message = __d('cake', 'The %1$s with id: %2$s has been deleted.', Inflector::humanize($this->modelClass), $id);
@@ -350,8 +357,8 @@ class Scaffold {
  *
  * @param CakeRequest $request Request object for scaffolding
  * @return void
- * @throws MissingActionException When methods are not scaffolded.
- * @throws MissingDatabaseException When the database connection is undefined.
+ * @throws \Cake\Error\MissingActionException When methods are not scaffolded.
+ * @throws \Cake\Error\MissingDatabaseException When the database connection is undefined.
  */
 	protected function _scaffold(CakeRequest $request) {
 		$db = ConnectionManager::getDataSource($this->ScaffoldModel->useDbConfig);
@@ -401,13 +408,13 @@ class Scaffold {
 						break;
 				}
 			} else {
-				throw new MissingActionException(array(
+				throw new \Cake\Error\MissingActionException(array(
 					'controller' => get_class($this->controller),
 					'action' => $request->action
 				));
 			}
 		} else {
-			throw new MissingDatabaseException(array('connection' => $this->ScaffoldModel->useDbConfig));
+			throw new \Cake\Error\MissingDatabaseException(array('connection' => $this->ScaffoldModel->useDbConfig));
 		}
 	}
 

@@ -14,6 +14,7 @@
  * @since         CakePHP(tm) v 1.3
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\TestSuite\Reporter;
 
 if (!class_exists('PHPUnit_TextUI_ResultPrinter')) {
 	require_once 'PHPUnit/TextUI/ResultPrinter.php';
@@ -24,7 +25,7 @@ if (!class_exists('PHPUnit_TextUI_ResultPrinter')) {
  *
  * @package       Cake.TestSuite.Reporter
  */
-class CakeBaseReporter extends PHPUnit_TextUI_ResultPrinter {
+class CakeBaseReporter extends \PHPUnit_TextUI_ResultPrinter {
 
 /**
  * Headers sent

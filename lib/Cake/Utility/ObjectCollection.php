@@ -11,6 +11,10 @@
  * @link          https://cakephp.org CakePHP(tm) Project
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Utility;
+
+use Cake\Core\CakeObject;
+use Cake\Event\CakeEvent;
 
 /**
  * Deals with Collections of objects. Keeping registries of those objects,
@@ -89,7 +93,7 @@ abstract class ObjectCollection {
  * @param array $params Array of parameters for the triggered callback.
  * @param array $options Array of options.
  * @return mixed Either the last result or all results if collectReturn is on.
- * @throws CakeException when modParams is used with an index that does not exist.
+ * @throws \Cake\Error\CakeException when modParams is used with an index that does not exist.
  */
 	public function trigger($callback, $params = array(), $options = array()) {
 		if (empty($this->_enabled)) {
@@ -122,7 +126,7 @@ abstract class ObjectCollection {
 		$collected = array();
 		$list = array_keys($this->_enabled);
 		if ($options['modParams'] !== false && !isset($params[$options['modParams']])) {
-			throw new CakeException(__d('cake_dev', 'Cannot use modParams with indexes that do not exist.'));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'Cannot use modParams with indexes that do not exist.'));
 		}
 		$result = null;
 		foreach ($list as $name) {

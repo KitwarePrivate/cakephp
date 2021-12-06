@@ -14,6 +14,9 @@
  * @since         CakePHP(tm) v 1.2.0.4433
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\TestSuite\Reporter;
+
+use Cake\Core\App;
 
 App::uses('CakeBaseReporter', 'TestSuite/Reporter');
 
@@ -414,7 +417,7 @@ class CakeHtmlReporter extends CakeBaseReporter {
 
 /**
  * Returns the query string formatted for ouput in links
- * 
+ *
  * @return string
  */
 	protected function _getQueryLink() {

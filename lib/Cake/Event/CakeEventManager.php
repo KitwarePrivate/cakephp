@@ -13,6 +13,9 @@
  * @since		  CakePHP(tm) v 2.1
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Event;
+
+use Cake\Core\App;
 
 App::uses('CakeEventListener', 'Event');
 App::uses('CakeEvent', 'Event');
@@ -95,12 +98,12 @@ class CakeEventManager {
  * when the listener is called. If $called is an instance of CakeEventListener, this parameter will be ignored
  *
  * @return void
- * @throws InvalidArgumentException When event key is missing or callable is not an
+ * @throws \InvalidArgumentException When event key is missing or callable is not an
  *   instance of CakeEventListener.
  */
 	public function attach($callable, $eventKey = null, $options = array()) {
 		if (!$eventKey && !($callable instanceof CakeEventListener)) {
-			throw new InvalidArgumentException(__d('cake_dev', 'The eventKey variable is required'));
+			throw new \InvalidArgumentException(__d('cake_dev', 'The eventKey variable is required'));
 		}
 		if ($callable instanceof CakeEventListener) {
 			$this->_attachSubscriber($callable);

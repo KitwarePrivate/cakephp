@@ -17,6 +17,14 @@
  * @since         CakePHP(tm) v 0.9.1
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\View\Helper;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Network\CakeResponse;
+use Cake\Utility\File;
+use Cake\Utility\Inflector;
+use Cake\View\View;
 
 App::uses('AppHelper', 'View/Helper');
 App::uses('CakeResponse', 'Network');
@@ -829,7 +837,7 @@ class HtmlHelper extends AppHelper {
  * @param string $path Path to the image file, relative to the app/webroot/img/ directory.
  * @param array $options Array of HTML attributes. See above for special options.
  * @return string completed img tag
- * @throws InvalidArgumentException - if the image isn't on disk and you have requested the base64 output
+ * @throws \InvalidArgumentException - if the image isn't on disk and you have requested the base64 output
  * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/html.html#HtmlHelper::image
  */
 	public function image($path, $options = array()) {
@@ -850,7 +858,7 @@ class HtmlHelper extends AppHelper {
 			$fullPath = WWW_ROOT . $path;
 			$file = new File($fullPath, false);
 			if (!$file->exists() || !$file->readable()) {
-				throw new InvalidArgumentException(__d('cake', 'Unable to find the requested image to output as base64!'));
+				throw new \InvalidArgumentException(__d('cake', 'Unable to find the requested image to output as base64!'));
 			}
 
 			$base64 = base64_encode($file->read());
@@ -1252,7 +1260,7 @@ class HtmlHelper extends AppHelper {
  * @param string|array $configFile String with the config file (load using PhpReader) or an array with file and reader name
  * @param string $path Path with config file
  * @return mixed False to error or loaded configs
- * @throws ConfigureException
+ * @throws \Cake\Error\ConfigureException
  * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/html.html#changing-the-tags-output-by-htmlhelper
  */
 	public function loadConfig($configFile, $path = null) {
@@ -1270,13 +1278,13 @@ class HtmlHelper extends AppHelper {
 				$reader = $configFile[1];
 			}
 		} else {
-			throw new ConfigureException(__d('cake_dev', 'Cannot load the configuration file. Wrong "configFile" configuration.'));
+			throw new \Cake\Error\ConfigureException(__d('cake_dev', 'Cannot load the configuration file. Wrong "configFile" configuration.'));
 		}
 
 		$readerClass = Inflector::camelize($reader) . 'Reader';
 		App::uses($readerClass, 'Configure');
 		if (!class_exists($readerClass)) {
-			throw new ConfigureException(__d('cake_dev', 'Cannot load the configuration file. Unknown reader.'));
+			throw new \Cake\Error\ConfigureException(__d('cake_dev', 'Cannot load the configuration file. Unknown reader.'));
 		}
 
 		$readerObj = new $readerClass($path);

@@ -14,6 +14,17 @@
  * @since         CakePHP(tm) v 1.2.0.5012
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Console\Command\Task;
+
+use Cake\Console\Command\AppShell;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Console\Shell;
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\Utility\File;
+use Cake\Utility\Folder;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
 
 App::uses('AppShell', 'Console/Command');
 App::uses('File', 'Utility');
@@ -499,7 +510,7 @@ class ExtractTask extends AppShell {
 
 		foreach ($models as $model) {
 			App::uses($model, $plugin . 'Model');
-			$reflection = new ReflectionClass($model);
+			$reflection = new \ReflectionClass($model);
 			if (!$reflection->isSubClassOf('Model')) {
 				continue;
 			}

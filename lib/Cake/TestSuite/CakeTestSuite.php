@@ -15,6 +15,10 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\TestSuite;
+
+use Cake\Core\App;
+use Cake\Utility\Folder;
 
 App::uses('Folder', 'Utility');
 
@@ -23,7 +27,7 @@ App::uses('Folder', 'Utility');
  *
  * @package       Cake.TestSuite
  */
-class CakeTestSuite extends PHPUnit_Framework_TestSuite {
+class CakeTestSuite extends \PHPUnit_Framework_TestSuite {
 
 /**
  * Adds all the files in a directory to the test suite. Does not recurse through directories.

@@ -15,6 +15,9 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\TestSuite\Coverage;
+
+use Cake\Core\App;
 
 App::uses('BaseCoverageReport', 'TestSuite/Coverage');
 
@@ -56,6 +59,7 @@ class HtmlCoverageReport extends BaseCoverageReport {
 		<a href="#" onclick="coverage_toggle_all()" class="coverage-toggle">Toggle all files</a>
 		</h3>
 HTML;
+		// TODO: seriously?
 		foreach ($coverageData as $file => $coverageData) {
 			$fileData = file($file);
 			$output .= $this->generateDiff($file, $fileData, $coverageData);
@@ -101,7 +105,7 @@ HTML;
 				$coveringTests = array();
 				foreach ($coverageData[$lineno] as $test) {
 					$class = (is_array($test) && isset($test['id'])) ? $test['id'] : $test;
-					$testReflection = new ReflectionClass(current(explode('::', $class)));
+					$testReflection = new \ReflectionClass(current(explode('::', $class)));
 					$this->_testNames[] = $this->_guessSubjectName($testReflection);
 					$coveringTests[] = $class;
 				}
@@ -127,7 +131,7 @@ HTML;
 /**
  * Guess the class name the test was for based on the test case filename.
  *
- * @param ReflectionClass $testReflection The class to reflect
+ * @param \ReflectionClass $testReflection The class to reflect
  * @return string Possible test subject name.
  */
 	protected function _guessSubjectName($testReflection) {
@@ -220,7 +224,7 @@ HTML;
 /**
  * Generate an HTML snippet for coverage footers
  *
- * @return void
+ * @return string
  */
 	public function coverageFooter() {
 		return "</pre></div></div>";

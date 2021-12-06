@@ -13,6 +13,9 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+
+use Cake\Core\Configure;
+
 ?>
 <!DOCTYPE html>
 <html>

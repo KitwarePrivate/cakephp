@@ -17,6 +17,7 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Utility;
 
 /**
  * Number helper library.
@@ -132,7 +133,7 @@ class CakeNumber {
  * @param string $size Size in human readable string like '5MB', '5M', '500B', '50kb' etc.
  * @param mixed $default Value to be returned when invalid size was used, for example 'Unknown type'
  * @return mixed Number of bytes as integer on success, `$default` on failure if not false
- * @throws CakeException On invalid Unit type.
+ * @throws \Cake\Error\CakeException On invalid Unit type.
  * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/number.html#NumberHelper::fromReadableSize
  */
 	public static function fromReadableSize($size, $default = false) {
@@ -160,7 +161,7 @@ class CakeNumber {
 		if ($default !== false) {
 			return $default;
 		}
-		throw new CakeException(__d('cake_dev', 'No unit type.'));
+		throw new \Cake\Error\CakeException(__d('cake_dev', 'No unit type.'));
 	}
 
 /**

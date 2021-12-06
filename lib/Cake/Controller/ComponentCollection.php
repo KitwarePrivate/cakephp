@@ -16,6 +16,11 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller;
+
+use Cake\Core\App;
+use Cake\Event\CakeEventListener;
+use Cake\Utility\ObjectCollection;
 
 App::uses('ObjectCollection', 'Utility');
 App::uses('Component', 'Controller');
@@ -91,7 +96,7 @@ class ComponentCollection extends ObjectCollection implements CakeEventListener 
  * @param string $component Component name to load
  * @param array $settings Settings for the component.
  * @return Component A component object, Either the existing loaded component or a new one.
- * @throws MissingComponentException when the component could not be found
+ * @throws \Cake\Error\MissingComponentException when the component could not be found
  */
 	public function load($component, $settings = array()) {
 		if (isset($settings['className'])) {
@@ -108,7 +113,7 @@ class ComponentCollection extends ObjectCollection implements CakeEventListener 
 		$componentClass = $name . 'Component';
 		App::uses($componentClass, $plugin . 'Controller/Component');
 		if (!class_exists($componentClass)) {
-			throw new MissingComponentException(array(
+			throw new \Cake\Error\MissingComponentException(array(
 				'class' => $componentClass,
 				'plugin' => substr($plugin, 0, -1)
 			));

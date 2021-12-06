@@ -15,6 +15,11 @@
  * @since         CakePHP(tm) v 2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Network;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Utility\File;
 
 App::uses('File', 'Utility');
 
@@ -633,14 +638,14 @@ class CakeResponse {
  *
  * @param int $code the HTTP status code
  * @return int current status code
- * @throws CakeException When an unknown status code is reached.
+ * @throws \Cake\Error\CakeException When an unknown status code is reached.
  */
 	public function statusCode($code = null) {
 		if ($code === null) {
 			return $this->_status;
 		}
 		if (!isset($this->_statusCodes[$code])) {
-			throw new CakeException(__d('cake_dev', 'Unknown status code'));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'Unknown status code'));
 		}
 		return $this->_status = $code;
 	}
@@ -675,7 +680,7 @@ class CakeResponse {
  * @return array|null|true associative array of the HTTP codes as keys, and the message
  *    strings as values, or null of the given $code does not exist. `true` if `$code` is
  *    an array of valid codes.
- * @throws CakeException If an attempt is made to add an invalid status code
+ * @throws \Cake\Error\CakeException If an attempt is made to add an invalid status code
  */
 	public function httpCodes($code = null) {
 		if (empty($code)) {
@@ -685,7 +690,7 @@ class CakeResponse {
 			$codes = array_keys($code);
 			$min = min($codes);
 			if (!is_int($min) || $min < 100 || max($codes) > 999) {
-				throw new CakeException(__d('cake_dev', 'Invalid status code'));
+				throw new \Cake\Error\CakeException(__d('cake_dev', 'Invalid status code'));
 			}
 			$this->_statusCodes = $code + $this->_statusCodes;
 			return true;
@@ -950,7 +955,7 @@ class CakeResponse {
  * `$response->expires(new DateTime('+1 day'))` Will set the expiration in next 24 hours
  * `$response->expires()` Will return the current expiration header value
  *
- * @param string|DateTime $time Valid time string or DateTime object.
+ * @param string|\DateTime $time Valid time string or DateTime object.
  * @return string
  */
 	public function expires($time = null) {
@@ -974,7 +979,7 @@ class CakeResponse {
  * `$response->modified(new DateTime('+1 day'))` Will set the modification date in the past 24 hours
  * `$response->modified()` Will return the current Last-Modified header value
  *
- * @param string|DateTime $time Valid time string or DateTime object.
+ * @param string|\DateTime $time Valid time string or DateTime object.
  * @return string
  */
 	public function modified($time = null) {
@@ -1068,18 +1073,18 @@ class CakeResponse {
  * Returns a DateTime object initialized at the $time param and using UTC
  * as timezone
  *
- * @param DateTime|int|string $time Valid time string or unix timestamp or DateTime object.
- * @return DateTime
+ * @param \DateTime|int|string $time Valid time string or unix timestamp or DateTime object.
+ * @return \DateTime
  */
 	protected function _getUTCDate($time = null) {
-		if ($time instanceof DateTime) {
+		if ($time instanceof \DateTime) {
 			$result = clone $time;
 		} elseif (is_int($time)) {
-			$result = new DateTime(date('Y-m-d H:i:s', $time));
+			$result = new \DateTime(date('Y-m-d H:i:s', $time));
 		} else {
-			$result = new DateTime($time);
+			$result = new \DateTime($time);
 		}
-		$result->setTimeZone(new DateTimeZone('UTC'));
+		$result->setTimeZone(new \DateTimeZone('UTC'));
 		return $result;
 	}
 
@@ -1339,7 +1344,7 @@ class CakeResponse {
  *   to a file, `APP` will be prepended to the path.
  * @param array $options Options See above.
  * @return void
- * @throws NotFoundException
+ * @throws \Cake\Error\NotFoundException
  */
 	public function file($path, $options = array()) {
 		$options += array(
@@ -1348,7 +1353,7 @@ class CakeResponse {
 		);
 
 		if (strpos($path, '../') !== false || strpos($path, '..\\') !== false) {
-			throw new NotFoundException(__d(
+			throw new \Cake\Error\NotFoundException(__d(
 				'cake_dev',
 				'The requested file contains `..` and will not be read.'
 			));
@@ -1361,9 +1366,9 @@ class CakeResponse {
 		$file = new File($path);
 		if (!$file->exists() || !$file->readable()) {
 			if (Configure::read('debug')) {
-				throw new NotFoundException(__d('cake_dev', 'The requested file %s was not found or not readable', $path));
+				throw new \Cake\Error\NotFoundException(__d('cake_dev', 'The requested file %s was not found or not readable', $path));
 			}
-			throw new NotFoundException(__d('cake', 'The requested file was not found'));
+			throw new \Cake\Error\NotFoundException(__d('cake', 'The requested file was not found'));
 		}
 
 		$extension = strtolower($file->ext());

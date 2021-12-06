@@ -15,6 +15,11 @@
  * @since         CakePHP(tm) v 1.2.0.4116
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\I18n;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Network\CakeRequest;
 
 App::uses('CakeRequest', 'Network');
 

@@ -15,6 +15,9 @@
  * @since         CakePHP(tm) v 1.2.0.4433
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+
+use Cake\Core\Configure;
+
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -138,7 +141,7 @@
 	<body>
 		<div id="container">
 			<div id="header">
-			<div id="version">PHPUnit: <?php echo class_exists('PHPUnit_Runner_Version') ? PHPUnit_Runner_Version::id() : 'n/a'; ?></div>
+			<div id="version">PHPUnit: <?php echo class_exists('\PHPUnit_Runner_Version') ? \PHPUnit_Runner_Version::id() : 'n/a'; ?></div>
 				<h1>CakePHP: the rapid development php framework</h1>
 			</div>
 			<div id="content">

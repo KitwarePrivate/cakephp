@@ -13,6 +13,11 @@
  * @since         CakePHP(tm) v 0.9.2
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Utility;
+
+use Cake\Core\App;
+use Cake\Model\ConnectionManager;
+use Cake\Model\Model;
 
 /**
  * Included libraries.
@@ -92,7 +97,7 @@ class ClassRegistry {
  * @param bool $strict if set to true it will return false if the class was not found instead
  *	of trying to create an AppModel
  * @return bool|object $class instance of ClassName.
- * @throws CakeException when you try to construct an interface or abstract class.
+ * @throws \Cake\Error\CakeException when you try to construct an interface or abstract class.
  */
 	public static function init($class, $strict = false) {
 		$_this = ClassRegistry::getInstance();
@@ -144,9 +149,9 @@ class ClassRegistry {
 				App::uses($class, $pluginPath . 'Model');
 
 				if (class_exists($class) || interface_exists($class)) {
-					$reflection = new ReflectionClass($class);
+					$reflection = new \ReflectionClass($class);
 					if ($reflection->isAbstract() || $reflection->isInterface()) {
-						throw new CakeException(__d('cake_dev', 'Cannot create instance of %s, as it is abstract or is an interface', $class));
+						throw new \Cake\Error\CakeException(__d('cake_dev', 'Cannot create instance of %s, as it is abstract or is an interface', $class));
 					}
 					$testing = isset($settings['testing']) ? $settings['testing'] : false;
 					if ($testing) {

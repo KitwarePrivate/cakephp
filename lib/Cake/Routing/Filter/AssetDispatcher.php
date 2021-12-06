@@ -13,6 +13,15 @@
  * @since		  CakePHP(tm) v 2.2
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Routing\Filter;
+
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\Core\Configure;
+use Cake\Event\CakeEvent;
+use Cake\Network\CakeResponse;
+use Cake\Routing\DispatcherFilter;
+use Cake\Utility\Inflector;
 
 App::uses('DispatcherFilter', 'Routing');
 
@@ -37,7 +46,7 @@ class AssetDispatcher extends DispatcherFilter {
  *
  * @param CakeEvent $event containing the request and response object
  * @return mixed The resulting response.
- * @throws NotFoundException When asset not found
+ * @throws \Cake\Error\NotFoundException When asset not found
  */
 	public function beforeDispatch(CakeEvent $event) {
 		$url = urldecode($event->data['request']->url);

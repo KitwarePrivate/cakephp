@@ -12,6 +12,9 @@
  * @since         CakePHP(tm) v 1.2.0.3830
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Utility;
+
+use Cake\Core\App;
 
 App::uses('Multibyte', 'I18n');
 App::uses('File', 'Utility');
@@ -939,7 +942,7 @@ class Validation {
  * @param string|array $check Value to check.
  * @param array|string $mimeTypes Array of mime types or regex pattern to check.
  * @return bool Success
- * @throws CakeException when mime type can not be determined.
+ * @throws \Cake\Error\CakeException when mime type can not be determined.
  */
 	public static function mimeType($check, $mimeTypes = array()) {
 		if (is_array($check) && isset($check['tmp_name'])) {
@@ -950,7 +953,7 @@ class Validation {
 		$mime = $File->mime();
 
 		if ($mime === false) {
-			throw new CakeException(__d('cake_dev', 'Can not determine the mimetype.'));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'Can not determine the mimetype.'));
 		}
 
 		if (is_string($mimeTypes)) {

@@ -13,6 +13,12 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Core;
+
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Dispatcher;
+use Cake\Routing\Router;
 
 App::uses('CakeLog', 'Log');
 App::uses('Dispatcher', 'Routing');

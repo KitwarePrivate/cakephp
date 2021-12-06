@@ -15,6 +15,14 @@
  * @since         CakePHP(tm) v 1.2.0.3467
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component;
+
+use Cake\Controller\Component;
+use Cake\Controller\ComponentCollection;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Network\Email\CakeEmail;
 
 App::uses('Component', 'Controller');
 App::uses('Multibyte', 'I18n');

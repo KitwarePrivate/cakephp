@@ -13,6 +13,10 @@
  * @since		  CakePHP(tm) v 2.2
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Routing;
+
+use Cake\Event\CakeEvent;
+use Cake\Network\CakeResponse;
 
 App::uses('CakeEventListener', 'Event');
 

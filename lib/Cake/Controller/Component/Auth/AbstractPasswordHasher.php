@@ -12,6 +12,7 @@
  * @since         CakePHP(tm) v 2.4.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component\Auth;
 
 /**
  * Abstract password hashing class

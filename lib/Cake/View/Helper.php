@@ -13,6 +13,18 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\View;
+
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Core\CakePlugin;
+use Cake\Core\Configure;
+use Cake\Network\CakeRequest;
+use Cake\Routing\Router;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+use Cake\Utility\ObjectCollection;
 
 App::uses('Router', 'Routing');
 App::uses('Hash', 'Utility');
@@ -958,6 +970,7 @@ class Helper extends CakeObject {
  * @return void
  */
 	protected function _clean() {
+		// TODO: get_magic_quotes_gpc() removed in php 8.0
 		if (get_magic_quotes_gpc()) {
 			$this->_cleaned = stripslashes($this->_tainted);
 		} else {

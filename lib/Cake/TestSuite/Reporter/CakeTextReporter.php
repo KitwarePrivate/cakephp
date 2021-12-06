@@ -14,6 +14,11 @@
  * @since         CakePHP(tm) v 1.3
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\TestSuite\Reporter;
+
+use Cake\Core\App;
+use Cake\TestSuite\Coverage\TextCoverageReport;
+use Cake\Utility\Inflector;
 
 App::uses('CakeBaseReporter', 'TestSuite/Reporter');
 App::uses('TextCoverageReport', 'TestSuite/Coverage');
@@ -48,7 +53,7 @@ class CakeTextReporter extends CakeBaseReporter {
 /**
  * Paints a failing test.
  *
- * @param PHPUnit_Framework_AssertionFailedError $message Failure object displayed in
+ * @param \PHPUnit_Framework_AssertionFailedError $message Failure object displayed in
  *   the context of the other tests.
  * @return void
  */
@@ -67,7 +72,7 @@ class CakeTextReporter extends CakeBaseReporter {
  * Paints the end of the test with a summary of
  * the passes and failures.
  *
- * @param PHPUnit_Framework_TestResult $result Result object
+ * @param \PHPUnit_Framework_TestResult $result Result object
  * @return void
  */
 	public function paintFooter($result) {
@@ -105,7 +110,7 @@ class CakeTextReporter extends CakeBaseReporter {
 /**
  * Paints a PHP exception.
  *
- * @param Exception $exception Exception to describe.
+ * @param \Exception $exception Exception to describe.
  * @return void
  */
 	public function paintException($exception) {

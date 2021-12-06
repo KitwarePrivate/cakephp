@@ -15,6 +15,12 @@
  * @since         CakePHP(tm) v 0.10.5.1790
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Model\Datasource\Database;
+
+use Cake\Core\App;
+use Cake\Model\Datasource\DboSource;
+use Cake\Model\Model;
+use PDO;
 
 App::uses('DboSource', 'Model/Datasource');
 
@@ -123,27 +129,27 @@ class Sqlserver extends DboSource {
  * information see: https://github.com/Microsoft/msphpsql/issues/65).
  *
  * @return bool True if the database could be connected, else false
- * @throws InvalidArgumentException if an unsupported setting is in the database config
- * @throws MissingConnectionException
+ * @throws \InvalidArgumentException if an unsupported setting is in the database config
+ * @throws \Cake\Error\MissingConnectionException
  */
 	public function connect() {
 		$config = $this->config;
 		$this->connected = false;
 
 		if (isset($config['persistent']) && $config['persistent']) {
-			throw new InvalidArgumentException('Config setting "persistent" cannot be set to true, as the Sqlserver PDO driver does not support PDO::ATTR_PERSISTENT');
+			throw new \InvalidArgumentException('Config setting "persistent" cannot be set to true, as the Sqlserver PDO driver does not support PDO::ATTR_PERSISTENT');
 		}
 
 		$flags = $config['flags'] + array(
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+			\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
 		);
 
 		if (!empty($config['encoding'])) {
-			$flags[PDO::SQLSRV_ATTR_ENCODING] = $config['encoding'];
+			$flags[\PDO::SQLSRV_ATTR_ENCODING] = $config['encoding'];
 		}
 
 		try {
-			$this->_connection = new PDO(
+			$this->_connection = new \PDO(
 				"sqlsrv:server={$config['host']};Database={$config['database']}",
 				$config['login'],
 				$config['password'],
@@ -155,8 +161,8 @@ class Sqlserver extends DboSource {
 					$this->_execute("SET $key $value");
 				}
 			}
-		} catch (PDOException $e) {
-			throw new MissingConnectionException(array(
+		} catch (\PDOException $e) {
+			throw new \Cake\Error\MissingConnectionException(array(
 				'class' => get_class($this),
 				'message' => $e->getMessage()
 			));
@@ -171,7 +177,7 @@ class Sqlserver extends DboSource {
  * @return bool
  */
 	public function enabled() {
-		return in_array('sqlsrv', PDO::getAvailableDrivers());
+		return in_array('sqlsrv', \PDO::getAvailableDrivers());
 	}
 
 /**
@@ -193,7 +199,7 @@ class Sqlserver extends DboSource {
 		}
 		$tables = array();
 
-		while ($line = $result->fetch(PDO::FETCH_NUM)) {
+		while ($line = $result->fetch(\PDO::FETCH_NUM)) {
 			$tables[] = $line[0];
 		}
 
@@ -207,7 +213,7 @@ class Sqlserver extends DboSource {
  *
  * @param Model|string $model Model object to describe, or a string table name.
  * @return array Fields in table. Keys are name and type
- * @throws CakeException
+ * @throws \Cake\Error\CakeException
  */
 	public function describe($model) {
 		$table = $this->fullTableName($model, false, false);
@@ -235,7 +241,7 @@ class Sqlserver extends DboSource {
 		);
 
 		if (!$cols) {
-			throw new CakeException(__d('cake_dev', 'Could not describe table for %s', $table));
+			throw new \Cake\Error\CakeException(__d('cake_dev', 'Could not describe table for %s', $table));
 		}
 
 		while ($column = $cols->fetch(PDO::FETCH_OBJ)) {
@@ -506,7 +512,7 @@ class Sqlserver extends DboSource {
 /**
  * Builds a map of the columns contained in a result
  *
- * @param PDOStatement $results The result to modify.
+ * @param \PDOStatement $results The result to modify.
  * @return void
  */
 	public function resultSet($results) {
@@ -791,7 +797,7 @@ class Sqlserver extends DboSource {
  * @param array $prepareOptions Options to be used in the prepare statement
  * @return mixed PDOStatement if query executes with no problem, true as the result of a successful, false on error
  * query returning no rows, such as a CREATE statement, false otherwise
- * @throws PDOException
+ * @throws \PDOException
  */
 	protected function _execute($sql, $params = array(), $prepareOptions = array()) {
 		$this->_lastAffected = false;
@@ -809,7 +815,7 @@ class Sqlserver extends DboSource {
 				return false;
 			}
 			return true;
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			if (isset($query->queryString)) {
 				$e->queryString = $query->queryString;
 			} else {
@@ -822,7 +828,7 @@ class Sqlserver extends DboSource {
 /**
  * Generate a "drop table" statement for the given table
  *
- * @param type $table Name of the table to drop
+ * @param Model|string $table Name of the table to drop
  * @return string Drop table SQL statement
  */
 	protected function _dropTable($table) {

@@ -13,6 +13,20 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller;
+
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Event\CakeEvent;
+use Cake\Event\CakeEventListener;
+use Cake\Event\CakeEventManager;
+use Cake\Model\Model;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Router;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Inflector;
+use Cake\View\View;
 
 App::uses('CakeResponse', 'Network');
 App::uses('ClassRegistry', 'Utility');
@@ -482,27 +496,27 @@ class Controller extends CakeObject implements CakeEventListener {
  *
  * @param CakeRequest $request Request instance.
  * @return mixed The resulting response.
- * @throws PrivateActionException When actions are not public or prefixed by _
- * @throws MissingActionException When actions are not defined and scaffolding is
+ * @throws \Cake\Error\PrivateActionException When actions are not public or prefixed by _
+ * @throws \Cake\Error\MissingActionException When actions are not defined and scaffolding is
  *    not enabled.
  */
 	public function invokeAction(CakeRequest $request) {
 		try {
-			$method = new ReflectionMethod($this, $request->params['action']);
+			$method = new \ReflectionMethod($this, $request->params['action']);
 
 			if ($this->_isPrivateAction($method, $request)) {
-				throw new PrivateActionException(array(
+				throw new \Cake\Error\PrivateActionException(array(
 					'controller' => $this->name . "Controller",
 					'action' => $request->params['action']
 				));
 			}
 			return $method->invokeArgs($this, $request->params['pass']);
 
-		} catch (ReflectionException $e) {
+		} catch (\ReflectionException $e) {
 			if ($this->scaffold !== false) {
 				return $this->_getScaffold($request);
 			}
-			throw new MissingActionException(array(
+			throw new \Cake\Error\MissingActionException(array(
 				'controller' => $this->name . "Controller",
 				'action' => $request->params['action']
 			));
@@ -513,11 +527,11 @@ class Controller extends CakeObject implements CakeEventListener {
  * Check if the request's action is marked as private, with an underscore,
  * or if the request is attempting to directly accessing a prefixed action.
  *
- * @param ReflectionMethod $method The method to be invoked.
+ * @param \ReflectionMethod $method The method to be invoked.
  * @param CakeRequest $request The request to check.
  * @return bool
  */
-	protected function _isPrivateAction(ReflectionMethod $method, CakeRequest $request) {
+	protected function _isPrivateAction(\ReflectionMethod $method, CakeRequest $request) {
 		$privateAction = (
 			$method->name[0] === '_' ||
 			!$method->isPublic() ||
@@ -638,7 +652,7 @@ class Controller extends CakeObject implements CakeEventListener {
  * @return mixed true if models found and instance created.
  * @see Controller::loadModel()
  * @link https://book.cakephp.org/2.0/en/controllers.html#Controller::constructClasses
- * @throws MissingModelException
+ * @throws \Cake\Error\MissingModelException
  */
 	public function constructClasses() {
 		$this->_mergeControllerVars();
@@ -728,7 +742,7 @@ class Controller extends CakeObject implements CakeEventListener {
  * @param string $modelClass Name of model class to load
  * @param int|string $id Initial ID the instanced model class should have
  * @return bool True if the model was found
- * @throws MissingModelException if the model class cannot be found.
+ * @throws \Cake\Error\MissingModelException if the model class cannot be found.
  */
 	public function loadModel($modelClass = null, $id = null) {
 		if ($modelClass === null) {
@@ -746,7 +760,7 @@ class Controller extends CakeObject implements CakeEventListener {
 			'class' => $plugin . $modelClass, 'alias' => $modelClass, 'id' => $id
 		));
 		if (!$this->{$modelClass}) {
-			throw new MissingModelException($modelClass);
+			throw new \Cake\Error\MissingModelException($modelClass);
 		}
 		return true;
 	}
@@ -1038,7 +1052,7 @@ class Controller extends CakeObject implements CakeEventListener {
  *        included in the returned conditions
  * @return array|null An array of model conditions
  * @deprecated 3.0.0 Will be removed in 3.0.
- * @throws RuntimeException when unsafe operators are found.
+ * @throws \RuntimeException when unsafe operators are found.
  */
 	public function postConditions($data = array(), $op = null, $bool = 'AND', $exclusive = false) {
 		if (!is_array($data) || empty($data)) {
@@ -1058,11 +1072,11 @@ class Controller extends CakeObject implements CakeEventListener {
 		$arrayOp = is_array($op);
 		foreach ($data as $model => $fields) {
 			if (preg_match($allowedChars, $model)) {
-				throw new RuntimeException("Unsafe operator found in {$model}");
+				throw new \RuntimeException("Unsafe operator found in {$model}");
 			}
 			foreach ($fields as $field => $value) {
 				if (preg_match($allowedChars, $field)) {
-					throw new RuntimeException("Unsafe operator found in {$model}.{$field}");
+					throw new \RuntimeException("Unsafe operator found in {$model}.{$field}");
 				}
 				$key = $model . '.' . $field;
 				$fieldOp = $op;

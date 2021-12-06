@@ -17,6 +17,13 @@
  * @since         CakePHP(tm) v 2.2.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Model;
+
+use Cake\Core\App;
+use Cake\Event\CakeEvent;
+use Cake\Model\Validator\CakeValidationRule;
+use Cake\Model\Validator\CakeValidationSet;
+use Cake\Utility\Hash;
 
 App::uses('CakeValidationSet', 'Model/Validator');
 App::uses('Hash', 'Utility');
@@ -31,7 +38,7 @@ App::uses('Hash', 'Utility');
  * @package       Cake.Model
  * @link          https://book.cakephp.org/2.0/en/data-validation.html
  */
-class ModelValidator implements ArrayAccess, IteratorAggregate, Countable {
+class ModelValidator implements \ArrayAccess, \IteratorAggregate, \Countable {
 
 /**
  * Holds the CakeValidationSet objects array
@@ -511,11 +518,11 @@ class ModelValidator implements ArrayAccess, IteratorAggregate, Countable {
 /**
  * Returns an iterator for each of the fields to be validated
  *
- * @return ArrayIterator
+ * @return \ArrayIterator
  */
 	public function getIterator() {
 		$this->_parseRules();
-		return new ArrayIterator($this->_fields);
+		return new \ArrayIterator($this->_fields);
 	}
 
 /**

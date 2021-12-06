@@ -13,6 +13,11 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Model;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Utility\Hash;
 
 App::uses('AppModel', 'Model');
 
@@ -168,7 +173,7 @@ class Permission extends AppModel {
  * @param string $actions Action (defaults to *) Invalid permissions will result in an exception
  * @param int $value Value to indicate access type (1 to give access, -1 to deny, 0 to inherit)
  * @return bool Success
- * @throws AclException on Invalid permission key.
+ * @throws \Cake\Error\AclException on Invalid permission key.
  */
 	public function allow($aro, $aco, $actions = '*', $value = 1) {
 		$perms = $this->getAclLink($aro, $aco);
@@ -194,7 +199,7 @@ class Permission extends AppModel {
 					$action = '_' . $action;
 				}
 				if (!in_array($action, $permKeys, true)) {
-					throw new AclException(__d('cake_dev', 'Invalid permission key "%s"', $action));
+					throw new \Cake\Error\AclException(__d('cake_dev', 'Invalid permission key "%s"', $action));
 				}
 				$save[$action] = $value;
 			}
@@ -215,7 +220,7 @@ class Permission extends AppModel {
  *
  * @param string $aro ARO The requesting object identifier.
  * @param string $aco ACO The controlled object identifier.
- * @return array Indexed array with: 'aro', 'aco' and 'link'
+ * @return array|false Indexed array with: 'aro', 'aco' and 'link'
  */
 	public function getAclLink($aro, $aco) {
 		$obj = array();

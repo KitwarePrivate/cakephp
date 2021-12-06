@@ -17,6 +17,22 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component;
+
+use Cake\Controller\Component;
+use Cake\Controller\Component\Auth\BaseAuthenticate;
+use Cake\Controller\Component\Auth\BaseAuthorize;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Event\CakeEvent;
+use Cake\Model\Datasource\CakeSession;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Router;
+use Cake\Utility\Debugger;
+use Cake\Utility\Hash;
+use Cake\Utility\Security;
 
 App::uses('Component', 'Controller');
 App::uses('Router', 'Routing');
@@ -402,12 +418,12 @@ class AuthComponent extends Component {
  *
  * @param Controller $controller A reference to the controller object
  * @return bool Returns false
- * @throws ForbiddenException
+ * @throws \Cake\Error\ForbiddenException
  * @see AuthComponent::$unauthorizedRedirect
  */
 	protected function _unauthorized(Controller $controller) {
 		if ($this->unauthorizedRedirect === false) {
-			throw new ForbiddenException($this->authError);
+			throw new \Cake\Error\ForbiddenException($this->authError);
 		}
 
 		$this->flash($this->authError);
@@ -478,7 +494,7 @@ class AuthComponent extends Component {
  * Loads the authorization objects configured.
  *
  * @return mixed Either null when authorize is empty, or the loaded authorization objects.
- * @throws CakeException
+ * @throws \Cake\Error\CakeException
  */
 	public function constructAuthorize() {
 		if (empty($this->authorize)) {
@@ -496,10 +512,10 @@ class AuthComponent extends Component {
 			$className = $class . 'Authorize';
 			App::uses($className, $plugin . 'Controller/Component/Auth');
 			if (!class_exists($className)) {
-				throw new CakeException(__d('cake_dev', 'Authorization adapter "%s" was not found.', $class));
+				throw new \Cake\Error\CakeException(__d('cake_dev', 'Authorization adapter "%s" was not found.', $class));
 			}
 			if (!method_exists($className, 'authorize')) {
-				throw new CakeException(__d('cake_dev', 'Authorization objects must implement an %s method.', 'authorize()'));
+				throw new \Cake\Error\CakeException(__d('cake_dev', 'Authorization objects must implement an %s method.', 'authorize()'));
 			}
 			$settings = array_merge($global, (array)$settings);
 			$this->_authorizeObjects[] = new $className($this->_Collection, $settings);
@@ -781,7 +797,7 @@ class AuthComponent extends Component {
  * Loads the configured authentication objects.
  *
  * @return mixed Either null on empty authenticate value, or an array of loaded objects.
- * @throws CakeException
+ * @throws \Cake\Error\CakeException
  */
 	public function constructAuthenticate() {
 		if (empty($this->authenticate)) {
@@ -803,10 +819,10 @@ class AuthComponent extends Component {
 			$className = $class . 'Authenticate';
 			App::uses($className, $plugin . 'Controller/Component/Auth');
 			if (!class_exists($className)) {
-				throw new CakeException(__d('cake_dev', 'Authentication adapter "%s" was not found.', $class));
+				throw new \Cake\Error\CakeException(__d('cake_dev', 'Authentication adapter "%s" was not found.', $class));
 			}
 			if (!method_exists($className, 'authenticate')) {
-				throw new CakeException(__d('cake_dev', 'Authentication objects must implement an %s method.', 'authenticate()'));
+				throw new \Cake\Error\CakeException(__d('cake_dev', 'Authentication objects must implement an %s method.', 'authenticate()'));
 			}
 			$settings = array_merge($global, (array)$settings);
 			$auth = new $className($this->_Collection, $settings);

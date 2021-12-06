@@ -11,6 +11,11 @@
  * @link          https://cakephp.org CakePHP(tm) Project
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\Controller\Component\Auth;
+
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Network\CakeRequest;
 
 App::uses('BaseAuthorize', 'Controller/Component/Auth');
 
@@ -41,12 +46,12 @@ class ControllerAuthorize extends BaseAuthorize {
  *
  * @param Controller $controller null to get, a controller to set.
  * @return mixed
- * @throws CakeException
+ * @throws \Cake\Error\CakeException
  */
 	public function controller(Controller $controller = null) {
 		if ($controller) {
 			if (!method_exists($controller, 'isAuthorized')) {
-				throw new CakeException(__d('cake_dev', '$controller does not implement an %s method.', 'isAuthorized()'));
+				throw new \Cake\Error\CakeException(__d('cake_dev', '$controller does not implement an %s method.', 'isAuthorized()'));
 			}
 		}
 		return parent::controller($controller);

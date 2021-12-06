@@ -17,6 +17,10 @@
  * @since         CakePHP(tm) v 1.2
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+namespace Cake\View\Helper;
+
+use Cake\Core\App;
+use Cake\Utility\Xml;
 
 App::uses('AppHelper', 'View/Helper');
 App::uses('Xml', 'Utility');
@@ -274,7 +278,7 @@ class RssHelper extends AppHelper {
 /**
  * Converts a time in any format to an RSS time
  *
- * @param int|string|DateTime $time UNIX timestamp or valid time string or DateTime object.
+ * @param int|string|\DateTime $time UNIX timestamp or valid time string or DateTime object.
  * @return string An RSS-formatted timestamp
  * @see TimeHelper::toRSS
  * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html#RssHelper::time
