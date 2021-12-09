@@ -17,6 +17,14 @@
  */
 namespace Cake\Routing;
 
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\RouterException;
+use Cake\Network\CakeRequest;
+use Cake\Routing\Route\CakeRoute;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+
 App::uses('CakeRequest', 'Network');
 App::uses('CakeRoute', 'Routing/Route');
 
