@@ -21,7 +21,7 @@
   },
   "autoload": {
 	"psr-4": {
-	  "": "lib/"
+	  "Cake\\": "lib/Cake/"
 	},
 	"exclude-from-classmap": [
 	  "/lib/Cake/Test/",
