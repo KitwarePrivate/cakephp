@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Model\Datasource;
+use Cake\Cache\Cache;
+use Cake\Core\CakeObject;
+use Cake\Model\ConnectionManager;
+use Cake\Model\Model;
+
 /**
  * DataSource base class
  *

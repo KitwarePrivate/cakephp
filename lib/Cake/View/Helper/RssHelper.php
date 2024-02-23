@@ -1,4 +1,9 @@
 <?php
+namespace Cake\View\Helper;
+use AppHelper;
+use Cake\Core\App;
+use Cake\Utility\Xml;
+
 /**
  * RSS Helper class file.
  *
@@ -274,7 +279,7 @@ class RssHelper extends AppHelper {
 /**
  * Converts a time in any format to an RSS time
  *
- * @param int|string|DateTime $time UNIX timestamp or valid time string or DateTime object.
+ * @param int|string|\DateTime $time UNIX timestamp or valid time string or DateTime object.
  * @return string An RSS-formatted timestamp
  * @see TimeHelper::toRSS
  * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html#RssHelper::time
@@ -324,7 +329,7 @@ class RssHelper extends AppHelper {
 		}
 		$bareName = $name;
 		if (strpos($name, ':') !== false) {
-			list($prefix, $bareName) = explode(':', $name, 2);
+			[$prefix, $bareName] = explode(':', $name, 2);
 			switch ($prefix) {
 				case 'atom':
 					$xml .= ' xmlns:atom="http://www.w3.org/2005/Atom"';

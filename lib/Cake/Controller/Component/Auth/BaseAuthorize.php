@@ -1,4 +1,13 @@
 <?php
+namespace Cake\Controller\Component\Auth;
+use Cake\Controller\ComponentCollection;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Error\CakeException;
+use Cake\Network\CakeRequest;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)

@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Log\Engine;
+use Cake\Console\ConsoleOutput;
+use Cake\Core\App;
+use Cake\Error\CakeLogException;
+use Cake\Utility\Hash;
+
 /**
  * Console Logging
  *

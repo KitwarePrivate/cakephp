@@ -1,4 +1,18 @@
 <?php
+namespace Cake\Controller\Component;
+use Cake\Controller\Component;
+use Cake\Controller\ComponentCollection;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\CakeException;
+use Cake\Error\XmlException;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Router;
+use Cake\Utility\Inflector;
+use Cake\Utility\Xml;
+
 /**
  * Request object for handling alternative HTTP requests
  *
@@ -531,9 +545,9 @@ class RequestHandlerComponent extends Component {
 			return false;
 		}
 
-		list($contentType) = explode(';', env('CONTENT_TYPE') ?? '');
+		[$contentType] = explode(';', env('CONTENT_TYPE') ?? '');
 		if ($contentType === '') {
-			list($contentType) = explode(';', CakeRequest::header('CONTENT_TYPE'));
+			[$contentType] = explode(';', CakeRequest::header('CONTENT_TYPE'));
 		}
 		if (!$type) {
 			return $this->mapType($contentType);
@@ -627,7 +641,7 @@ class RequestHandlerComponent extends Component {
 		$pluginDot = null;
 		$viewClassMap = $this->viewClassMap();
 		if (array_key_exists($type, $viewClassMap)) {
-			list($pluginDot, $viewClass) = pluginSplit($viewClassMap[$type], true);
+			[$pluginDot, $viewClass] = pluginSplit($viewClassMap[$type], true);
 		} else {
 			$viewClass = Inflector::classify($type);
 		}

@@ -1,4 +1,9 @@
 <?php
+namespace Cake\TestSuite;
+use Cake\Core\App;
+use Cake\Utility\Folder;
+use PHPUnit_Framework_TestSuite;
+
 /**
  * A class to contain test cases and run them with shared fixtures
  *
@@ -33,7 +38,7 @@ class CakeTestSuite extends PHPUnit_Framework_TestSuite {
  */
 	public function addTestDirectory($directory = '.') {
 		$Folder = new Folder($directory);
-		list(, $files) = $Folder->read(true, true, true);
+		[, $files] = $Folder->read(true, true, true);
 
 		foreach ($files as $file) {
 			if (substr($file, -4) === '.php') {

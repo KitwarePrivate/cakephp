@@ -1,4 +1,12 @@
 <?php
+namespace Cake\Console\Command;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Console\Shell;
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\Utility\Folder;
+use Cake\Utility\Inflector;
+
 /**
  * Upgrade Shell
  *
@@ -134,7 +142,7 @@ class UpgradeShell extends AppShell {
 
 		if (is_dir('plugins')) {
 			$Folder = new Folder('plugins');
-			list($plugins) = $Folder->read();
+			[$plugins] = $Folder->read();
 			foreach ($plugins as $plugin) {
 				chdir($cwd . DS . 'plugins' . DS . $plugin);
 				$this->out(__d('cake_console', 'Upgrading locations for plugin %s', $plugin));
@@ -779,10 +787,10 @@ class UpgradeShell extends AppShell {
 			if (!is_dir($path)) {
 				continue;
 			}
-			$Iterator = new RegexIterator(
-				new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path)),
+			$Iterator = new \RegexIterator(
+				new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path)),
 				'/^.+\.(' . $extensions . ')$/i',
-				RegexIterator::MATCH
+				\RegexIterator::MATCH
 			);
 			foreach ($Iterator as $file) {
 				if ($file->isFile()) {

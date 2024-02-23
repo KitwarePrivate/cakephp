@@ -1,4 +1,13 @@
 <?php
+namespace Cake\Console\Command;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Console\Shell;
+use Cake\Core\App;
+use Cake\TestSuite\CakeTestLoader;
+use Cake\TestSuite\CakeTestSuiteCommand;
+use Cake\TestSuite\CakeTestSuiteDispatcher;
+use Cake\Utility\Inflector;
+
 /**
  * Test Shell
  *
@@ -33,7 +42,7 @@ class TestShell extends Shell {
 /**
  * Dispatcher object for the run.
  *
- * @var CakeTestDispatcher
+ * @var CakeTestSuiteDispatcher
  */
 	protected $_dispatcher = null;
 
@@ -170,7 +179,7 @@ class TestShell extends Shell {
  * Initialization method installs PHPUnit and loads all plugins
  *
  * @return void
- * @throws Exception
+ * @throws \Exception
  */
 	public function initialize() {
 		$this->_dispatcher = new CakeTestSuiteDispatcher();
@@ -373,7 +382,7 @@ class TestShell extends Shell {
 					}
 					return $testCase;
 				}
-				throw new Exception(__d('cake_dev', 'Test case %s cannot be run via this shell', $testFile));
+				throw new \Exception(__d('cake_dev', 'Test case %s cannot be run via this shell', $testFile));
 			}
 		}
 
@@ -386,7 +395,7 @@ class TestShell extends Shell {
 			$testFile = CAKE . 'Test/Case/' . $testCase . 'Test.php';
 
 			if (!file_exists($testFile) && $throwOnMissingFile) {
-				throw new Exception(__d('cake_dev', 'Test case %s not found', $testFile));
+				throw new \Exception(__d('cake_dev', 'Test case %s not found', $testFile));
 			}
 
 			return $testCase;
@@ -403,7 +412,7 @@ class TestShell extends Shell {
 		}
 
 		if (!file_exists($testFile) && $throwOnMissingFile) {
-			throw new Exception(__d('cake_dev', 'Test case %s not found', $testFile));
+			throw new \Exception(__d('cake_dev', 'Test case %s not found', $testFile));
 		}
 
 		$testCase = substr($testFile, 0, -8);

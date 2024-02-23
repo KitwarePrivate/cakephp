@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Console\Command\Task;
+use Cake\Console\Command\AppShell;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Core\App;
+use Cake\Model\ConnectionManager;
+
 /**
  * The DbConfig Task handles creating and updating the database.php
  *
@@ -349,7 +355,7 @@ class DbConfigTask extends AppShell {
 /**
  * Get a user specified Connection name
  *
- * @return void
+ * @return int|null|string
  */
 	public function getConfig() {
 		App::uses('ConnectionManager', 'Model');

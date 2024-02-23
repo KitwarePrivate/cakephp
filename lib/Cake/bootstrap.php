@@ -18,6 +18,10 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Event\Multibyte;
+
 define('TIME_START', microtime(true));
 
 if (!defined('E_DEPRECATED')) {
@@ -139,7 +143,7 @@ require CAKE . 'basics.php';
 require CAKE . 'Core' . DS . 'App.php';
 require CAKE . 'Error' . DS . 'exceptions.php';
 
-spl_autoload_register(array('App', 'load'));
+spl_autoload_register([App::class, 'load']);
 
 App::uses('ErrorHandler', 'Error');
 App::uses('Configure', 'Core');

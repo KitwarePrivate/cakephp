@@ -1,4 +1,9 @@
 <?php
+namespace Cake\TestSuite;
+use Cake\Core\CakePlugin;
+use Cake\Error\MissingPluginException;
+use PHPUnit_Runner_StandardTestSuiteLoader;
+
 /**
  * TestLoader for CakePHP Test suite.
  *
@@ -32,7 +37,7 @@ class CakeTestLoader extends PHPUnit_Runner_StandardTestSuiteLoader {
  *
  * @param string $filePath The file path to load
  * @param string $params Additional parameters
- * @return ReflectionClass
+ * @return \ReflectionClass
  */
 	public function load($filePath, $params = '') {
 		$file = $this->_resolveTestFile($filePath, $params);
@@ -111,8 +116,8 @@ class CakeTestLoader extends PHPUnit_Runner_StandardTestSuiteLoader {
 			return $fileList;
 		}
 
-		$files = new RegexIterator(
-			new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)),
+		$files = new \RegexIterator(
+			new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory)),
 			'/.*Test.php$/'
 		);
 

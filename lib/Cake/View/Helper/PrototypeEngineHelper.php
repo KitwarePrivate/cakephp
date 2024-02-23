@@ -1,4 +1,8 @@
 <?php
+namespace Cake\View\Helper;
+use Cake\Core\App;
+use Cake\Core\Configure;
+
 /**
  * Prototype Engine Helper for JsHelper
  *

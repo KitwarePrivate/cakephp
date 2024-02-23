@@ -1,4 +1,13 @@
 <?php
+namespace Cake\Routing\Filter;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Event\CakeEvent;
+use Cake\Network\CakeResponse;
+use Cake\Routing\DispatcherFilter;
+use Cake\Utility\Inflector;
+use Cake\View\View;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)

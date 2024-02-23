@@ -1,4 +1,13 @@
 <?php
+namespace Cake\TestSuite\Fixture;
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\Model\ConnectionManager;
+use Cake\Model\Datasource\DataSource;
+use Cake\TestSuite\CakeTestCase;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Inflector;
+
 /**
  * A factory class to manage the life cycle of test fixtures
  *
@@ -117,7 +126,7 @@ class CakeFixtureManager {
  *
  * @param array $fixtures the fixture names to load using the notation {type}.{name}
  * @return void
- * @throws UnexpectedValueException when a referenced fixture does not exist.
+ * @throws \UnexpectedValueException when a referenced fixture does not exist.
  */
 	protected function _loadFixtures($fixtures) {
 		foreach ($fixtures as $fixture) {
@@ -169,7 +178,7 @@ class CakeFixtureManager {
 
 			if (!$loaded) {
 				$firstPath = str_replace(array(APP, CAKE_CORE_INCLUDE_PATH, ROOT), '', $fixturePaths[0] . DS . $className . 'Fixture.php');
-				throw new UnexpectedValueException(__d('cake_dev', 'Referenced fixture class %s (%s) not found', $className, $firstPath));
+				throw new \UnexpectedValueException(__d('cake_dev', 'Referenced fixture class %s (%s) not found', $className, $firstPath));
 			}
 		}
 	}
@@ -265,7 +274,7 @@ class CakeFixtureManager {
  * @param DataSource $db DataSource instance or leave null to get DataSource from the fixture
  * @param bool $dropTables Whether or not tables should be dropped and re-created.
  * @return void
- * @throws UnexpectedValueException if $name is not a previously loaded class
+ * @throws \UnexpectedValueException if $name is not a previously loaded class
  */
 	public function loadSingle($name, $db = null, $dropTables = true) {
 		$name .= 'Fixture';
@@ -277,7 +286,7 @@ class CakeFixtureManager {
 			$this->_setupTable($fixture, $db, $dropTables);
 			$fixture->insert($db);
 		} else {
-			throw new UnexpectedValueException(__d('cake_dev', 'Referenced fixture class %s not found', $name));
+			throw new \UnexpectedValueException(__d('cake_dev', 'Referenced fixture class %s not found', $name));
 		}
 	}
 

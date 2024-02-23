@@ -1,4 +1,16 @@
 <?php
+namespace Cake\Controller;
+use Cake\Core\Configure;
+use Cake\Error\MethodNotAllowedException;
+use Cake\Error\MissingActionException;
+use Cake\Error\MissingDatabaseException;
+use Cake\Error\MissingModelException;
+use Cake\Error\NotFoundException;
+use Cake\Model\ConnectionManager;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Utility\Inflector;
+
 /**
  * Scaffold.
  *
@@ -431,7 +443,7 @@ class Scaffold {
 				$associations[$type][$assocKey]['foreignKey'] =
 					$assocData['foreignKey'];
 
-				list($plugin, $model) = pluginSplit($assocData['className']);
+				[$plugin, $model] = pluginSplit($assocData['className']);
 				if ($plugin) {
 					$plugin = Inflector::underscore($plugin);
 				}

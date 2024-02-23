@@ -1,4 +1,17 @@
 <?php
+namespace Cake\View\Helper;
+use AppHelper;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\CakeException;
+use Cake\Model\Model;
+use Cake\Model\Validator\CakeValidationSet;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+use Cake\Utility\Security;
+use Cake\View\View;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -350,7 +363,7 @@ class FormHelper extends AppHelper {
 
 		$key = null;
 		if ($model !== false) {
-			list($plugin, $model) = pluginSplit($model, true);
+			[$plugin, $model] = pluginSplit($model, true);
 			$key = $this->_introspectModel($plugin . $model, 'key');
 			$this->setEntity($model, true);
 		}
@@ -2440,13 +2453,13 @@ class FormHelper extends AppHelper {
 
 		if (strlen($attributes['value']) > 2) {
 			try {
-				$date = new DateTime($attributes['value']);
+				$date = new \DateTime($attributes['value']);
 				if ($format24Hours) {
 					$attributes['value'] = $date->format('H');
 				} else {
 					$attributes['value'] = $date->format('g');
 				}
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$attributes['value'] = null;
 			}
 		} elseif ($attributes['value'] === false) {
@@ -2616,7 +2629,7 @@ class FormHelper extends AppHelper {
 		}
 
 		if (!empty($attributes['value'])) {
-			list($year, $month, $day, $hour, $min, $meridian) = $this->_getDateTimeValue(
+			[$year, $month, $day, $hour, $min, $meridian] = $this->_getDateTimeValue(
 				$attributes['value'],
 				$timeFormat
 			);
@@ -2640,7 +2653,7 @@ class FormHelper extends AppHelper {
 		$attributes = array_diff_key($attributes, $defaults);
 
 		if (!empty($interval) && $interval > 1 && !empty($min)) {
-			$current = new DateTime();
+			$current = new \DateTime();
 			if ($year !== null) {
 				$current->setDate($year, $month, $day);
 			}
@@ -2662,7 +2675,7 @@ class FormHelper extends AppHelper {
 			$current->modify($change > 0 ? "+$change minutes" : "$change minutes");
 			$format = ($timeFormat == 12) ? 'Y m d h i a' : 'Y m d H i a';
 			$newTime = explode(' ', $current->format($format));
-			list($year, $month, $day, $hour, $min, $meridian) = $newTime;
+			[$year, $month, $day, $hour, $min, $meridian] = $newTime;
 		}
 
 		$keys = array('Day', 'Month', 'Year', 'Hour', 'Minute', 'Meridian');
@@ -3029,7 +3042,7 @@ class FormHelper extends AppHelper {
 				$max = !isset($options['max']) ? $current + 20 : (int)$options['max'];
 
 				if ($min > $max) {
-					list($min, $max) = array($max, $min);
+					[$min, $max] = array($max, $min);
 				}
 				if (!empty($options['value']) &&
 					(int)$options['value'] < $min &&

@@ -1,4 +1,13 @@
 <?php
+namespace Cake\Routing;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\RouterException;
+use Cake\Network\CakeRequest;
+use Cake\Routing\Route\CakeRoute;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+
 /**
  * Parses the request URL into controller, action, and parameters.
  *
@@ -366,7 +375,7 @@ class Router {
 			if (strpos($options['routeClass'], '.') === false) {
 				$routeClass = $options['routeClass'];
 			} else {
-				list(, $routeClass) = pluginSplit($options['routeClass'], true);
+				[, $routeClass] = pluginSplit($options['routeClass'], true);
 			}
 			$routeClass = static::_validateRouteClass($routeClass);
 			unset($options['routeClass']);
@@ -548,7 +557,7 @@ class Router {
 		}
 
 		foreach ((array)$controller as $name) {
-			list($plugin, $name) = pluginSplit($name);
+			[$plugin, $name] = pluginSplit($name);
 			$urlName = Inflector::underscore($name);
 			$plugin = Inflector::underscore($plugin);
 			if ($plugin && !$hasPrefix) {
@@ -603,7 +612,7 @@ class Router {
 			$url = '/' . $url;
 		}
 		if (strpos($url, '?') !== false) {
-			list($url, $queryParameters) = explode('?', $url, 2);
+			[$url, $queryParameters] = explode('?', $url, 2);
 			parse_str($queryParameters, $queryParameters);
 		}
 
@@ -1002,7 +1011,7 @@ class Router {
 			}
 		}
 
-		list($args, $named) = array(Hash::filter($args), Hash::filter($named));
+		[$args, $named] = array(Hash::filter($args), Hash::filter($named));
 		foreach (static::$_prefixes as $prefix) {
 			$prefixed = $prefix . '_';
 			if (!empty($url[$prefix]) && strpos($url['action'], $prefixed) === 0) {

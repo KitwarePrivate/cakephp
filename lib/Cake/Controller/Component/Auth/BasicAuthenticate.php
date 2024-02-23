@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Controller\Component\Auth;
+use Cake\Controller\ComponentCollection;
+use Cake\Core\App;
+use Cake\Error\UnauthorizedException;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -87,7 +94,7 @@ class BasicAuthenticate extends BaseAuthenticate {
 		if (!strlen($username)) {
 			$httpAuthorization = $request->header('Authorization');
 			if (strlen($httpAuthorization) > 0 && strpos($httpAuthorization, 'Basic') !== false) {
-				list($username, $pass) = explode(':', base64_decode(substr($httpAuthorization, 6)));
+				[$username, $pass] = explode(':', base64_decode(substr($httpAuthorization, 6)));
 			}
 		}
 

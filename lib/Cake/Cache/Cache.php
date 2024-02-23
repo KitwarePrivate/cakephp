@@ -1,4 +1,8 @@
 <?php
+namespace Cake\Cache;
+use Cake\Core\App;
+use Cake\Error\CacheException;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -166,7 +170,7 @@ class Cache {
 	protected static function _buildEngine($name) {
 		$config = static::$_config[$name];
 
-		list($plugin, $class) = pluginSplit($config['engine'], true);
+		[$plugin, $class] = pluginSplit($config['engine'], true);
 		$cacheClass = $class . 'Engine';
 		App::uses($cacheClass, $plugin . 'Cache/Engine');
 		if (!class_exists($cacheClass)) {

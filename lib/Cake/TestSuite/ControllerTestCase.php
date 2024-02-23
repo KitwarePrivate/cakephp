@@ -1,4 +1,21 @@
 <?php
+namespace Cake\TestSuite;
+use Cake\Controller\Component;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Error\MissingComponentException;
+use Cake\Error\MissingControllerException;
+use Cake\Event\CakeEvent;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Dispatcher;
+use Cake\Routing\Route\RedirectRoute;
+use Cake\Routing\Router;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Inflector;
+use Cake\View\Helper;
+use PHPUnit_Framework_MockObject_MockObject;
+
 /**
  * ControllerTestCase file
  *
@@ -192,13 +209,13 @@ abstract class ControllerTestCase extends CakeTestCase {
  * @param string $name The name of the function
  * @param array $arguments Array of arguments
  * @return mixed The return of _testAction.
- * @throws BadMethodCallException when you call methods that don't exist.
+ * @throws \BadMethodCallException when you call methods that don't exist.
  */
 	public function __call($name, $arguments) {
 		if ($name === 'testAction') {
 			return call_user_func_array(array($this, '_testAction'), $arguments);
 		}
-		throw new BadMethodCallException("Method '{$name}' does not exist.");
+		throw new \BadMethodCallException("Method '{$name}' does not exist.");
 	}
 
 /**
@@ -250,7 +267,7 @@ abstract class ControllerTestCase extends CakeTestCase {
 		}
 
 		if (strpos($url, '?') !== false) {
-			list($url, $query) = explode('?', $url, 2);
+			[$url, $query] = explode('?', $url, 2);
 			parse_str($query, $queryArgs);
 			$_GET += $queryArgs;
 		}
@@ -346,7 +363,7 @@ abstract class ControllerTestCase extends CakeTestCase {
  * @throws MissingComponentException When components could not be created.
  */
 	public function generate($controller, $mocks = array()) {
-		list($plugin, $controller) = pluginSplit($controller);
+		[$plugin, $controller] = pluginSplit($controller);
 		if ($plugin) {
 			App::uses($plugin . 'AppController', $plugin . '.Controller');
 			$plugin .= '.';
@@ -366,7 +383,7 @@ abstract class ControllerTestCase extends CakeTestCase {
 			'components' => array()
 		), (array)$mocks);
 
-		list($plugin, $name) = pluginSplit($controller);
+		[$plugin, $name] = pluginSplit($controller);
 		/** @var Controller|PHPUnit_Framework_MockObject_MockObject $controllerObj */
 		$controllerObj = $this->getMock($name . 'Controller', $mocks['methods'], array(), '', false);
 		$controllerObj->name = $name;
@@ -402,7 +419,7 @@ abstract class ControllerTestCase extends CakeTestCase {
 				$alias = $component;
 				$component = $config['className'];
 			}
-			list($plugin, $name) = pluginSplit($component, true);
+			[$plugin, $name] = pluginSplit($component, true);
 			if (!isset($alias)) {
 				$alias = $name;
 			}

@@ -1,4 +1,17 @@
 <?php
+namespace Cake\Routing;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\MissingControllerException;
+use Cake\Error\MissingDispatcherFilterException;
+use Cake\Event\CakeEvent;
+use Cake\Event\CakeEventListener;
+use Cake\Event\CakeEventManager;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Utility\Inflector;
+
 /**
  * Dispatcher takes the URL information, parses it for parameters and
  * tells the involved controllers what to do.
@@ -105,7 +118,7 @@ class Dispatcher implements CakeEventListener {
 				$filter = array('callable' => $filter);
 			}
 			if (is_string($filter['callable'])) {
-				list($plugin, $callable) = pluginSplit($filter['callable'], true);
+				[$plugin, $callable] = pluginSplit($filter['callable'], true);
 				App::uses($callable, $plugin . 'Routing/Filter');
 				if (!class_exists($callable)) {
 					throw new MissingDispatcherFilterException($callable);
@@ -236,7 +249,7 @@ class Dispatcher implements CakeEventListener {
 		if (!$ctrlClass) {
 			return false;
 		}
-		$reflection = new ReflectionClass($ctrlClass);
+		$reflection = new \ReflectionClass($ctrlClass);
 		if ($reflection->isAbstract() || $reflection->isInterface()) {
 			return false;
 		}

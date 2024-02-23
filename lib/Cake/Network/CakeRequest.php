@@ -1,4 +1,12 @@
 <?php
+namespace Cake\Network;
+use ArrayAccess;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\CakeException;
+use Cake\Error\MethodNotAllowedException;
+use Cake\Utility\Hash;
+
 /**
  * CakeRequest
  *
@@ -228,7 +236,7 @@ class CakeRequest implements ArrayAccess {
 		unset($query[$unsetUrl]);
 		unset($query[$this->base . $unsetUrl]);
 		if (strpos($this->url, '?') !== false) {
-			list($this->url, $querystr) = explode('?', $this->url);
+			[$this->url, $querystr] = explode('?', $this->url);
 			parse_str($querystr, $queryArgs);
 			$query += $queryArgs;
 		}
@@ -275,7 +283,7 @@ class CakeRequest implements ArrayAccess {
 			$uri = substr($uri, strlen($base));
 		}
 		if (strpos($uri, '?') !== false) {
-			list($uri) = explode('?', $uri, 2);
+			[$uri] = explode('?', $uri, 2);
 		}
 		if (empty($uri) || $uri === '/' || $uri === '//' || $uri === '/index.php') {
 			$uri = '/';

@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Model;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\CakeException;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Inflector;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -130,7 +137,7 @@ class AclNode extends Model {
 			$ref = array('model' => $ref->name, 'foreign_key' => $ref->id);
 		} elseif (is_array($ref) && !(isset($ref['model']) && isset($ref['foreign_key']))) {
 			$name = key($ref);
-			list(, $alias) = pluginSplit($name);
+			[, $alias] = pluginSplit($name);
 
 			$model = ClassRegistry::init(array('class' => $name, 'alias' => $alias));
 

@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Model\Datasource\Database;
+use Cake\Core\App;
+use Cake\Error\MissingConnectionException;
+use Cake\Model\Datasource\DboSource;
+use Cake\Model\Model;
+use Cake\Utility\CakeText;
+
 /**
  * SQLite layer for DBO
  *
@@ -111,13 +118,13 @@ class Sqlite extends DboSource {
 	public function connect() {
 		$config = $this->config;
 		$flags = $config['flags'] + array(
-			PDO::ATTR_PERSISTENT => $config['persistent'],
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+			\PDO::ATTR_PERSISTENT => $config['persistent'],
+			\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
 		);
 		try {
-			$this->_connection = new PDO('sqlite:' . $config['database'], null, null, $flags);
+			$this->_connection = new \PDO('sqlite:' . $config['database'], null, null, $flags);
 			$this->connected = true;
-		} catch(PDOException $e) {
+		} catch(\PDOException $e) {
 			throw new MissingConnectionException(array(
 				'class' => get_class($this),
 				'message' => $e->getMessage()
@@ -132,7 +139,7 @@ class Sqlite extends DboSource {
  * @return bool
  */
 	public function enabled() {
-		return in_array('sqlite', PDO::getAvailableDrivers());
+		return in_array('sqlite',\PDO::getAvailableDrivers());
 	}
 
 /**
@@ -258,7 +265,7 @@ class Sqlite extends DboSource {
 
 		$col = strtolower(str_replace(')', '', $real));
 		if (strpos($col, '(') !== false) {
-			list($col) = explode('(', $col);
+			[$col] = explode('(', $col);
 		}
 
 		$standard = array(
@@ -298,7 +305,7 @@ class Sqlite extends DboSource {
 /**
  * Generate ResultSet
  *
- * @param PDOStatement $results The results to modify.
+ * @param \PDOStatement $results The results to modify.
  * @return void
  */
 	public function resultSet($results) {
@@ -350,7 +357,7 @@ class Sqlite extends DboSource {
 				if (!empty($metaData['sqlite:decl_type'])) {
 					$metaType = trim($metaData['sqlite:decl_type']);
 				}
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 			}
 
 			if (strpos($columnName, '.')) {
@@ -369,10 +376,10 @@ class Sqlite extends DboSource {
  * @return mixed array with results fetched and mapped to column names or false if there is no results left to fetch
  */
 	public function fetchResult() {
-		if ($row = $this->_result->fetch(PDO::FETCH_NUM)) {
+		if ($row = $this->_result->fetch(\PDO::FETCH_NUM)) {
 			$resultRow = array();
 			foreach ($this->map as $col => $meta) {
-				list($table, $column, $type) = $meta;
+				[$table, $column, $type] = $meta;
 				$resultRow[$table][$column] = $row[$col];
 				if ($type === 'boolean' && $row[$col] !== null) {
 					$resultRow[$table][$column] = $this->boolean($resultRow[$table][$column]);
@@ -472,7 +479,7 @@ class Sqlite extends DboSource {
 		$join = array();
 
 		$table = str_replace('"', '', $table);
-		list($dbname, $table) = explode('.', $table);
+		[$dbname, $table] = explode('.', $table);
 		$dbname = $this->name($dbname);
 
 		foreach ($indexes as $name => $value) {

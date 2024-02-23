@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Configure;
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\Error\ConfigureException;
+
 /**
  * PhpReader file
  *
@@ -103,7 +108,7 @@ class PhpReader implements ConfigReaderInterface {
 		if (substr($key, -4) === '.php') {
 			$key = substr($key, 0, -4);
 		}
-		list($plugin, $key) = pluginSplit($key);
+		[$plugin, $key] = pluginSplit($key);
 		$key .= '.php';
 
 		if ($plugin) {

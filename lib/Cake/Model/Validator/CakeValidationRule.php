@@ -1,4 +1,7 @@
 <?php
+namespace Cake\Model\Validator;
+use Cake\Core\App;
+
 /**
  * CakeValidationRule.
  *

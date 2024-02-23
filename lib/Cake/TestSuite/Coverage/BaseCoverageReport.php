@@ -1,4 +1,10 @@
 <?php
+namespace Cake\TestSuite\Coverage;
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\TestSuite\Reporter\CakeBaseReporter;
+use Cake\Utility\Inflector;
+
 /**
  * Abstract class for common CoverageReport methods.
  * Provides several template methods for custom output.

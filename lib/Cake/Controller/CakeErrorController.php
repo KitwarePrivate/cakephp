@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Controller;
+use AppController;
+use Cake\Core\App;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Router;
+
 /**
  * Error Handling Controller
  *

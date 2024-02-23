@@ -1,4 +1,11 @@
 <?php
+namespace Cake\TestSuite\Reporter;
+use Cake\Core\App;
+use Cake\TestSuite\Coverage\TextCoverageReport;
+use Cake\Utility\Inflector;
+use PHPUnit_Framework_AssertionFailedError;
+use PHPUnit_Framework_TestResult;
+
 /**
  * CakeTextReporter contains reporting features used for plain text based output
  *
@@ -105,7 +112,7 @@ class CakeTextReporter extends CakeBaseReporter {
 /**
  * Paints a PHP exception.
  *
- * @param Exception $exception Exception to describe.
+ * @param \Exception $exception Exception to describe.
  * @return void
  */
 	public function paintException($exception) {

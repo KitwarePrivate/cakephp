@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Network\Email;
+use Cake\Core\App;
+use Cake\Error\SocketException;
+use Cake\Network\CakeSocket;
+
 /**
  * Send mail using SMTP protocol
  *
@@ -151,7 +156,7 @@ class SmtpTransport extends AbstractTransport {
 		if (isset($this->_config['client'])) {
 			$host = $this->_config['client'];
 		} elseif ($httpHost = env('HTTP_HOST')) {
-			list($host) = explode(':', $httpHost);
+			[$host] = explode(':', $httpHost);
 		} else {
 			$host = 'localhost';
 		}

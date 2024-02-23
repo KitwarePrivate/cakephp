@@ -1,4 +1,11 @@
 <?php
+namespace Cake\View\Helper;
+use AppHelper;
+use Cake\Core\App;
+use Cake\Error\CakeException;
+use Cake\Utility\Inflector;
+use Cake\View\View;
+
 /**
  * Pagination Helper class file.
  *
@@ -363,7 +370,7 @@ class PaginatorHelper extends AppHelper {
 		$sortKey = $this->sortKey($options['model']);
 		$defaultModel = $this->defaultModel();
 		$model = $options['model'] ?: $defaultModel;
-		list($table, $field) = explode('.', $key . '.');
+		[$table, $field] = explode('.', $key . '.');
 		if (!$field) {
 			$field = $table;
 			$table = $model;
@@ -448,7 +455,7 @@ class PaginatorHelper extends AppHelper {
 		if (isset($url['order'])) {
 			$sort = $direction = null;
 			if (is_array($url['order'])) {
-				list($sort, $direction) = array($this->sortKey($model, $url), current($url['order']));
+				[$sort, $direction] = array($this->sortKey($model, $url), current($url['order']));
 			}
 			unset($url['order']);
 			$url = array_merge($url, compact('sort', 'direction'));
@@ -631,7 +638,7 @@ class PaginatorHelper extends AppHelper {
 		if (empty($this->request->params['paging'])) {
 			return null;
 		}
-		list($this->_defaultModel) = array_keys($this->request->params['paging']);
+		[$this->_defaultModel] = array_keys($this->request->params['paging']);
 		return $this->_defaultModel;
 	}
 

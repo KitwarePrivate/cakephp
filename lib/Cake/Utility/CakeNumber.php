@@ -1,4 +1,7 @@
 <?php
+namespace Cake\Utility;
+use Cake\Error\CakeException;
+
 /**
  * CakeNumber Utility.
  *

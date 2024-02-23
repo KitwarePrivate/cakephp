@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Model;
+use Cake\Core\App;
+use Cake\Error\MissingDatasourceConfigException;
+use Cake\Error\MissingDatasourceException;
+use Cake\Model\Datasource\DataSource;
+
 /**
  * Datasource connection manager
  *
@@ -33,7 +39,7 @@ class ConnectionManager {
 /**
  * Holds a loaded instance of the Connections object
  *
- * @var DATABASE_CONFIG
+ * @var \DATABASE_CONFIG
  */
 	public static $config = null;
 
@@ -66,7 +72,7 @@ class ConnectionManager {
 	protected static function _init() {
 		include_once CONFIG . 'database.php';
 		if (class_exists('DATABASE_CONFIG')) {
-			static::$config = new DATABASE_CONFIG();
+			static::$config = new \DATABASE_CONFIG();
 		}
 		static::$_init = true;
 	}
@@ -259,7 +265,7 @@ class ConnectionManager {
 	protected static function _connectionData($config) {
 		$package = $classname = $plugin = null;
 
-		list($plugin, $classname) = pluginSplit($config['datasource']);
+		[$plugin, $classname] = pluginSplit($config['datasource']);
 		if (strpos($classname, '/') !== false) {
 			$package = dirname($classname);
 			$classname = basename($classname);

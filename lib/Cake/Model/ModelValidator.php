@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Model;
+use Cake\Core\App;
+use Cake\Event\CakeEvent;
+use Cake\Model\Validator\CakeValidationRule;
+use Cake\Model\Validator\CakeValidationSet;
+use Cake\Utility\Hash;
+
 /**
  * ModelValidator.
  *
@@ -31,7 +38,7 @@ App::uses('Hash', 'Utility');
  * @package       Cake.Model
  * @link          https://book.cakephp.org/2.0/en/data-validation.html
  */
-class ModelValidator implements ArrayAccess, IteratorAggregate, Countable {
+class ModelValidator implements \ArrayAccess, \IteratorAggregate, \Countable {
 
 /**
  * Holds the CakeValidationSet objects array
@@ -420,7 +427,7 @@ class ModelValidator implements ArrayAccess, IteratorAggregate, Countable {
 			if (empty($association['with']) || !isset($model->data[$assoc])) {
 				continue;
 			}
-			list($join) = $model->joinModel($model->hasAndBelongsToMany[$assoc]['with']);
+			[$join] = $model->joinModel($model->hasAndBelongsToMany[$assoc]['with']);
 			$data = $model->data[$assoc];
 
 			$newData = array();
@@ -450,7 +457,7 @@ class ModelValidator implements ArrayAccess, IteratorAggregate, Countable {
 	protected function _triggerBeforeValidate($options = array()) {
 		$model = $this->getModel();
 		$event = new CakeEvent('Model.beforeValidate', $model, array($options));
-		list($event->break, $event->breakOn) = array(true, false);
+		[$event->break, $event->breakOn] = array(true, false);
 		$model->getEventManager()->dispatch($event);
 		if ($event->isStopped()) {
 			return false;
@@ -511,11 +518,11 @@ class ModelValidator implements ArrayAccess, IteratorAggregate, Countable {
 /**
  * Returns an iterator for each of the fields to be validated
  *
- * @return ArrayIterator
+ * @return \ArrayIterator
  */
 	public function getIterator(): \Traversable {
 		$this->_parseRules();
-		return new ArrayIterator($this->_fields);
+		return new \ArrayIterator($this->_fields);
 	}
 
 /**

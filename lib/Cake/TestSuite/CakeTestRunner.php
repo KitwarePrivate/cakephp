@@ -1,4 +1,12 @@
 <?php
+namespace Cake\TestSuite;
+use Cake\Core\App;
+use Cake\TestSuite\Fixture\CakeFixtureManager;
+use PHP_CodeCoverage;
+use PHPUnit_Framework_Test;
+use PHPUnit_Framework_TestResult;
+use PHPUnit_TextUI_TestRunner;
+
 /**
  * TestRunner for CakePHP Test suite.
  *
@@ -63,8 +71,8 @@ class CakeTestRunner extends PHPUnit_TextUI_TestRunner {
 
 		$fixture = $this->_getFixtureManager($arguments);
 		$iterator = $suite->getIterator();
-		if ($iterator instanceof RecursiveIterator) {
-			$iterator = new RecursiveIteratorIterator($iterator);
+		if ($iterator instanceof \RecursiveIterator) {
+			$iterator = new \RecursiveIteratorIterator($iterator);
 		}
 		foreach ($iterator as $test) {
 			if ($test instanceof CakeTestCase) {
@@ -103,7 +111,7 @@ class CakeTestRunner extends PHPUnit_TextUI_TestRunner {
  *
  * @param array $arguments The CLI arguments.
  * @return mixed instance of a fixture manager.
- * @throws RuntimeException When fixture manager class cannot be loaded.
+ * @throws \RuntimeException When fixture manager class cannot be loaded.
  */
 	protected function _getFixtureManager($arguments) {
 		if (!empty($arguments['fixtureManager'])) {
@@ -111,7 +119,7 @@ class CakeTestRunner extends PHPUnit_TextUI_TestRunner {
 			if (class_exists($arguments['fixtureManager'])) {
 				return new $arguments['fixtureManager'];
 			}
-			throw new RuntimeException(__d('cake_dev', 'Could not find fixture manager %s.', $arguments['fixtureManager']));
+			throw new \RuntimeException(__d('cake_dev', 'Could not find fixture manager %s.', $arguments['fixtureManager']));
 		}
 		App::uses('AppFixtureManager', 'TestSuite');
 		if (class_exists('AppFixtureManager')) {

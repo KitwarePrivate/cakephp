@@ -1,4 +1,17 @@
 <?php
+namespace Cake\TestSuite\Fixture;
+use Cake\Core\App;
+use Cake\Error\CakeException;
+use Cake\Error\MissingModelException;
+use Cake\Log\CakeLog;
+use Cake\Model\CakeSchema;
+use Cake\Model\ConnectionManager;
+use Cake\Model\Datasource\DboSource;
+use Cake\Model\Model;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+
 /**
  * CakePHP(tm) Tests <https://book.cakephp.org/2.0/en/development/testing.html>
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -136,7 +149,7 @@ class CakeTestFixture {
 
 			$this->Schema->connection = $import['connection'];
 			if (isset($import['model'])) {
-				list($plugin, $modelClass) = pluginSplit($import['model'], true);
+				[$plugin, $modelClass] = pluginSplit($import['model'], true);
 				App::uses($modelClass, $plugin . 'Model');
 				if (!class_exists($modelClass)) {
 					throw new MissingModelException(array('class' => $modelClass));
@@ -234,7 +247,7 @@ class CakeTestFixture {
 		try {
 			$db->execute($db->createSchema($this->Schema), array('log' => false));
 			$this->created[] = $db->configKeyName;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$msg = __d(
 				'cake_dev',
 				'Fixture creation for "%s" failed "%s"',
@@ -263,7 +276,7 @@ class CakeTestFixture {
 
 			$db->execute($db->dropSchema($this->Schema), array('log' => false));
 			$this->created = array_diff($this->created, array($db->configKeyName));
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			return false;
 		}
 		return true;

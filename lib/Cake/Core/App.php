@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Core;
+use Cake\Cache\Cache;
+use Cake\Error\ErrorHandler;
+use Cake\Utility\Inflector;
+
 /**
  * App class
  *
@@ -444,7 +449,7 @@ class App {
 			$includeDirectories = true;
 		}
 
-		list($plugin, $type) = pluginSplit($type);
+		[$plugin, $type] = pluginSplit($type);
 
 		if (isset(static::$legacy[$type . 's'])) {
 			$type = static::$legacy[$type . 's'];
@@ -468,7 +473,7 @@ class App {
 
 			foreach ((array)$path as $dir) {
 				if ($dir != APP && is_dir($dir)) {
-					$files = new RegexIterator(new DirectoryIterator($dir), $extension);
+					$files = new \RegexIterator(new \DirectoryIterator($dir), $extension);
 					foreach ($files as $file) {
 						$fileName = basename($file);
 						if (!$file->isDot() && $fileName[0] !== '.') {
@@ -540,7 +545,7 @@ class App {
 		}
 
 		$parts = explode('.', static::$_classMap[$className], 2);
-		list($plugin, $package) = count($parts) > 1 ? $parts : array(null, current($parts));
+		[$plugin, $package] = count($parts) > 1 ? $parts : array(null, current($parts));
 
 		$file = static::_mapped($className, $plugin);
 		if ($file) {
@@ -632,7 +637,7 @@ class App {
 		if (!$specialPackage && isset(static::$legacy[$originalType . 's'])) {
 			$type = static::$legacy[$originalType . 's'];
 		}
-		list($plugin, $name) = pluginSplit($name);
+		[$plugin, $name] = pluginSplit($name);
 		if (!empty($plugin)) {
 			if (!CakePlugin::loaded($plugin)) {
 				return false;
@@ -954,7 +959,7 @@ class App {
 			return;
 		}
 
-		list(, $log) = ErrorHandler::mapErrorCode($lastError['type']);
+		[, $log] = ErrorHandler::mapErrorCode($lastError['type']);
 		if ($log !== LOG_ERR) {
 			return;
 		}

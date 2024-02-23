@@ -1,4 +1,9 @@
 <?php
+namespace Cake\TestSuite;
+use Cake\Core\App;
+use Cake\Error\MissingConnectionException;
+use Cake\TestSuite\Reporter\CakeBaseReporter;
+
 /**
  * CakeTestSuiteDispatcher controls dispatching TestSuite web based requests.
  *

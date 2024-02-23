@@ -1,4 +1,13 @@
 <?php
+namespace Cake\Controller\Component;
+use Cake\Controller\Component;
+use Cake\Controller\ComponentCollection;
+use Cake\Core\App;
+use Cake\Error\MissingModelException;
+use Cake\Error\NotFoundException;
+use Cake\Model\Model;
+use Cake\Utility\Hash;
+
 /**
  * Paginator Component
  *
@@ -275,7 +284,7 @@ class PaginatorComponent extends Component {
 		if (is_string($object)) {
 			$assoc = null;
 			if (strpos($object, '.') !== false) {
-				list($object, $assoc) = pluginSplit($object);
+				[$object, $assoc] = pluginSplit($object);
 			}
 			if ($assoc && isset($this->Controller->{$object}->{$assoc})) {
 				return $this->Controller->{$object}->{$assoc};
@@ -298,7 +307,7 @@ class PaginatorComponent extends Component {
 			$className = null;
 			$name = $this->Controller->uses[0];
 			if (strpos($this->Controller->uses[0], '.') !== false) {
-				list($name, $className) = explode('.', $this->Controller->uses[0]);
+				[$name, $className] = explode('.', $this->Controller->uses[0]);
 			}
 			if ($className) {
 				return $this->Controller->{$className};
@@ -414,7 +423,7 @@ class PaginatorComponent extends Component {
 				$field = $key;
 				$alias = $object->alias;
 				if (strpos($key, '.') !== false) {
-					list($alias, $field) = explode('.', $key);
+					[$alias, $field] = explode('.', $key);
 				}
 				$correctAlias = ($object->alias === $alias);
 

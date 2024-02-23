@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Controller\Component\Auth;
+use Cake\Core\App;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -67,7 +72,7 @@ class FormAuthenticate extends BaseAuthenticate {
  */
 	public function authenticate(CakeRequest $request, CakeResponse $response) {
 		$userModel = $this->settings['userModel'];
-		list(, $model) = pluginSplit($userModel);
+		[, $model] = pluginSplit($userModel);
 
 		$fields = $this->settings['fields'];
 		if (!$this->_checkFields($request, $model, $fields)) {

@@ -1,4 +1,12 @@
 <?php
+namespace Cake\View;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Network\CakeResponse;
+use Cake\Utility\Hash;
+use Cake\Utility\Xml;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)

@@ -1,4 +1,8 @@
 <?php
+namespace Cake\Cache\Engine;
+use Cake\Cache\CacheEngine;
+use Cake\Utility\Inflector;
+
 /**
  * Redis storage engine for cache
  *
@@ -80,7 +84,7 @@ class RedisEngine extends CacheEngine {
  */
 	protected function _connect() {
 		try {
-			$this->_Redis = new Redis();
+			$this->_Redis = new \Redis();
 			if (!empty($this->settings['unix_socket'])) {
 				$return = $this->_Redis->connect($this->settings['unix_socket']);
 			} elseif (empty($this->settings['persistent'])) {
@@ -89,7 +93,7 @@ class RedisEngine extends CacheEngine {
 				$persistentId = $this->settings['port'] . $this->settings['timeout'] . $this->settings['database'];
 				$return = $this->_Redis->pconnect($this->settings['server'], $this->settings['port'], $this->settings['timeout'], $persistentId);
 			}
-		} catch (RedisException $e) {
+		} catch (\RedisException $e) {
 			$return = false;
 		}
 		if (!$return) {

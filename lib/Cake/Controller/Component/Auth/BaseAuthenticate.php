@@ -1,4 +1,15 @@
 <?php
+namespace Cake\Controller\Component\Auth;
+use Cake\Controller\ComponentCollection;
+use Cake\Core\App;
+use Cake\Error\CakeException;
+use Cake\Event\CakeEventListener;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Hash;
+use Cake\Utility\Security;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -102,7 +113,7 @@ abstract class BaseAuthenticate implements CakeEventListener {
  */
 	protected function _findUser($username, $password = null) {
 		$userModel = $this->settings['userModel'];
-		list(, $model) = pluginSplit($userModel);
+		[, $model] = pluginSplit($userModel);
 		$fields = $this->settings['fields'];
 
 		if (is_array($username)) {
@@ -165,7 +176,7 @@ abstract class BaseAuthenticate implements CakeEventListener {
 			$config = $this->settings['passwordHasher'];
 			unset($config['className']);
 		}
-		list($plugin, $class) = pluginSplit($class, true);
+		[$plugin, $class] = pluginSplit($class, true);
 		$className = $class . 'PasswordHasher';
 		App::uses($className, $plugin . 'Controller/Component/Auth');
 		if (!class_exists($className)) {

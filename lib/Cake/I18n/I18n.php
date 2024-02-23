@@ -1,4 +1,14 @@
 <?php
+namespace Cake\I18n;
+use Cake\Cache\Cache;
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\Core\Configure;
+use Cake\Error\CakeException;
+use Cake\Model\Datasource\CakeSession;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+
 /**
  * Internationalization
  *
@@ -499,10 +509,10 @@ class I18n {
 					$context = null;
 
 					if (strpos($msgid, "\x04") !== false) {
-						list($context, $msgid) = explode("\x04", $msgid);
+						[$context, $msgid] = explode("\x04", $msgid);
 					}
 					if (strpos($msgid, "\000")) {
-						list($msgid, $msgid_plural) = explode("\000", $msgid);
+						[$msgid, $msgid_plural] = explode("\000", $msgid);
 					}
 					$r = unpack("L1len/L1offs", substr($data, $o_trn + $n * 8, 8));
 					$msgstr = substr($data, $r["offs"], $r["len"]);

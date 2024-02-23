@@ -1,4 +1,13 @@
 <?php
+namespace Cake\Console\Command;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Controller\Component\AclComponent;
+use Cake\Controller\ComponentCollection;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Utility\Hash;
+
 /**
  * Acl Shell provides Acl access in the CLI environment
  *
@@ -70,7 +79,7 @@ class AclShell extends AppShell {
 		}
 
 		$class = Configure::read('Acl.classname');
-		list($plugin, $class) = pluginSplit($class, true);
+		[$plugin, $class] = pluginSplit($class, true);
 		App::uses($class, $plugin . 'Controller/Component/Acl');
 		if (!in_array($class, array('DbAcl', 'DB_ACL')) && !is_subclass_of($class, 'DbAcl')) {
 			$out = "--------------------------------------------------\n";

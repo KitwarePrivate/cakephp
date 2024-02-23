@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Cache\Engine;
+use Cake\Cache\CacheEngine;
+use Cake\Error\CacheException;
+use Cake\Utility\Inflector;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -32,7 +37,7 @@ class MemcachedEngine extends CacheEngine {
 /**
  * memcached wrapper.
  *
- * @var Memcache
+ * @var \Memcache
  */
 	protected $_Memcached = null;
 
@@ -62,9 +67,9 @@ class MemcachedEngine extends CacheEngine {
  * @var array
  */
 	protected $_serializers = array(
-		'igbinary' => Memcached::SERIALIZER_IGBINARY,
-		'json' => Memcached::SERIALIZER_JSON,
-		'php' => Memcached::SERIALIZER_PHP
+		'igbinary' => \Memcached::SERIALIZER_IGBINARY,
+		'json' => \Memcached::SERIALIZER_JSON,
+		'php' => \Memcached::SERIALIZER_PHP
 	);
 
 /**
@@ -85,8 +90,8 @@ class MemcachedEngine extends CacheEngine {
 			$settings['prefix'] = Inflector::slug(APP_DIR) . '_';
 		}
 
-		if (defined('Memcached::HAVE_MSGPACK') && Memcached::HAVE_MSGPACK) {
-			$this->_serializers['msgpack'] = Memcached::SERIALIZER_MSGPACK;
+		if (defined('Memcached::HAVE_MSGPACK') && \Memcached::HAVE_MSGPACK) {
+			$this->_serializers['msgpack'] = \Memcached::SERIALIZER_MSGPACK;
 		}
 
 		$settings += array(
@@ -110,9 +115,9 @@ class MemcachedEngine extends CacheEngine {
 		}
 
 		if (!$this->settings['persistent']) {
-			$this->_Memcached = new Memcached();
+			$this->_Memcached = new \Memcached();
 		} else {
-			$this->_Memcached = new Memcached((string)$this->settings['persistent']);
+			$this->_Memcached = new \Memcached((string)$this->settings['persistent']);
 		}
 		$this->_setOptions();
 
@@ -135,7 +140,7 @@ class MemcachedEngine extends CacheEngine {
 					__d('cake_dev', 'Memcached extension is not build with SASL support')
 				);
 			}
-			$this->_Memcached->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
+			$this->_Memcached->setOption(\Memcached::OPT_BINARY_PROTOCOL, true);
 			$this->_Memcached->setSaslAuthData($this->settings['login'], $this->settings['password']);
 		}
 		if (is_array($this->settings['options'])) {
@@ -154,7 +159,7 @@ class MemcachedEngine extends CacheEngine {
  * @return void
  */
 	protected function _setOptions() {
-		$this->_Memcached->setOption(Memcached::OPT_LIBKETAMA_COMPATIBLE, true);
+		$this->_Memcached->setOption(\Memcached::OPT_LIBKETAMA_COMPATIBLE, true);
 
 		$serializer = strtolower($this->settings['serialize']);
 		if (!isset($this->_serializers[$serializer])) {
@@ -169,14 +174,14 @@ class MemcachedEngine extends CacheEngine {
 			);
 		}
 
-		$this->_Memcached->setOption(Memcached::OPT_SERIALIZER, $this->_serializers[$serializer]);
+		$this->_Memcached->setOption(\Memcached::OPT_SERIALIZER, $this->_serializers[$serializer]);
 
 		// Check for Amazon ElastiCache instance
 		if (defined('Memcached::OPT_CLIENT_MODE') && defined('Memcached::DYNAMIC_CLIENT_MODE')) {
-			$this->_Memcached->setOption(Memcached::OPT_CLIENT_MODE, Memcached::DYNAMIC_CLIENT_MODE);
+			$this->_Memcached->setOption(\Memcached::OPT_CLIENT_MODE, \Memcached::DYNAMIC_CLIENT_MODE);
 		}
 
-		$this->_Memcached->setOption(Memcached::OPT_COMPRESSION, (bool)$this->settings['compress']);
+		$this->_Memcached->setOption(\Memcached::OPT_COMPRESSION, (bool)$this->settings['compress']);
 	}
 
 /**
@@ -242,7 +247,7 @@ class MemcachedEngine extends CacheEngine {
  *
  * @param string $key Identifier for the data
  * @param int $offset How much to increment
- * @return New incremented value, false otherwise
+ * @return false|int New incremented value, false otherwise
  * @throws CacheException when you try to increment with compress = true
  */
 	public function increment($key, $offset = 1) {
@@ -254,7 +259,7 @@ class MemcachedEngine extends CacheEngine {
  *
  * @param string $key Identifier for the data
  * @param int $offset How much to subtract
- * @return New decremented value, false otherwise
+ * @return false|int New decremented value, false otherwise
  * @throws CacheException when you try to decrement with compress = true
  */
 	public function decrement($key, $offset = 1) {

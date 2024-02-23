@@ -1,4 +1,8 @@
 <?php
+namespace Cake\Cache\Engine;
+use Cake\Cache\CacheEngine;
+use Cake\Utility\Inflector;
+
 /**
  * Xcache storage engine for cache.
  *

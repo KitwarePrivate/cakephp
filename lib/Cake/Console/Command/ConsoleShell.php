@@ -1,4 +1,12 @@
 <?php
+namespace Cake\Console\Command;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\Routing\Dispatcher;
+use Cake\Routing\Router;
+use Cake\Utility\Hash;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -328,7 +336,7 @@ class ConsoleShell extends AppShell {
 		$command = str_replace($this->badCommandChars, "", $command);
 
 		// Do we have a valid model?
-		list($modelToCheck) = explode('->', $command);
+		[$modelToCheck] = explode('->', $command);
 
 		if ($this->_isValidModel($modelToCheck)) {
 			$findCommand = "\$data = \$this->$command;";
@@ -389,11 +397,11 @@ class ConsoleShell extends AppShell {
 		// Validate the model we're trying to save here
 		$command = strip_tags($command);
 		$command = str_replace($this->badCommandChars, "", $command);
-		list($modelToSave) = explode("->", $command);
+		[$modelToSave] = explode("->", $command);
 
 		if ($this->_isValidModel($modelToSave)) {
 			// Extract the array of data we are trying to build
-			list(, $data) = explode("->save", $command);
+			[, $data] = explode("->save", $command);
 			$data = preg_replace('/^\(*(array)?\(*(.+?)\)*$/i', '\\2', $data);
 			$saveCommand = "\$this->{$modelToSave}->save(array('{$modelToSave}' => array({$data})));";
 			//@codingStandardsIgnoreStart

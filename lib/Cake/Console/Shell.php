@@ -1,4 +1,18 @@
 <?php
+namespace Cake\Console;
+use Cake\Console\Helper\BaseShellHelper;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Core\CakePlugin;
+use Cake\Core\Configure;
+use Cake\Error\ConsoleException;
+use Cake\Error\MissingModelException;
+use Cake\Log\CakeLog;
+use Cake\Utility\CakeText;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\File;
+use Cake\Utility\Inflector;
+
 /**
  * Base class for Shells
  *
@@ -264,7 +278,7 @@ class Shell extends CakeObject {
  */
 	protected function _loadModels() {
 		if (is_array($this->uses)) {
-			list(, $this->modelClass) = pluginSplit(current($this->uses));
+			[, $this->modelClass] = pluginSplit(current($this->uses));
 			foreach ($this->uses as $modelClass) {
 				$this->loadModel($modelClass);
 			}
@@ -281,7 +295,7 @@ class Shell extends CakeObject {
 	public function __isset($name) {
 		if (is_array($this->uses)) {
 			foreach ($this->uses as $modelClass) {
-				list(, $class) = pluginSplit($modelClass);
+				[, $class] = pluginSplit($modelClass);
 				if ($name === $class) {
 					return $this->loadModel($modelClass);
 				}
@@ -307,7 +321,7 @@ class Shell extends CakeObject {
 			$this->uses[] = $modelClass;
 		}
 
-		list($plugin, $modelClass) = pluginSplit($modelClass, true);
+		[$plugin, $modelClass] = pluginSplit($modelClass, true);
 		if (!isset($this->modelClass)) {
 			$this->modelClass = $modelClass;
 		}
@@ -355,7 +369,7 @@ class Shell extends CakeObject {
  */
 	public function hasMethod($name) {
 		try {
-			$method = new ReflectionMethod($this, $name);
+			$method = new \ReflectionMethod($this, $name);
 			if (!$method->isPublic() || substr($name, 0, 1) === '_') {
 				return false;
 			}
@@ -363,7 +377,7 @@ class Shell extends CakeObject {
 				return false;
 			}
 			return true;
-		} catch (ReflectionException $e) {
+		} catch (\ReflectionException $e) {
 			return false;
 		}
 	}
@@ -429,7 +443,7 @@ class Shell extends CakeObject {
 
 		$this->OptionParser = $this->getOptionParser();
 		try {
-			list($this->params, $this->args) = $this->OptionParser->parse($argv, $command);
+			[$this->params, $this->args] = $this->OptionParser->parse($argv, $command);
 		} catch (ConsoleException $e) {
 			$this->err(__d('cake_console', '<error>Error:</error> %s', $e->getMessage()));
 			$this->out($this->OptionParser->help($command));
@@ -799,17 +813,17 @@ class Shell extends CakeObject {
  *
  * @param string $name Name of the helper class. Supports plugin syntax.
  * @return BaseShellHelper Instance of helper class
- * @throws RuntimeException If invalid class name is provided
+ * @throws \RuntimeException If invalid class name is provided
  */
 	public function helper($name) {
 		if (isset($this->_helpers[$name])) {
 			return $this->_helpers[$name];
 		}
-		list($plugin, $helperClassName) = pluginSplit($name, true);
+		[$plugin, $helperClassName] = pluginSplit($name, true);
 		$helperClassNameShellHelper = Inflector::camelize($helperClassName) . "ShellHelper";
 		App::uses($helperClassNameShellHelper, $plugin . "Console/Helper");
 		if (!class_exists($helperClassNameShellHelper)) {
-			throw new RuntimeException("Class " . $helperClassName . " not found");
+			throw new \RuntimeException("Class " . $helperClassName . " not found");
 		}
 		$helper = new $helperClassNameShellHelper($this->stdout);
 		$this->_helpers[$name] = $helper;
@@ -983,7 +997,7 @@ class Shell extends CakeObject {
 
 /**
  * Configure the stdout logger
- * 
+ *
  * @return void
  */
 	protected function _configureStdOutLogger() {
@@ -996,7 +1010,7 @@ class Shell extends CakeObject {
 
 /**
  * Configure the stderr logger
- * 
+ *
  * @return void
  */
 	protected function _configureStdErrLogger() {
@@ -1009,8 +1023,8 @@ class Shell extends CakeObject {
 
 /**
  * Checks if the given logger is configured
- * 
- * @param string $logger The name of the logger to check 
+ *
+ * @param string $logger The name of the logger to check
  * @return bool
  */
 	protected function _loggerIsConfigured($logger) {

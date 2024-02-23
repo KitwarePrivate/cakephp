@@ -1,4 +1,31 @@
 <?php
+namespace Cake\View;
+use Cake\Cache\Cache;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Core\CakePlugin;
+use Cake\Core\Configure;
+use Cake\Error\CakeException;
+use Cake\Error\MissingLayoutException;
+use Cake\Error\MissingViewException;
+use Cake\Event\CakeEvent;
+use Cake\Event\CakeEventManager;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Router;
+use Cake\Utility\Inflector;
+use Cake\View\Helper\CacheHelper;
+use Cake\View\Helper\FormHelper;
+use Cake\View\Helper\HtmlHelper;
+use Cake\View\Helper\JsHelper;
+use Cake\View\Helper\NumberHelper;
+use Cake\View\Helper\PaginatorHelper;
+use Cake\View\Helper\RssHelper;
+use Cake\View\Helper\SessionHelper;
+use Cake\View\Helper\TextHelper;
+use Cake\View\Helper\TimeHelper;
+
 /**
  * Methods for displaying presentation data in the view.
  *
@@ -419,7 +446,7 @@ class View extends CakeObject {
 		}
 
 		if (empty($options['ignoreMissing'])) {
-			list ($plugin, $name) = pluginSplit($name, true);
+			[$plugin, $name] = pluginSplit($name, true);
 			$name = str_replace('/', DS, $name);
 			$file = $plugin . 'Elements' . DS . $name . $this->ext;
 			trigger_error(__d('cake_dev', 'Element Not Found: %s', $file), E_USER_NOTICE);
@@ -724,8 +751,8 @@ class View extends CakeObject {
  *
  * @param string $name The view or element to 'extend' the current one with.
  * @return void
- * @throws LogicException when you extend a view with itself or make extend loops.
- * @throws LogicException when you extend an element which doesn't exist
+ * @throws \LogicException when you extend a view with itself or make extend loops.
+ * @throws \LogicException when you extend an element which doesn't exist
  */
 	public function extend($name) {
 		if ($name[0] === '/' || $this->_currentType === static::TYPE_VIEW) {
@@ -735,10 +762,10 @@ class View extends CakeObject {
 				case static::TYPE_ELEMENT:
 					$parent = $this->_getElementFileName($name);
 					if (!$parent) {
-						list($plugin, $name) = $this->pluginSplit($name);
+						[$plugin, $name] = $this->pluginSplit($name);
 						$paths = $this->_paths($plugin);
 						$defaultPath = $paths[0] . 'Elements' . DS;
-						throw new LogicException(__d(
+						throw new \LogicException(__d(
 							'cake_dev',
 							'You cannot extend an element which does not exist (%s).',
 							$defaultPath . $name . $this->ext
@@ -754,10 +781,10 @@ class View extends CakeObject {
 		}
 
 		if ($parent == $this->_current) {
-			throw new LogicException(__d('cake_dev', 'You cannot have views extend themselves.'));
+			throw new \LogicException(__d('cake_dev', 'You cannot have views extend themselves.'));
 		}
 		if (isset($this->_parents[$parent]) && $this->_parents[$parent] == $this->_current) {
-			throw new LogicException(__d('cake_dev', 'You cannot have views extend in a loop.'));
+			throw new \LogicException(__d('cake_dev', 'You cannot have views extend in a loop.'));
 		}
 		$this->_parents[$this->_current] = $parent;
 	}
@@ -903,7 +930,7 @@ class View extends CakeObject {
 	public function loadHelpers() {
 		$helpers = HelperCollection::normalizeObjectArray($this->helpers);
 		foreach ($helpers as $properties) {
-			list(, $class) = pluginSplit($properties['class']);
+			[, $class] = pluginSplit($properties['class']);
 			$this->{$class} = $this->Helpers->load($properties['class'], $properties['settings']);
 		}
 	}
@@ -1006,7 +1033,7 @@ class View extends CakeObject {
 			$name = $this->view;
 		}
 		$name = str_replace('/', DS, $name);
-		list($plugin, $name) = $this->pluginSplit($name);
+		[$plugin, $name] = $this->pluginSplit($name);
 
 		if (strpos($name, DS) === false && $name[0] !== '.') {
 			$name = $this->viewPath . DS . $subDir . Inflector::underscore($name);
@@ -1042,7 +1069,7 @@ class View extends CakeObject {
  */
 	public function pluginSplit($name, $fallback = true) {
 		$plugin = null;
-		list($first, $second) = pluginSplit($name);
+		[$first, $second] = pluginSplit($name);
 		if (CakePlugin::loaded($first) === true) {
 			$name = $second;
 			$plugin = $first;
@@ -1069,7 +1096,7 @@ class View extends CakeObject {
 		if ($this->layoutPath !== null) {
 			$subDir = $this->layoutPath . DS;
 		}
-		list($plugin, $name) = $this->pluginSplit($name);
+		[$plugin, $name] = $this->pluginSplit($name);
 		$paths = $this->_paths($plugin);
 		$file = 'Layouts' . DS . $subDir . $name;
 
@@ -1104,7 +1131,7 @@ class View extends CakeObject {
  * @return mixed Either a string to the element filename or false when one can't be found.
  */
 	protected function _getElementFileName($name) {
-		list($plugin, $name) = $this->pluginSplit($name);
+		[$plugin, $name] = $this->pluginSplit($name);
 
 		$paths = $this->_paths($plugin);
 		$exts = $this->_getExtensions();
@@ -1179,7 +1206,7 @@ class View extends CakeObject {
  */
 	protected function _elementCache($name, $data, $options) {
 		$plugin = null;
-		list($plugin, $name) = $this->pluginSplit($name);
+		[$plugin, $name] = $this->pluginSplit($name);
 
 		$underscored = null;
 		if ($plugin) {

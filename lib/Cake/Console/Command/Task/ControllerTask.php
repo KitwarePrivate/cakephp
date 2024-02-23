@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Console\Command\Task;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Core\App;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Inflector;
+
 /**
  * The ControllerTask handles creating and updating controller files.
  *
@@ -176,7 +182,7 @@ class ControllerTask extends BakeTask {
 				$wannaBakeCrud = 'n';
 				$actions = 'scaffold';
 			} else {
-				list($wannaBakeCrud, $wannaBakeAdminCrud) = $this->_askAboutMethods();
+				[$wannaBakeCrud, $wannaBakeAdminCrud] = $this->_askAboutMethods();
 
 				$helpers = $this->doHelpers();
 				$components = $this->doComponents();
@@ -191,7 +197,7 @@ class ControllerTask extends BakeTask {
 				array_unique($components);
 			}
 		} else {
-			list($wannaBakeCrud, $wannaBakeAdminCrud) = $this->_askAboutMethods();
+			[$wannaBakeCrud, $wannaBakeAdminCrud] = $this->_askAboutMethods();
 		}
 
 		if (strtolower($wannaBakeCrud) === 'y') {

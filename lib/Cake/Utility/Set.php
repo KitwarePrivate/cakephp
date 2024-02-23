@@ -1,4 +1,7 @@
 <?php
+namespace Cake\Utility;
+use Cake\Core\App;
+
 /**
  * Library of array functions for Cake.
  *
@@ -127,7 +130,7 @@ class Set {
  */
 	protected static function _map(&$array, $class, $primary = false) {
 		if ($class === true) {
-			$out = new stdClass;
+			$out = new \stdClass;
 		} else {
 			$out = new $class;
 		}
@@ -493,7 +496,7 @@ class Set {
 				}
 				continue;
 			}
-			list(, $key, $op, $expected) = $match;
+			[, $key, $op, $expected] = $match;
 			if (!(isset($data[$key]) || array_key_exists($key, $data))) {
 				return false;
 			}
@@ -541,7 +544,7 @@ class Set {
 			return $data;
 		}
 		if (is_object($data)) {
-			if (!($data instanceof ArrayAccess || $data instanceof Traversable)) {
+			if (!($data instanceof \ArrayAccess || $data instanceof \Traversable)) {
 				$data = get_object_vars($data);
 			}
 		}
@@ -800,7 +803,7 @@ class Set {
 		}
 
 		if (is_object($data)) {
-			if (!($data instanceof ArrayAccess || $data instanceof Traversable)) {
+			if (!($data instanceof \ArrayAccess || $data instanceof \Traversable)) {
 				$data = get_object_vars($data);
 			}
 		}
@@ -858,7 +861,7 @@ class Set {
  */
 	public static function reverse($object) {
 		$out = array();
-		if ($object instanceof SimpleXMLElement) {
+		if ($object instanceof \SimpleXMLElement) {
 			return Xml::toArray($object);
 		} elseif (is_object($object)) {
 			$keys = get_object_vars($object);
@@ -967,7 +970,7 @@ class Set {
 			$numeric = true;
 		}
 		$result = Set::_flatten(Set::extract($data, $path));
-		list($keys, $values) = array(Set::extract($result, '{n}.id'), Set::extract($result, '{n}.value'));
+		[$keys, $values] = array(Set::extract($result, '{n}.id'), Set::extract($result, '{n}.value'));
 
 		$dir = strtolower($dir);
 		if ($dir === 'asc') {

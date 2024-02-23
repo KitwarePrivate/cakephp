@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Console\Command;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Console\ConsoleOutput;
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\Utility\Inflector;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -101,7 +108,7 @@ class CommandListShell extends AppShell {
  */
 	protected function _asXml($shellList) {
 		$plugins = CakePlugin::loaded();
-		$shells = new SimpleXmlElement('<shells></shells>');
+		$shells = new \SimpleXmlElement('<shells></shells>');
 		foreach ($shellList as $plugin => $commands) {
 			foreach ($commands as $command) {
 				$callable = $command;

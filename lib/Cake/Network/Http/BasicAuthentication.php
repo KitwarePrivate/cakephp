@@ -1,4 +1,5 @@
 <?php
+namespace Cake\Network\Http;
 /**
  * Basic authentication
  *

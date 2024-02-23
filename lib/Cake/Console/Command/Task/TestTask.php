@@ -1,4 +1,15 @@
 <?php
+namespace Cake\Console\Command\Task;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Console\Shell;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Error\CakeException;
+use Cake\Model\Model;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Inflector;
+
 /**
  * The TestTask handles creating and updating test files.
  *
@@ -147,7 +158,7 @@ class TestTask extends BakeTask {
 		} elseif ($this->interactive) {
 			$this->getUserFixtures();
 		}
-		list($baseClass, $baseType) = $this->getBaseType($type);
+		[$baseClass, $baseType] = $this->getBaseType($type);
 		App::uses($baseClass, $baseType);
 		App::uses($fullClassName, $realType);
 
@@ -156,7 +167,7 @@ class TestTask extends BakeTask {
 			$methods = $this->getTestableMethods($fullClassName);
 		}
 		$mock = $this->hasMockClass($type, $fullClassName);
-		list($preConstruct, $construction, $postConstruct) = $this->generateConstructor($type, $fullClassName, $plugin);
+		[$preConstruct, $construction, $postConstruct] = $this->generateConstructor($type, $fullClassName, $plugin);
 		$uses = $this->generateUses($type, $realType, $fullClassName);
 
 		$this->out("\n" . __d('cake_console', 'Baking test case for %s %s ...', $className, $type), 1, Shell::QUIET);
@@ -258,7 +269,7 @@ class TestTask extends BakeTask {
  */
 	public function isLoadableClass($package, $class) {
 		App::uses($class, $package);
-		list($plugin, $ns) = pluginSplit($package);
+		[$plugin, $ns] = pluginSplit($package);
 		if ($plugin) {
 			App::uses("{$plugin}AppController", $package);
 			App::uses("{$plugin}AppModel", $package);
@@ -397,7 +408,7 @@ class TestTask extends BakeTask {
 			}
 			if ($type === 'hasAndBelongsToMany') {
 				if (!empty($subject->hasAndBelongsToMany[$alias]['with'])) {
-					list(, $joinModel) = pluginSplit($subject->hasAndBelongsToMany[$alias]['with']);
+					[, $joinModel] = pluginSplit($subject->hasAndBelongsToMany[$alias]['with']);
 				} else {
 					$joinModel = Inflector::classify($subject->hasAndBelongsToMany[$alias]['joinTable']);
 				}
@@ -422,7 +433,7 @@ class TestTask extends BakeTask {
 			$models = $subject->uses;
 		}
 		foreach ($models as $model) {
-			list(, $model) = pluginSplit($model);
+			[, $model] = pluginSplit($model);
 			$this->_processModel($subject->{$model});
 		}
 	}

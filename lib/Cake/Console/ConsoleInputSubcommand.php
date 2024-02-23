@@ -1,4 +1,5 @@
 <?php
+namespace Cake\Console;
 /**
  * ConsoleInputSubcommand file
  *

@@ -1,4 +1,13 @@
 <?php
+namespace Cake\Controller\Component;
+use Cake\Controller\Component;
+use Cake\Controller\ComponentCollection;
+use Cake\Core\App;
+use Cake\Error\InternalErrorException;
+use Cake\Model\Datasource\CakeSession;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+
 /**
  * Flash Component
  *
@@ -72,12 +81,12 @@ class FlashComponent extends Component {
 	public function set($message, $options = array()) {
 		$options += $this->_defaultConfig;
 
-		if ($message instanceof Exception) {
+		if ($message instanceof \Exception) {
 			$options['params'] += array('code' => $message->getCode());
 			$message = $message->getMessage();
 		}
 
-		list($plugin, $element) = pluginSplit($options['element'], true);
+		[$plugin, $element] = pluginSplit($options['element'], true);
 		if (!empty($options['plugin'])) {
 			$plugin = $options['plugin'] . '.';
 		}

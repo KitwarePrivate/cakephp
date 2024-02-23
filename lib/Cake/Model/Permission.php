@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Model;
+use AppModel;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\AclException;
+use Cake\Utility\Hash;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -199,7 +206,7 @@ class Permission extends AppModel {
 				$save[$action] = $value;
 			}
 		}
-		list($save['aro_id'], $save['aco_id']) = array($perms['aro'], $perms['aco']);
+		[$save['aro_id'], $save['aco_id']] = array($perms['aro'], $perms['aco']);
 
 		if ($perms['link'] && !empty($perms['link'])) {
 			$save['id'] = $perms['link'][0][$this->alias]['id'];

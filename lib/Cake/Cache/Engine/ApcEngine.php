@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Cache\Engine;
+use APCIterator;
+use Cake\Cache\CacheEngine;
+use Cake\Utility\Inflector;
+
 /**
  * APC storage engine for cache.
  *
@@ -209,7 +214,7 @@ class ApcEngine extends CacheEngine {
 	}
 
 /**
- * Write data for key into cache if it doesn't exist already. 
+ * Write data for key into cache if it doesn't exist already.
  * If it already exists, it fails and returns false.
  *
  * @param string $key Identifier for the data.

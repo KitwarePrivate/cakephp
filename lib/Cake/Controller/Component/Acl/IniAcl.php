@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Controller\Component\Acl;
+use Cake\Configure\IniReader;
+use Cake\Controller\Component;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Utility\Hash;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)

@@ -1,4 +1,12 @@
 <?php
+namespace Cake\TestSuite\Reporter;
+use Cake\TestSuite\CakeTestLoader;
+use PHPUnit_Framework_AssertionFailedError;
+use PHPUnit_Framework_Test;
+use PHPUnit_Framework_TestResult;
+use PHPUnit_Framework_TestSuite;
+use PHPUnit_TextUI_ResultPrinter;
+
 /**
  * CakeBaseReporter contains common functionality to all cake test suite reporters.
  *
@@ -144,11 +152,11 @@ class CakeBaseReporter extends PHPUnit_TextUI_ResultPrinter {
  * An error occurred.
  *
  * @param PHPUnit_Framework_Test $test The test to add an error for.
- * @param Exception $e The exception object to add.
+ * @param \Exception $e The exception object to add.
  * @param float $time The current time.
  * @return void
  */
-	public function addError(PHPUnit_Framework_Test $test, Exception $e, $time) {
+	public function addError(PHPUnit_Framework_Test $test, \Exception $e, $time) {
 		$this->paintException($e, $test);
 	}
 
@@ -168,11 +176,11 @@ class CakeBaseReporter extends PHPUnit_TextUI_ResultPrinter {
  * Incomplete test.
  *
  * @param PHPUnit_Framework_Test $test The test that was incomplete.
- * @param Exception $e The incomplete exception
+ * @param \Exception $e The incomplete exception
  * @param float $time The current time.
  * @return void
  */
-	public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time) {
+	public function addIncompleteTest(PHPUnit_Framework_Test $test, \Exception $e, $time) {
 		$this->paintSkip($e, $test);
 	}
 
@@ -180,11 +188,11 @@ class CakeBaseReporter extends PHPUnit_TextUI_ResultPrinter {
  * Skipped test.
  *
  * @param PHPUnit_Framework_Test $test The test that failed.
- * @param Exception $e The skip object.
+ * @param \Exception $e The skip object.
  * @param float $time The current time.
  * @return void
  */
-	public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time) {
+	public function addSkippedTest(PHPUnit_Framework_Test $test, \Exception $e, $time) {
 		$this->paintSkip($e, $test);
 	}
 

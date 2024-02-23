@@ -1,4 +1,16 @@
 <?php
+namespace Cake\View;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Core\CakePlugin;
+use Cake\Core\Configure;
+use Cake\Network\CakeRequest;
+use Cake\Routing\Router;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+use Cake\Utility\ObjectCollection;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -354,7 +366,7 @@ class Helper extends CakeObject {
 			return $path;
 		}
 		if (!array_key_exists('plugin', $options) || $options['plugin'] !== false) {
-			list($plugin, $path) = $this->_View->pluginSplit($path, false);
+			[$plugin, $path] = $this->_View->pluginSplit($path, false);
 		}
 		if (!empty($options['pathPrefix']) && $path[0] !== '/') {
 			$path = $options['pathPrefix'] . $path;

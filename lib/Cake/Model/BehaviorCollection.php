@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Model;
+use Cake\Core\App;
+use Cake\Error\MissingBehaviorException;
+use Cake\Event\CakeEventListener;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\ObjectCollection;
+
 /**
  * BehaviorCollection
  *
@@ -109,7 +116,7 @@ class BehaviorCollection extends ObjectCollection implements CakeEventListener {
 		$priority = isset($config['priority']) ? $config['priority'] : $this->defaultPriority;
 		unset($config['enabled'], $config['className'], $config['priority']);
 
-		list($plugin, $name) = pluginSplit($behavior, true);
+		[$plugin, $name] = pluginSplit($behavior, true);
 		if (!isset($alias)) {
 			$alias = $name;
 		}
@@ -184,7 +191,7 @@ class BehaviorCollection extends ObjectCollection implements CakeEventListener {
  * @return void
  */
 	public function unload($name) {
-		list(, $name) = pluginSplit($name);
+		[, $name] = pluginSplit($name);
 		if (isset($this->_loaded[$name])) {
 			$this->_loaded[$name]->cleanup(ClassRegistry::getObject($this->modelName));
 			parent::unload($name);

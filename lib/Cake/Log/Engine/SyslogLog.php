@@ -1,4 +1,7 @@
 <?php
+namespace Cake\Log\Engine;
+use Cake\Core\App;
+
 /**
  * Syslog logger engine for CakePHP
  *

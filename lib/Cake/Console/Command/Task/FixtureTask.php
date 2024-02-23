@@ -1,4 +1,15 @@
 <?php
+namespace Cake\Console\Command\Task;
+use Cake\Console\ConsoleInput;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Console\ConsoleOutput;
+use Cake\Console\Shell;
+use Cake\Core\App;
+use Cake\Model\CakeSchema;
+use Cake\Model\Model;
+use Cake\Utility\CakeText;
+use Cake\Utility\Inflector;
+
 /**
  * The FixtureTask handles creating and updating fixture files.
  *

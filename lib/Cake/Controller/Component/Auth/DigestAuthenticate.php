@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Controller\Component\Auth;
+use Cake\Controller\ComponentCollection;
+use Cake\Core\App;
+use Cake\Network\CakeRequest;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -118,7 +123,7 @@ class DigestAuthenticate extends BasicAuthenticate {
 			return false;
 		}
 
-		list(, $model) = pluginSplit($this->settings['userModel']);
+		[, $model] = pluginSplit($this->settings['userModel']);
 		$user = $this->_findUser(array(
 			$model . '.' . $this->settings['fields']['username'] => $digest['username']
 		));

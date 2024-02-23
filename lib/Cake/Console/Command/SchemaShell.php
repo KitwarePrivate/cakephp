@@ -1,4 +1,16 @@
 <?php
+namespace Cake\Console\Command;
+use Cake\Cache\Cache;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Model\CakeSchema;
+use Cake\Model\ConnectionManager;
+use Cake\Utility\CakeText;
+use Cake\Utility\File;
+use Cake\Utility\Folder;
+use Cake\Utility\Inflector;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -63,7 +75,7 @@ class SchemaShell extends AppShell {
 		}
 
 		if (strpos((string)$name, '.')) {
-			list($this->params['plugin'], $splitName) = pluginSplit($name);
+			[$this->params['plugin'], $splitName] = pluginSplit($name);
 			$name = $this->params['name'] = $splitName;
 		}
 		if ($name && empty($this->params['file'])) {
@@ -246,7 +258,7 @@ class SchemaShell extends AppShell {
  * @return void
  */
 	public function create() {
-		list($Schema, $table) = $this->_loadSchema();
+		[$Schema, $table] = $this->_loadSchema();
 		$this->_create($Schema, $table);
 	}
 
@@ -256,7 +268,7 @@ class SchemaShell extends AppShell {
  * @return void
  */
 	public function update() {
-		list($Schema, $table) = $this->_loadSchema();
+		[$Schema, $table] = $this->_loadSchema();
 		$this->_update($Schema, $table);
 	}
 
@@ -441,7 +453,7 @@ class SchemaShell extends AppShell {
 					$error = null;
 					try {
 						$db->execute($sql);
-					} catch (PDOException $e) {
+					} catch (\PDOException $e) {
 						$error = $table . ': ' . $e->getMessage();
 					}
 

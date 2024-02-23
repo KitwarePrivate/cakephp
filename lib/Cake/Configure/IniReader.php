@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Configure;
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\Error\ConfigureException;
+use Cake\Utility\Hash;
+
 /**
  * IniReader
  *
@@ -208,13 +214,13 @@ class IniReader implements ConfigReaderInterface {
 	protected function _getFilePath($key) {
 		if (substr($key, -8) === '.ini.php') {
 			$key = substr($key, 0, -8);
-			list($plugin, $key) = pluginSplit($key);
+			[$plugin, $key] = pluginSplit($key);
 			$key .= '.ini.php';
 		} else {
 			if (substr($key, -4) === '.ini') {
 				$key = substr($key, 0, -4);
 			}
-			list($plugin, $key) = pluginSplit($key);
+			[$plugin, $key] = pluginSplit($key);
 			$key .= '.ini';
 		}
 

@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Controller;
+use Cake\Core\App;
+use Cake\Error\MissingComponentException;
+use Cake\Event\CakeEventListener;
+use Cake\Utility\ObjectCollection;
+
 /**
  * Components collection is used as a registry for loaded components and handles loading
  * and constructing component class objects.
@@ -98,7 +104,7 @@ class ComponentCollection extends ObjectCollection implements CakeEventListener 
 			$alias = $component;
 			$component = $settings['className'];
 		}
-		list($plugin, $name) = pluginSplit($component, true);
+		[$plugin, $name] = pluginSplit($component, true);
 		if (!isset($alias)) {
 			$alias = $name;
 		}

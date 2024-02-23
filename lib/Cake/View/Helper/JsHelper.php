@@ -1,4 +1,10 @@
 <?php
+namespace Cake\View\Helper;
+use AppHelper;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\View\View;
+
 /**
  * Javascript Generator class file.
  *
@@ -90,7 +96,7 @@ class JsHelper extends AppHelper {
 			$className = $settings;
 		}
 		$engineName = $className;
-		list(, $className) = pluginSplit($className);
+		[, $className] = pluginSplit($className);
 
 		$this->_engineName = $className . 'Engine';
 		$engineClass = $engineName . 'Engine';
@@ -294,7 +300,7 @@ class JsHelper extends AppHelper {
 		if (!isset($options['id'])) {
 			$options['id'] = 'link-' . (int)mt_rand();
 		}
-		list($options, $htmlOptions) = $this->_getHtmlOptions($options);
+		[$options, $htmlOptions] = $this->_getHtmlOptions($options);
 		$out = $this->Html->link($title, $url, $htmlOptions);
 		$this->get('#' . $htmlOptions['id']);
 		$requestString = $event = '';
@@ -371,7 +377,7 @@ class JsHelper extends AppHelper {
 			$options['id'] = 'submit-' . (int)mt_rand();
 		}
 		$formOptions = array('div');
-		list($options, $htmlOptions) = $this->_getHtmlOptions($options, $formOptions);
+		[$options, $htmlOptions] = $this->_getHtmlOptions($options, $formOptions);
 		$out = $this->Form->submit($caption, $htmlOptions);
 
 		$this->get('#' . $htmlOptions['id']);

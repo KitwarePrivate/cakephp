@@ -1,4 +1,13 @@
 <?php
+namespace Cake\Console\Command\Task;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Console\Shell;
+use Cake\Core\App;
+use Cake\Model\ConnectionManager;
+use Cake\Model\Model;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Inflector;
+
 /**
  * The ModelTask handles creating and updating models files.
  *
@@ -218,7 +227,7 @@ class ModelTask extends BakeTask {
 		try {
 			$fields = $tempModel->schema(true);
 			$knownToExist = true;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$fields = array($tempModel->primaryKey);
 		}
 		if (!array_key_exists('id', $fields)) {

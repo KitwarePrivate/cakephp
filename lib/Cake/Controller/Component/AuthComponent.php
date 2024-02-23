@@ -1,4 +1,22 @@
 <?php
+namespace Cake\Controller\Component;
+use Cake\Controller\Component;
+use Cake\Controller\Component\Auth\BaseAuthenticate;
+use Cake\Controller\Component\Auth\BaseAuthorize;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\CakeException;
+use Cake\Error\ForbiddenException;
+use Cake\Event\CakeEvent;
+use Cake\Model\Datasource\CakeSession;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Router;
+use Cake\Utility\Debugger;
+use Cake\Utility\Hash;
+use Cake\Utility\Security;
+
 /**
  * Authentication component
  *
@@ -492,7 +510,7 @@ class AuthComponent extends Component {
 			unset($config[AuthComponent::ALL]);
 		}
 		foreach ($config as $class => $settings) {
-			list($plugin, $class) = pluginSplit($class, true);
+			[$plugin, $class] = pluginSplit($class, true);
 			$className = $class . 'Authorize';
 			App::uses($className, $plugin . 'Controller/Component/Auth');
 			if (!class_exists($className)) {
@@ -799,7 +817,7 @@ class AuthComponent extends Component {
 				$class = $settings['className'];
 				unset($settings['className']);
 			}
-			list($plugin, $class) = pluginSplit($class, true);
+			[$plugin, $class] = pluginSplit($class, true);
 			$className = $class . 'Authenticate';
 			App::uses($className, $plugin . 'Controller/Component/Auth');
 			if (!class_exists($className)) {

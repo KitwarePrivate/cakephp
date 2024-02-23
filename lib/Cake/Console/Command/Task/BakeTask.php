@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Console\Command\Task;
+use Cake\Console\Command\AppShell;
+use Cake\Core\App;
+use Cake\Core\Configure;
+
 /**
  * Base class for Bake Tasks.
  *
@@ -80,7 +85,7 @@ class BakeTask extends AppShell {
 	public function execute() {
 		foreach ($this->args as $i => $arg) {
 			if (strpos($arg, '.')) {
-				list($this->params['plugin'], $this->args[$i]) = pluginSplit($arg);
+				[$this->params['plugin'], $this->args[$i]] = pluginSplit($arg);
 				break;
 			}
 		}

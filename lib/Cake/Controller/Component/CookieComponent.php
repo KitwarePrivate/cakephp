@@ -1,4 +1,14 @@
 <?php
+namespace Cake\Controller\Component;
+use Cake\Controller\Component;
+use Cake\Controller\ComponentCollection;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Network\CakeResponse;
+use Cake\Utility\Hash;
+use Cake\Utility\Security;
+
 /**
  * Cookie Component
  *
@@ -231,7 +241,7 @@ class CookieComponent extends Component {
 		foreach ($key as $name => $value) {
 			if (strpos($name, '.') !== false) {
 				$this->_values[$this->name] = Hash::insert($this->_values[$this->name], $name, $value);
-				list($name) = explode('.', $name, 2);
+				[$name] = explode('.', $name, 2);
 				$value = $this->_values[$this->name][$name];
 			} else {
 				$this->_values[$this->name][$name] = $value;
@@ -305,7 +315,7 @@ class CookieComponent extends Component {
 			$this->_delete('[' . $key . ']');
 		} else {
 			$this->_values[$this->name] = Hash::remove((array)$this->_values[$this->name], $key);
-			list($key) = explode('.', $key, 2);
+			[$key] = explode('.', $key, 2);
 			if (isset($this->_values[$this->name][$key])) {
 				$value = $this->_values[$this->name][$key];
 				$this->_write('[' . $key . ']', $value);
@@ -374,10 +384,10 @@ class CookieComponent extends Component {
 		if (!$expires) {
 			return $this->_expires = 0;
 		}
-		$now = new DateTime();
+		$now = new \DateTime();
 
 		if (is_int($expires) || is_numeric($expires)) {
-			return $this->_expires = $now->format('U') + (int)$expires;
+			return $this->_expires = $now->format('U') . (int)$expires;
 		}
 		$now->modify($expires);
 		return $this->_expires = $now->format('U');

@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Model\Datasource\Database;
+use Cake\Core\App;
+use Cake\Error\CakeException;
+use Cake\Error\MissingConnectionException;
+use Cake\Model\Datasource\DboSource;
+use Cake\Model\Model;
+
 /**
  * MS SQL Server layer for DBO
  *
@@ -123,7 +130,7 @@ class Sqlserver extends DboSource {
  * information see: https://github.com/Microsoft/msphpsql/issues/65).
  *
  * @return bool True if the database could be connected, else false
- * @throws InvalidArgumentException if an unsupported setting is in the database config
+ * @throws \InvalidArgumentException if an unsupported setting is in the database config
  * @throws MissingConnectionException
  */
 	public function connect() {
@@ -131,19 +138,19 @@ class Sqlserver extends DboSource {
 		$this->connected = false;
 
 		if (isset($config['persistent']) && $config['persistent']) {
-			throw new InvalidArgumentException('Config setting "persistent" cannot be set to true, as the Sqlserver PDO driver does not support PDO::ATTR_PERSISTENT');
+			throw new \InvalidArgumentException('Config setting "persistent" cannot be set to true, as the Sqlserver PDO driver does not support PDO::ATTR_PERSISTENT');
 		}
 
 		$flags = $config['flags'] + array(
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+			\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
 		);
 
 		if (!empty($config['encoding'])) {
-			$flags[PDO::SQLSRV_ATTR_ENCODING] = $config['encoding'];
+			$flags[\PDO::SQLSRV_ATTR_ENCODING] = $config['encoding'];
 		}
 
 		try {
-			$this->_connection = new PDO(
+			$this->_connection = new \PDO(
 				"sqlsrv:server={$config['host']};Database={$config['database']}",
 				$config['login'],
 				$config['password'],
@@ -155,7 +162,7 @@ class Sqlserver extends DboSource {
 					$this->_execute("SET $key $value");
 				}
 			}
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			throw new MissingConnectionException(array(
 				'class' => get_class($this),
 				'message' => $e->getMessage()
@@ -171,7 +178,7 @@ class Sqlserver extends DboSource {
  * @return bool
  */
 	public function enabled() {
-		return in_array('sqlsrv', PDO::getAvailableDrivers());
+		return in_array('sqlsrv', \PDO::getAvailableDrivers());
 	}
 
 /**
@@ -193,7 +200,7 @@ class Sqlserver extends DboSource {
 		}
 		$tables = array();
 
-		while ($line = $result->fetch(PDO::FETCH_NUM)) {
+		while ($line = $result->fetch(\PDO::FETCH_NUM)) {
 			$tables[] = $line[0];
 		}
 
@@ -238,7 +245,7 @@ class Sqlserver extends DboSource {
 			throw new CakeException(__d('cake_dev', 'Could not describe table for %s', $table));
 		}
 
-		while ($column = $cols->fetch(PDO::FETCH_OBJ)) {
+		while ($column = $cols->fetch(\PDO::FETCH_OBJ)) {
 			$field = $column->Field;
 			$fields[$field] = array(
 				'type' => $this->column($column),
@@ -506,7 +513,7 @@ class Sqlserver extends DboSource {
 /**
  * Builds a map of the columns contained in a result
  *
- * @param PDOStatement $results The result to modify.
+ * @param \PDOStatement $results The result to modify.
  * @return void
  */
 	public function resultSet($results) {
@@ -626,7 +633,7 @@ class Sqlserver extends DboSource {
 		switch ($column) {
 			case 'string':
 			case 'text':
-				return 'N' . $this->_connection->quote($data, PDO::PARAM_STR);
+				return 'N' . $this->_connection->quote($data, \PDO::PARAM_STR);
 			default:
 				return parent::value($data, $column, $null);
 		}
@@ -654,10 +661,10 @@ class Sqlserver extends DboSource {
  * @return mixed
  */
 	public function fetchResult() {
-		if ($row = $this->_result->fetch(PDO::FETCH_NUM)) {
+		if ($row = $this->_result->fetch(\PDO::FETCH_NUM)) {
 			$resultRow = array();
 			foreach ($this->map as $col => $meta) {
-				list($table, $column, $type) = $meta;
+				[$table, $column, $type] = $meta;
 				if ($table === 0 && $column === static::ROW_COUNTER) {
 					continue;
 				}
@@ -789,15 +796,15 @@ class Sqlserver extends DboSource {
  * @param string $sql SQL statement
  * @param array $params list of params to be bound to query (supported only in select)
  * @param array $prepareOptions Options to be used in the prepare statement
- * @return mixed PDOStatement if query executes with no problem, true as the result of a successful, false on error
+ * @return mixed \PDOStatement if query executes with no problem, true as the result of a successful, false on error
  * query returning no rows, such as a CREATE statement, false otherwise
- * @throws PDOException
+ * @throws \PDOException
  */
 	protected function _execute($sql, $params = array(), $prepareOptions = array()) {
 		$this->_lastAffected = false;
 		$sql = trim($sql);
 		if (strncasecmp($sql, 'SELECT', 6) === 0 || preg_match('/^EXEC(?:UTE)?\s/mi', $sql) > 0) {
-			$prepareOptions += array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL);
+			$prepareOptions += array(\PDO::ATTR_CURSOR => \PDO::CURSOR_SCROLL);
 			return parent::_execute($sql, $params, $prepareOptions);
 		}
 		try {
@@ -809,7 +816,7 @@ class Sqlserver extends DboSource {
 				return false;
 			}
 			return true;
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			if (isset($query->queryString)) {
 				$e->queryString = $query->queryString;
 			} else {

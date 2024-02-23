@@ -1,4 +1,12 @@
 <?php
+namespace Cake\Console\Command\Task;
+use Cake\Console\Command\AppShell;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Console\TaskCollection;
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\Utility\Inflector;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -104,15 +112,15 @@ class CommandTask extends AppShell {
 		$return = array_keys($taskMap);
 		$return = array_map('Inflector::underscore', $return);
 
-		$ShellReflection = new ReflectionClass('AppShell');
-		$shellMethods = $ShellReflection->getMethods(ReflectionMethod::IS_PUBLIC);
+		$ShellReflection = new \ReflectionClass('AppShell');
+		$shellMethods = $ShellReflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 		$shellMethodNames = array('main', 'help');
 		foreach ($shellMethods as $method) {
 			$shellMethodNames[] = $method->getName();
 		}
 
-		$Reflection = new ReflectionClass($Shell);
-		$methods = $Reflection->getMethods(ReflectionMethod::IS_PUBLIC);
+		$Reflection = new \ReflectionClass($Shell);
+		$methods = $Reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 		$methodNames = array();
 		foreach ($methods as $method) {
 			$methodNames[] = $method->getName();
@@ -131,7 +139,7 @@ class CommandTask extends AppShell {
  * @return mixed
  */
 	public function getShell($commandName) {
-		list($pluginDot, $name) = pluginSplit($commandName, true);
+		[$pluginDot, $name] = pluginSplit($commandName, true);
 
 		if (in_array(strtolower($pluginDot), array('app.', 'core.'))) {
 			$commandName = $name;

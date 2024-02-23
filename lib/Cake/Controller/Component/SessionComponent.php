@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Controller\Component;
+use Cake\Controller\Component;
+use Cake\Core\App;
+use Cake\Model\Datasource\CakeSession;
+
 /**
  * SessionComponent. Provides access to Sessions from the Controller layer
  *

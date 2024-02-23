@@ -1,4 +1,7 @@
 <?php
+namespace Cake\Utility;
+use Cake\Core\App;
+
 /**
  * Convenience class for reading, writing and appending to files.
  *
@@ -561,7 +564,7 @@ class File {
 			if (!$finfo) {
 				return false;
 			}
-			list($type) = explode(';', $finfo);
+			[$type] = explode(';', $finfo);
 			return $type;
 		}
 		if (function_exists('mime_content_type')) {

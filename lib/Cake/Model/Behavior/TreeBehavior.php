@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Model\Behavior;
+use Cake\Core\App;
+use Cake\Model\ConnectionManager;
+use Cake\Model\Model;
+use Cake\Model\ModelBehavior;
+use Cake\Utility\Hash;
+
 /**
  * Tree behavior class.
  *
@@ -266,13 +273,13 @@ class TreeBehavior extends ModelBehavior {
 			if (empty($values)) {
 				return false;
 			}
-			list($node) = array_values($values);
+			[$node] = array_values($values);
 
 			$parentNode = $this->_getNode($Model, $Model->data[$Model->alias][$parent]);
 			if (!$parentNode) {
 				return false;
 			}
-			list($parentNode) = array_values($parentNode);
+			[$parentNode] = array_values($parentNode);
 
 			if (($node[$left] < $parentNode[$left]) && ($parentNode[$right] < $node[$right])) {
 				return false;
@@ -656,9 +663,9 @@ class TreeBehavior extends ModelBehavior {
 			$id = $Model->id;
 		}
 		extract($this->settings[$Model->alias]);
-		list($node) = array_values($this->_getNode($Model, $id));
+		[$node] = array_values($this->_getNode($Model, $id));
 		if ($node[$parent]) {
-			list($parentNode) = array_values($this->_getNode($Model, $node[$parent]));
+			[$parentNode] = array_values($this->_getNode($Model, $node[$parent]));
 			if (($node[$right] + 1) == $parentNode[$right]) {
 				return false;
 			}
@@ -670,7 +677,7 @@ class TreeBehavior extends ModelBehavior {
 			'recursive' => $recursive)
 		);
 		if ($nextNode) {
-			list($nextNode) = array_values($nextNode);
+			[$nextNode] = array_values($nextNode);
 		} else {
 			return false;
 		}
@@ -710,9 +717,9 @@ class TreeBehavior extends ModelBehavior {
 			$id = $Model->id;
 		}
 		extract($this->settings[$Model->alias]);
-		list($node) = array_values($this->_getNode($Model, $id));
+		[$node] = array_values($this->_getNode($Model, $id));
 		if ($node[$parent]) {
-			list($parentNode) = array_values($this->_getNode($Model, $node[$parent]));
+			[$parentNode] = array_values($this->_getNode($Model, $node[$parent]));
 			if (($node[$left] - 1) == $parentNode[$left]) {
 				return false;
 			}
@@ -725,7 +732,7 @@ class TreeBehavior extends ModelBehavior {
 		));
 
 		if ($previousNode) {
-			list($previousNode) = array_values($previousNode);
+			[$previousNode] = array_values($previousNode);
 		} else {
 			return false;
 		}
@@ -941,7 +948,7 @@ class TreeBehavior extends ModelBehavior {
 		}
 		extract($this->settings[$Model->alias]);
 
-		list($node) = array_values($this->_getNode($Model, $id));
+		[$node] = array_values($this->_getNode($Model, $id));
 
 		if ($node[$right] == $node[$left] + 1) {
 			if ($delete) {
@@ -950,7 +957,7 @@ class TreeBehavior extends ModelBehavior {
 			$Model->id = $id;
 			return $Model->saveField($parent, null);
 		} elseif ($node[$parent]) {
-			list($parentNode) = array_values($this->_getNode($Model, $node[$parent]));
+			[$parentNode] = array_values($this->_getNode($Model, $node[$parent]));
 		} else {
 			$parentNode[$right] = $node[$right] + 1;
 		}
@@ -1110,7 +1117,7 @@ class TreeBehavior extends ModelBehavior {
  */
 	protected function _setParent(Model $Model, $parentId = null, $created = false) {
 		extract($this->settings[$Model->alias]);
-		list($node) = array_values($this->_getNode($Model, $Model->id));
+		[$node] = array_values($this->_getNode($Model, $Model->id));
 		$edge = $this->_getMax($Model, $scope, $right, $recursive, $created);
 
 		if (empty($parentId)) {
@@ -1183,7 +1190,7 @@ class TreeBehavior extends ModelBehavior {
 			}
 		}
 		$name = $Model->escapeField($right);
-		list($edge) = array_values($Model->find('first', array(
+		[$edge] = array_values($Model->find('first', array(
 			'conditions' => $scope,
 			'fields' => $db->calculate($Model, 'max', array($name, $right)),
 			'recursive' => $recursive,
@@ -1205,7 +1212,7 @@ class TreeBehavior extends ModelBehavior {
 	protected function _getMin(Model $Model, $scope, $left, $recursive = -1) {
 		$db = ConnectionManager::getDataSource($Model->useDbConfig);
 		$name = $Model->escapeField($left);
-		list($edge) = array_values($Model->find('first', array(
+		[$edge] = array_values($Model->find('first', array(
 			'conditions' => $scope,
 			'fields' => $db->calculate($Model, 'min', array($name, $left)),
 			'recursive' => $recursive,

@@ -1,4 +1,9 @@
 <?php
+namespace Cake\I18n;
+use Cake\Configure\PhpReader;
+use Cake\Core\App;
+use Cake\Core\Configure;
+
 /**
  * Multibyte handling methods.
  *

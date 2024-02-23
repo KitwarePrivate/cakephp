@@ -21,7 +21,14 @@
 /**
  * Basic defines for timing functions.
  */
-	define('SECOND', 1);
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Event\I18n;
+use Cake\Log\CakeLog;
+use Cake\Utility\Debugger;
+
+define('SECOND', 1);
 	define('MINUTE', 60);
 	define('HOUR', 3600);
 	define('DAY', 86400);

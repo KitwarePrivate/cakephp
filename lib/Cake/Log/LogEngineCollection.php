@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Log;
+use Cake\Core\App;
+use Cake\Error\CakeLogException;
+use Cake\Log\Engine\BaseLog;
+use Cake\Utility\ObjectCollection;
+
 /**
  * Registry of loaded log engines
  *
@@ -60,7 +66,7 @@ class LogEngineCollection extends ObjectCollection {
  * @throws CakeLogException
  */
 	protected static function _getLogger($loggerName) {
-		list($plugin, $loggerName) = pluginSplit($loggerName, true);
+		[$plugin, $loggerName] = pluginSplit($loggerName, true);
 		if (substr($loggerName, -3) !== 'Log') {
 			$loggerName .= 'Log';
 		}

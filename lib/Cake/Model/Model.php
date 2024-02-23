@@ -1,4 +1,22 @@
 <?php
+namespace Cake\Model;
+use AppModel;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Core\Configure;
+use Cake\Error\MissingConnectionException;
+use Cake\Error\MissingTableException;
+use Cake\Event\CakeEvent;
+use Cake\Event\CakeEventListener;
+use Cake\Event\CakeEventManager;
+use Cake\Model\Datasource\DataSource;
+use Cake\Utility\CakeText;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+use Cake\Utility\Set;
+use Cake\Utility\Xml;
+
 /**
  * Object-relational mapper.
  *
@@ -862,7 +880,7 @@ class Model extends CakeObject implements CakeEventListener {
 							$className = $name;
 						}
 					} else {
-						list($plugin, $class) = pluginSplit($relation['with']);
+						[$plugin, $class] = pluginSplit($relation['with']);
 						if ($class === $name) {
 							$className = $relation['with'];
 						}
@@ -881,7 +899,7 @@ class Model extends CakeObject implements CakeEventListener {
 			return false;
 		}
 
-		list($plugin, $className) = pluginSplit($className);
+		[$plugin, $className] = pluginSplit($className);
 
 		if (!ClassRegistry::isKeySet($className) && !empty($dynamic)) {
 			$this->{$className} = new AppModel(array(
@@ -1047,7 +1065,7 @@ class Model extends CakeObject implements CakeEventListener {
 
 					if (!isset($value['className']) && strpos($assoc, '.') !== false) {
 						unset($association[$assoc]);
-						list($plugin, $assoc) = pluginSplit($assoc, true);
+						[$plugin, $assoc] = pluginSplit($assoc, true);
 						$association[$assoc] = array('className' => $plugin . $assoc) + $value;
 					}
 
@@ -1195,7 +1213,7 @@ class Model extends CakeObject implements CakeEventListener {
  * (Alternative indata: two strings, which are mangled to
  * a one-item, two-dimensional array using $one for a key and $two as its value.)
  *
- * @param string|array|SimpleXmlElement|DomNode $one Array or string of data
+ * @param string|array|\SimpleXmlElement|\DomNode $one Array or string of data
  * @param string|false $two Value string for the alternative indata method
  * @return array|null Data with all of $one's keys and values, otherwise null.
  * @link https://book.cakephp.org/2.0/en/models/saving-your-data.html
@@ -1206,7 +1224,7 @@ class Model extends CakeObject implements CakeEventListener {
 		}
 
 		if (is_object($one)) {
-			if ($one instanceof SimpleXMLElement || $one instanceof DOMNode) {
+			if ($one instanceof \SimpleXMLElement || $one instanceof \DOMNode) {
 				$one = $this->_normalizeXmlData(Xml::toArray($one));
 			} else {
 				$one = Set::reverse($one);
@@ -1448,7 +1466,7 @@ class Model extends CakeObject implements CakeEventListener {
 		$column = str_replace(array($startQuote, $endQuote), '', $column);
 
 		if (strpos($column, '.')) {
-			list($model, $column) = explode('.', $column);
+			[$model, $column] = explode('.', $column);
 		}
 
 		if (isset($model) && $model != $this->alias && isset($this->{$model})) {
@@ -1528,7 +1546,7 @@ class Model extends CakeObject implements CakeEventListener {
 		}
 
 		if (strpos($field, '.') !== false) {
-			list($model, $field) = explode('.', $field);
+			[$model, $field] = explode('.', $field);
 			if ($model === $this->alias && isset($this->virtualFields[$field])) {
 				return true;
 			}
@@ -1552,7 +1570,7 @@ class Model extends CakeObject implements CakeEventListener {
 
 		if ($this->isVirtualField($field)) {
 			if (strpos($field, '.') !== false) {
-				list(, $field) = pluginSplit($field);
+				[, $field] = pluginSplit($field);
 			}
 
 			return $this->virtualFields[$field];
@@ -1731,8 +1749,8 @@ class Model extends CakeObject implements CakeEventListener {
  *
  * @param array $fieldList List of fields to allow to be saved
  * @return mixed On success Model::$data if its not empty or true, false on failure
- * @throws Exception
- * @throws PDOException
+ * @throws \Exception
+ * @throws \PDOException
  * @triggers Model.beforeSave $this, array($options)
  * @triggers Model.afterSave $this, array($created, $options)
  * @link https://book.cakephp.org/2.0/en/models/saving-your-data.html
@@ -1766,7 +1784,7 @@ class Model extends CakeObject implements CakeEventListener {
 				}
 			}
 			return $success;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			if ($transactionBegun) {
 				$db->rollback();
 			}
@@ -1788,7 +1806,7 @@ class Model extends CakeObject implements CakeEventListener {
  *   - `counterCache`: Boolean to control updating of counter caches (if any)
  *
  * @return mixed On success Model::$data if its not empty or true, false on failure
- * @throws PDOException
+ * @throws \PDOException
  * @link https://book.cakephp.org/2.0/en/models/saving-your-data.html
  */
 	protected function _doSave($data = null, $options = array()) {
@@ -1869,7 +1887,7 @@ class Model extends CakeObject implements CakeEventListener {
 
 		if ($options['callbacks'] === true || $options['callbacks'] === 'before') {
 			$event = new CakeEvent('Model.beforeSave', $this, array($options));
-			list($event->break, $event->breakOn) = array(true, array(false, null));
+			[$event->break, $event->breakOn] = array(true, array(false, null));
 			$this->getEventManager()->dispatch($event);
 			if (!$event->result) {
 				$this->whitelist = $_whitelist;
@@ -1897,7 +1915,7 @@ class Model extends CakeObject implements CakeEventListener {
 
 				foreach ($v as $x => $y) {
 					if ($this->hasField($x) && (empty($this->whitelist) || in_array($x, $this->whitelist))) {
-						list($fields[], $values[]) = array($x, $y);
+						[$fields[], $values[]] = array($x, $y);
 					}
 				}
 			}
@@ -1924,7 +1942,7 @@ class Model extends CakeObject implements CakeEventListener {
 				$this->__safeUpdateMode = true;
 				try {
 					$success = (bool)$db->update($this, $fields, $values);
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					$this->__safeUpdateMode = false;
 					throw $e;
 				}
@@ -1935,7 +1953,7 @@ class Model extends CakeObject implements CakeEventListener {
 						$j = array_search($this->primaryKey, $fields);
 						$values[$j] = CakeText::uuid();
 					} else {
-						list($fields[], $values[]) = array($this->primaryKey, CakeText::uuid());
+						[$fields[], $values[]] = array($this->primaryKey, CakeText::uuid());
 					}
 				}
 
@@ -2010,13 +2028,13 @@ class Model extends CakeObject implements CakeEventListener {
 
 			$habtm = $this->hasAndBelongsToMany[$assoc];
 
-			list($join) = $this->joinModel($habtm['with']);
+			[$join] = $this->joinModel($habtm['with']);
 
 			$Model = $this->{$join};
 
 			if (!empty($habtm['with'])) {
 				$withModel = is_array($habtm['with']) ? key($habtm['with']) : $habtm['with'];
-				list(, $withModel) = pluginSplit($withModel);
+				[, $withModel] = pluginSplit($withModel);
 				$dbMulti = $this->{$withModel}->getDataSource();
 			} else {
 				$dbMulti = $db;
@@ -2306,7 +2324,7 @@ class Model extends CakeObject implements CakeEventListener {
  * @return mixed If atomic: True on success, or false on failure.
  *    Otherwise: array similar to the $data array passed, but values are set to true/false
  *    depending on whether each record saved successfully.
- * @throws PDOException
+ * @throws \PDOException
  * @link https://book.cakephp.org/2.0/en/models/saving-your-data.html#model-savemany-array-data-null-array-options-array
  */
 	public function saveMany($data = null, $options = array()) {
@@ -2382,7 +2400,7 @@ class Model extends CakeObject implements CakeEventListener {
 				$db->rollback();
 			}
 			return false;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			if ($transactionBegun) {
 				$db->rollback();
 			}
@@ -2439,7 +2457,7 @@ class Model extends CakeObject implements CakeEventListener {
  * @return mixed If atomic: True on success, or false on failure.
  *    Otherwise: array similar to the $data array passed, but values are set to true/false
  *    depending on whether each record saved successfully.
- * @throws PDOException
+ * @throws \PDOException
  * @link https://book.cakephp.org/2.0/en/models/saving-your-data.html#model-saveassociated-array-data-null-array-options-array
  */
 	public function saveAssociated($data = null, $options = array()) {
@@ -2602,7 +2620,7 @@ class Model extends CakeObject implements CakeEventListener {
 				$db->rollback();
 			}
 			return false;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			if ($transactionBegun) {
 				$db->rollback();
 			}
@@ -2690,7 +2708,7 @@ class Model extends CakeObject implements CakeEventListener {
 		$id = $this->id;
 
 		$event = new CakeEvent('Model.beforeDelete', $this, array($cascade));
-		list($event->break, $event->breakOn) = array(true, array(false, null));
+		[$event->break, $event->breakOn] = array(true, array(false, null));
 		$this->getEventManager()->dispatch($event);
 		if ($event->isStopped()) {
 			return false;
@@ -2798,7 +2816,7 @@ class Model extends CakeObject implements CakeEventListener {
  */
 	protected function _deleteLinks($id) {
 		foreach ($this->hasAndBelongsToMany as $data) {
-			list(, $joinModel) = pluginSplit($data['with']);
+			[, $joinModel] = pluginSplit($data['with']);
 			$Model = $this->{$joinModel};
 			$records = $Model->find('all', array(
 				'conditions' => $this->_getConditionsForDeletingLinks($Model, $id, $data),
@@ -3106,7 +3124,7 @@ class Model extends CakeObject implements CakeEventListener {
 
 		if ($query['callbacks'] === true || $query['callbacks'] === 'before') {
 			$event = new CakeEvent('Model.beforeFind', $this, array($query));
-			list($event->break, $event->breakOn, $event->modParams) = array(true, array(false, null), 0);
+			[$event->break, $event->breakOn, $event->modParams] = array(true, array(false, null), 0);
 			$this->getEventManager()->dispatch($event);
 
 			if ($event->isStopped()) {
@@ -3258,7 +3276,7 @@ class Model extends CakeObject implements CakeEventListener {
 			if (!isset($query['recursive']) || $query['recursive'] === null) {
 				$query['recursive'] = -1;
 			}
-			list($query['list']['keyPath'], $query['list']['valuePath'], $query['list']['groupPath']) = $list;
+			[$query['list']['keyPath'], $query['list']['valuePath'], $query['list']['groupPath']] = $list;
 
 			return $query;
 		}
@@ -3758,7 +3776,7 @@ class Model extends CakeObject implements CakeEventListener {
  */
 	public function joinModel($assoc, $keys = array()) {
 		if (is_string($assoc)) {
-			list(, $assoc) = pluginSplit($assoc);
+			[, $assoc] = pluginSplit($assoc);
 			return array($assoc, array_keys($this->{$assoc}->schema()));
 		}
 

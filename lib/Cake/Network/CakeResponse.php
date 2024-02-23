@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Network;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\CakeException;
+use Cake\Error\NotFoundException;
+use Cake\Utility\File;
+
 /**
  * CakeResponse
  *
@@ -585,10 +592,10 @@ class CakeResponse {
 		$headers = is_array($header) ? $header : array($header => $value);
 		foreach ($headers as $header => $value) {
 			if (is_numeric($header)) {
-				list($header, $value) = array($value, null);
+				[$header, $value] = array($value, null);
 			}
 			if ($value === null && strpos($header, ':') !== false) {
-				list($header, $value) = explode(':', $header, 2);
+				[$header, $value] = explode(':', $header, 2);
 			}
 			$this->_headers[$header] = is_array($value) ? array_map('trim', $value) : trim($value);
 		}
@@ -950,7 +957,7 @@ class CakeResponse {
  * `$response->expires(new DateTime('+1 day'))` Will set the expiration in next 24 hours
  * `$response->expires()` Will return the current expiration header value
  *
- * @param string|DateTime $time Valid time string or DateTime object.
+ * @param string|\DateTime $time Valid time string or DateTime object.
  * @return string
  */
 	public function expires($time = null) {
@@ -974,7 +981,7 @@ class CakeResponse {
  * `$response->modified(new DateTime('+1 day'))` Will set the modification date in the past 24 hours
  * `$response->modified()` Will return the current Last-Modified header value
  *
- * @param string|DateTime $time Valid time string or DateTime object.
+ * @param string|\DateTime $time Valid time string or DateTime object.
  * @return string
  */
 	public function modified($time = null) {
@@ -1068,18 +1075,18 @@ class CakeResponse {
  * Returns a DateTime object initialized at the $time param and using UTC
  * as timezone
  *
- * @param DateTime|int|string $time Valid time string or unix timestamp or DateTime object.
- * @return DateTime
+ * @param \DateTime|int|string $time Valid time string or unix timestamp or DateTime object.
+ * @return \DateTime
  */
 	protected function _getUTCDate($time = null) {
-		if ($time instanceof DateTime) {
+		if ($time instanceof \DateTime) {
 			$result = clone $time;
 		} elseif (is_int($time)) {
-			$result = new DateTime(date('Y-m-d H:i:s', $time));
+			$result = new \DateTime(date('Y-m-d H:i:s', $time));
 		} else {
-			$result = new DateTime($time);
+			$result = new \DateTime($time);
 		}
-		$result->setTimeZone(new DateTimeZone('UTC'));
+		$result->setTimeZone(new \DateTimeZone('UTC'));
 		return $result;
 	}
 
@@ -1466,7 +1473,7 @@ class CakeResponse {
 
 		$end = $start = false;
 		if ($range && is_array($range)) {
-			list($start, $end) = $range;
+			[$start, $end] = $range;
 		}
 		if ($start !== false) {
 			$file->offset($start);

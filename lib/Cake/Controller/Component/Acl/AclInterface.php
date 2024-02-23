@@ -1,4 +1,7 @@
 <?php
+namespace Cake\Controller\Component\Acl;
+use Cake\Controller\Component;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
