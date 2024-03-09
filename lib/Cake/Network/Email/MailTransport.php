@@ -67,7 +67,7 @@ class MailTransport extends AbstractTransport {
  * @throws SocketException if mail could not be sent
  * @return void
  */
-	protected function _mail($to, $subject, $message, $headers, $params = null) {
+	protected function _mail($to, $subject, $message, $headers, $params = '') {
 		if (ini_get('safe_mode')) {
 			//@codingStandardsIgnoreStart
 			if (!@mail($to, $subject, $message, $headers)) {
