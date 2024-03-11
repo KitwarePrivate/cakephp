@@ -201,6 +201,8 @@ if (!function_exists('h')) {
 	function h($text, $double = true, $charset = null) {
 		if (is_string($text)) {
 			//optimize for strings
+		} elseif (is_null($text)) {
+			return '';
 		} elseif (is_array($text)) {
 			$texts = array();
 			foreach ($text as $k => $t) {
