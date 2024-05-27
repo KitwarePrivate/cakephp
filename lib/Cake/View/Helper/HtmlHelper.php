@@ -1,6 +1,6 @@
 <?php
 namespace Cake\View\Helper;
-use AppHelper;
+
 use Cake\Core\App;
 use Cake\Core\Configure;
 use Cake\Error\ConfigureException;
@@ -40,7 +40,7 @@ App::uses('File', 'Utility');
  * @package       Cake.View.Helper
  * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/html.html
  */
-class HtmlHelper extends AppHelper {
+class HtmlHelper extends \AppHelper {
 
 /**
  * Reference to the Response object

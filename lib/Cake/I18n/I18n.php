@@ -1,5 +1,6 @@
 <?php
 namespace Cake\I18n;
+
 use Cake\Cache\Cache;
 use Cake\Core\App;
 use Cake\Core\CakePlugin;

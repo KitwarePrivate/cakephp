@@ -1,5 +1,6 @@
 <?php
 namespace Cake\View;
+
 use Cake\Cache\Cache;
 use Cake\Controller\Controller;
 use Cake\Core\App;

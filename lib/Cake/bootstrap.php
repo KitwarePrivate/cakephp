@@ -20,7 +20,7 @@
 
 use Cake\Core\App;
 use Cake\Core\Configure;
-use Cake\Event\Multibyte;
+use Cake\I18n\Multibyte;
 
 define('TIME_START', microtime(true));
 
@@ -115,7 +115,7 @@ if (!defined('CACHE')) {
  * Path to the vendors directory.
  */
 if (!defined('VENDORS')) {
-	define('VENDORS', ROOT . DS . 'vendors' . DS);
+	define('VENDORS', APP . 'vendors' . DS);
 }
 
 /**
@@ -139,9 +139,65 @@ if (!defined('JS_URL')) {
 	define('JS_URL', 'js/');
 }
 
+// Define an autoloader for short names
+$autoloader = static function ($class) {
+	static $classMap;
+	if (!isset($classMap)) {
+		// VENDORS is defined above, but we don't want the application's vendors directory
+		// we want Cake's vendors directory, so access relative to this file
+		$composer = require_once dirname(__DIR__) . '/../vendors/autoload.php';
+		// First build Cake's class map
+		foreach ($composer->getClassMap() as $fqn => $path) {
+			if (!str_starts_with($fqn, 'Cake')) {
+				continue;
+			}
+			$key = substr($fqn, strrpos($fqn, '\\')+1);
+			$classMap[$key] = [$fqn, $path];
+		}
+		// Next, get model short names,
+		// this should get cached to prevent the fs check with each request...
+		$errors = [];
+		$model_path = App::path('Model')[0] ?? null;
+		$namespace = App::extractPsr4NamespaceFromFilePath($model_path);
+		$model_names = App::objects('Model');
+		foreach ($model_names as $key) {
+			$path = $model_path .  $key . '.php';
+			if (file_exists($path)) {
+				$fqn = $namespace . '\\' . $key;
+				$classMap[$key] = [$fqn, $path];
+			} else {
+				$errors[] = "File for $key does not exist at $path.";
+			}
+		}
+
+		if ($errors) {
+			// This is going blow up the logs with each request to the app
+			$count = count($errors);
+			\Cake\Log\CakeLog::error("Unable to load $count model files (see debug log for more info).");
+			\Cake\Log\CakeLog::debug(implode("\n  -", $errors));
+		}
+	}
+
+	if (isset($classMap[$class])) {
+		[$fqn, $path] = $classMap[$class];
+		// If this class has previously been loaded via a PSR4 class loader with an FQN, then we
+		// just need to make sure to alias the short name as an FQN.
+		if (class_exists($fqn, false) || interface_exists($fqn, false)) {
+			return class_alias($fqn, $class, false);
+		}
+
+		// if the FQN does not yet exist, here, we attempt to include the file, then alias the short
+		// name
+		require $path;
+		return class_alias($fqn, $class, false);
+	}
+	return false;
+};
+spl_autoload_register($autoloader);
+
 require CAKE . 'basics.php';
 require CAKE . 'Core' . DS . 'App.php';
-require CAKE . 'Error' . DS . 'exceptions.php';
+// require CAKE . 'Error' . DS . 'exceptions.php';
 
 spl_autoload_register([App::class, 'load']);
 

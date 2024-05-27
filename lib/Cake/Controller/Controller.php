@@ -230,7 +230,7 @@ class Controller extends CakeObject implements CakeEventListener {
  *
  * @var string
  */
-	public $viewClass = 'View';
+	public $viewClass = View::class;
 
 /**
  * Instance of the View created during rendering. Won't be set until after
@@ -364,7 +364,7 @@ class Controller extends CakeObject implements CakeEventListener {
 		$this->Components = new ComponentCollection();
 
 		$childMethods = get_class_methods($this);
-		$parentMethods = get_class_methods('Controller');
+		$parentMethods = get_class_methods(self::class);
 
 		$this->methods = array_diff($childMethods, $parentMethods);
 
@@ -1285,9 +1285,9 @@ class Controller extends CakeObject implements CakeEventListener {
  */
 	protected function _getViewObject() {
 		$viewClass = $this->viewClass;
-		if ($this->viewClass !== 'View') {
+		if ($this->viewClass !== View::class) {
 			[$plugin, $viewClass] = pluginSplit($viewClass, true);
-			$viewClass = $viewClass . 'View';
+			$viewClass = str_ends_with($viewClass, 'View') ? $viewClass : $viewClass . 'View';
 			App::uses($viewClass, $plugin . 'View');
 		}
 

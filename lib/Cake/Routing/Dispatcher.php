@@ -269,10 +269,13 @@ class Dispatcher implements CakeEventListener {
 			$pluginPath = $pluginName . '.';
 		}
 		if (!empty($request->params['controller'])) {
-			$controller = Inflector::camelize($request->params['controller']);
+			$isFQN = str_ends_with($request->params['controller'], 'Controller');
+			$controller = $isFQN
+				? $request->params['controller']
+				: Inflector::camelize($request->params['controller']);
 		}
 		if ($pluginPath . $controller) {
-			$class = $controller . 'Controller';
+			$class = $isFQN ? $controller : $controller . 'Controller';
 			App::uses('AppController', 'Controller');
 			App::uses($pluginName . 'AppController', $pluginPath . 'Controller');
 			App::uses($class, $pluginPath . 'Controller');

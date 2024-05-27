@@ -1,5 +1,7 @@
 <?php
 namespace Cake\Console;
+use Cake\Error\ConsoleException;
+
 /**
  * ConsoleArgumentOption file
  *
@@ -153,10 +155,10 @@ class ConsoleInputArgument {
 /**
  * Append this arguments XML representation to the passed in SimpleXml object.
  *
- * @param SimpleXmlElement $parent The parent element.
- * @return SimpleXmlElement The parent with this argument appended.
+ * @param \SimpleXmlElement $parent The parent element.
+ * @return \SimpleXmlElement The parent with this argument appended.
  */
-	public function xml(SimpleXmlElement $parent) {
+	public function xml(\SimpleXmlElement $parent) {
 		$option = $parent->addChild('argument');
 		$option->addAttribute('name', $this->_name);
 		$option->addAttribute('help', $this->_help);

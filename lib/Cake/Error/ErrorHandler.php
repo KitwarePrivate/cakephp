@@ -1,5 +1,6 @@
 <?php
 namespace Cake\Error;
+
 use Cake\Core\App;
 use Cake\Core\Configure;
 use Cake\Log\CakeLog;

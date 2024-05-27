@@ -818,7 +818,7 @@ class AuthComponent extends Component {
 				unset($settings['className']);
 			}
 			[$plugin, $class] = pluginSplit($class, true);
-			$className = $class . 'Authenticate';
+			$className = str_ends_with($class, 'Authenticate') ? $class : $class . 'Authenticate';
 			App::uses($className, $plugin . 'Controller/Component/Auth');
 			if (!class_exists($className)) {
 				throw new CakeException(__d('cake_dev', 'Authentication adapter "%s" was not found.', $class));

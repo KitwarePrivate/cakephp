@@ -1,5 +1,6 @@
 <?php
 namespace Cake\Configure;
+
 use Cake\Core\App;
 use Cake\Core\CakePlugin;
 use Cake\Error\ConfigureException;

@@ -1,5 +1,10 @@
 <?php
 namespace Cake\Console;
+
+use Cake\Core\App;
+use Cake\Error\ConsoleException;
+use Cake\Utility\Inflector;
+
 /**
  * ConsoleOptionParser file
  *

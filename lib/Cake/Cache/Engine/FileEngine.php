@@ -1,5 +1,6 @@
 <?php
 namespace Cake\Cache\Engine;
+
 use Cake\Cache\CacheEngine;
 use Cake\Core\Configure;
 use Cake\Error\CacheException;
@@ -39,7 +40,7 @@ class FileEngine extends CacheEngine {
 /**
  * Instance of SplFileObject class
  *
- * @var File
+ * @var \SplFileObject
  */
 	protected $_File = null;
 

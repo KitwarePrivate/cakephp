@@ -1,5 +1,6 @@
 <?php
 namespace Cake\Cache\Engine;
+
 use Cake\Cache\CacheEngine;
 use Cake\Error\CacheException;
 use Cake\Utility\Inflector;
@@ -162,7 +163,7 @@ class MemcacheEngine extends CacheEngine {
  *
  * @param string $key Identifier for the data
  * @param int $offset How much to increment
- * @return New incremented value, false otherwise
+ * @return int New incremented value, false otherwise
  * @throws CacheException when you try to increment with compress = true
  */
 	public function increment($key, $offset = 1) {

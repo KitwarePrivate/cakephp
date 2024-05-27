@@ -24,7 +24,7 @@
 
 use Cake\Core\App;
 use Cake\Core\Configure;
-use Cake\Event\I18n;
+use Cake\I18n\I18n;
 use Cake\Log\CakeLog;
 use Cake\Utility\Debugger;
 

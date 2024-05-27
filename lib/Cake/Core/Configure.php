@@ -1,5 +1,12 @@
 <?php
 namespace Cake\Core;
+
+use Cake\Configure\ConfigReaderInterface;
+use Cake\Configure\PhpReader;
+use Cake\Console\ConsoleErrorHandler;
+use Cake\Error\ErrorHandler;
+use Cake\Utility\Hash;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -82,10 +89,10 @@ class Configure {
 			App::build();
 
 			$exception = array(
-				'handler' => 'ErrorHandler::handleException',
+				'handler' => [ErrorHandler::class, 'handleException'],
 			);
 			$error = array(
-				'handler' => 'ErrorHandler::handleError',
+				'handler' => [ErrorHandler::class, 'handleError'],
 				'level' => E_ALL & ~E_DEPRECATED,
 			);
 			if (PHP_SAPI === 'cli') {

@@ -1,5 +1,11 @@
 <?php
 namespace Cake\Console;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\ErrorHandler;
+use Cake\Log\CakeLog;
+
 /**
  * ErrorHandler for Console Shells
  *

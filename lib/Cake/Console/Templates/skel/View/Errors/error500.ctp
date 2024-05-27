@@ -1,4 +1,5 @@
 <?php
+use Cake\Core\Configure;
 /**
  * @link          https://cakephp.org CakePHP(tm) Project
  * @package       app.View.Errors

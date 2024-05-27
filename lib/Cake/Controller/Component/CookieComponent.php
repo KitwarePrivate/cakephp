@@ -387,7 +387,7 @@ class CookieComponent extends Component {
 		$now = new \DateTime();
 
 		if (is_int($expires) || is_numeric($expires)) {
-			return $this->_expires = $now->format('U') . (int)$expires;
+			return $this->_expires = (int)$now->format('U') + (int)$expires;
 		}
 		$now->modify($expires);
 		return $this->_expires = $now->format('U');

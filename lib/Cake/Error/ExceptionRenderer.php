@@ -1,5 +1,6 @@
 <?php
 namespace Cake\Error;
+
 use Cake\Controller\CakeErrorController;
 use Cake\Controller\Controller;
 use Cake\Core\App;
@@ -112,7 +113,7 @@ class ExceptionRenderer {
 			$this->controller->appError($exception);
 			return;
 		}
-		$method = $template = Inflector::variable(str_replace('Exception', '', get_class($exception)));
+		$method = $template = Inflector::variable(substr(str_replace(__NAMESPACE__, '', $exception::class), 1, -(strlen('Exception'))));
 		$code = $exception->getCode();
 
 		$methodExists = method_exists($this, $method);

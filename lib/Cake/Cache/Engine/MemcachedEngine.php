@@ -1,5 +1,6 @@
 <?php
 namespace Cake\Cache\Engine;
+
 use Cake\Cache\CacheEngine;
 use Cake\Error\CacheException;
 use Cake\Utility\Inflector;

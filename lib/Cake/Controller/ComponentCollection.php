@@ -100,6 +100,7 @@ class ComponentCollection extends ObjectCollection implements CakeEventListener 
  * @throws MissingComponentException when the component could not be found
  */
 	public function load($component, $settings = array()) {
+		$isFqn = str_ends_with($component, 'Component');
 		if (isset($settings['className'])) {
 			$alias = $component;
 			$component = $settings['className'];
@@ -111,7 +112,7 @@ class ComponentCollection extends ObjectCollection implements CakeEventListener 
 		if (isset($this->_loaded[$alias])) {
 			return $this->_loaded[$alias];
 		}
-		$componentClass = $name . 'Component';
+		$componentClass = $isFqn ? $name : $name . 'Component';
 		App::uses($componentClass, $plugin . 'Controller/Component');
 		if (!class_exists($componentClass)) {
 			throw new MissingComponentException(array(

@@ -1,5 +1,6 @@
 <?php
 namespace Cake\Core;
+
 use Cake\Cache\Cache;
 use Cake\Error\ErrorHandler;
 use Cake\Utility\Inflector;
@@ -130,6 +131,13 @@ class App {
  * @var bool
  */
 	public static $return = false;
+
+/**
+ * Holds key/value pairs of $file_path => namespace
+ *
+ * @var array
+ */
+	protected static $_namespaces = [];
 
 /**
  * Holds key/value pairs of $type => file path.
@@ -549,33 +557,95 @@ class App {
 
 		$file = static::_mapped($className, $plugin);
 		if ($file) {
-			return include $file;
-		}
-		$paths = static::path($package, $plugin);
-
-		if (empty($plugin)) {
-			$appLibs = empty(static::$_packages['Lib']) ? APPLIBS : current(static::$_packages['Lib']);
-			$paths[] = $appLibs . $package . DS;
-			$paths[] = APP . $package . DS;
-			$paths[] = CAKE . $package . DS;
+			return static::_includeFile($file, $className);
 		} else {
-			$pluginPath = CakePlugin::path($plugin);
-			$paths[] = $pluginPath . 'Lib' . DS . $package . DS;
-			$paths[] = $pluginPath . $package . DS;
-		}
+			$paths = static::path($package, $plugin);
 
-		$normalizedClassName = str_replace('\\', DS, $className);
-		foreach ($paths as $path) {
-			$file = $path . $normalizedClassName . '.php';
-			if (file_exists($file)) {
-				static::_map($file, $className, $plugin);
-				return include $file;
+			if (empty($plugin)) {
+				$appLibs = empty(static::$_packages['Lib']) ? APPLIBS : current(static::$_packages['Lib']);
+				$paths[] = $appLibs . $package . DS;
+				$paths[] = APP . $package . DS;
+				$paths[] = CAKE . $package . DS;
+			} else {
+				$pluginPath = CakePlugin::path($plugin);
+				$paths[] = $pluginPath . 'Lib' . DS . $package . DS;
+				$paths[] = $pluginPath . $package . DS;
+			}
+
+			$normalizedClassName = str_replace('\\', DS, $className);
+			foreach ($paths as $path) {
+				$file = $path . $normalizedClassName . '.php';
+
+				if (file_exists($file)) {
+					static::_map($file, $className, $plugin);
+					return static::_includeFile($file, $className);
+				}
 			}
 		}
 
 		return false;
 	}
 
+	/**
+	 * Include file with namespace checking.
+	 *   1) Determine if the file being loaded belongs to a names space
+	 *      * If no namespace, include the file and return the results
+	 *      * If namespace, continue
+	 *   2) If the file belongs to a namespace check first to ensure that the FQN has not already
+	 *      been included
+	 *      * If the FQN does not already exist include the file and continue
+	 *      * If the FQN already exists, do not load the file and continue
+	 *   3) At this point the FQN should exist, alias it with the given short class name.
+	 *
+	 * @param string $file
+	 * @return bool
+	 */
+	private static function _includeFile(string $file, string $className)
+	{
+		$fqn = static::extractPsr4NamespaceFromFilePath($file);
+		if (is_null($fqn)) {
+			return include $file;
+		}
+
+		$included = false;
+		if (!class_exists($fqn, false)) {
+			$included = include $file;
+		}
+
+		if (class_exists($fqn, false)) {
+			class_alias($fqn, $className);
+		}
+
+		return $included;
+	}
+
+	/**
+	 * @param string $path
+	 * @return string|null
+	 */
+	public static function extractPsr4NamespaceFromFilePath(string $path): ?string
+	{
+		// clean up the path, removes redundant and trailing path separator
+		$redundant = DS . DS;
+		$path = preg_replace('~\b' . $redundant . '+~', DS, rtrim($path, DS));
+		// self::$_namespaces ordered by length of $ns_path, e.g:
+		//  \Framework => /home/user/src/application/App/vendor/framework/lib/Framework
+		//  \App => /home/user/src/application/App
+		foreach (self::$_namespaces as $root => $ns_path) {
+			// e.g. /home/user/src/application/App/Model/Dummy.php
+			if (str_starts_with($path, $ns_path)) {
+				// given $path, replacing $ns_path with nothing leaves, /Model/Dummy.php
+				$fqn = str_replace($ns_path, '', $path);
+				// * add the PSR4 root namespace
+				// * replace dir separators with namespace separators
+				// * remove the file extension and file extension separator
+				// * e.g. \App\Model\Dummy <~ FQN
+				return $root . ucfirst(str_replace(DS, '\\', str_replace('.php', '', $fqn)));
+			}
+		}
+
+		return null;
+	}
 /**
  * Returns the package name where a class was defined to be located at
  *
@@ -779,7 +849,7 @@ class App {
  */
 	public static function init() {
 		static::$_map += (array)Cache::read('file_map', '_cake_core_');
-		register_shutdown_function(array('App', 'shutdown'));
+		register_shutdown_function([App::class, 'shutdown']);
 	}
 
 /**
@@ -819,6 +889,22 @@ class App {
 			$key = 'plugin.' . $name;
 		}
 		return isset(static::$_map[$key]) ? static::$_map[$key] : false;
+	}
+
+/**
+ * Sets the namespaces for given paths
+ *
+ * @return void
+ */
+	public static function setApplicationNamespaces(array $namespaces) {
+		// cleanup path names
+		$pattern = '~\b' . DS . DS . '+~';
+		foreach ($namespaces as $root => $path) {
+			self::$_namespaces[$root] = preg_replace($pattern, DS, rtrim($path, DS));
+		}
+
+		// sort string by length such that longest strings are checked first
+		uasort(self::$_namespaces, static fn ($a, $b) => strlen($b) <=> strlen($a));
 	}
 
 /**
@@ -943,6 +1029,8 @@ class App {
 			Cache::write('file_map', array_filter(static::$_map), '_cake_core_');
 		}
 		if (static::$_objectCacheChange) {
+			// TODO: does this wipe out the current cache _cake_core_ or does it append to it what does
+			//  not already exist there?
 			Cache::write('object_map', static::$_objects, '_cake_core_');
 		}
 		static::_checkFatalError();

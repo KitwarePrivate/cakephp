@@ -1,5 +1,9 @@
 <?php
 namespace Cake\Core;
+
+use Cake\Log\CakeLog;
+use Cake\Utility\Hash;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -211,4 +215,12 @@ class CakeObject {
 		}
 	}
 
+	/**
+	 * Returns the short name of the class
+	 *
+	 * @return string
+	 */
+	public static function getShortName() {
+		return (new \ReflectionClass(static::class))->getShortName();
+	}
 }
