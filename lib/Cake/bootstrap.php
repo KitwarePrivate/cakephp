@@ -154,27 +154,11 @@ $autoloader = static function ($class) {
 			$key = substr($fqn, strrpos($fqn, '\\')+1);
 			$classMap[$key] = [$fqn, $path];
 		}
-		// Next, get model short names,
-		// this should get cached to prevent the fs check with each request...
-		$errors = [];
-		$model_path = App::path('Model')[0] ?? null;
-		$namespace = App::extractPsr4NamespaceFromFilePath($model_path);
-		$model_names = App::objects('Model');
-		foreach ($model_names as $key) {
-			$path = $model_path .  $key . '.php';
-			if (file_exists($path)) {
-				$fqn = $namespace . '\\' . $key;
-				$classMap[$key] = [$fqn, $path];
-			} else {
-				$errors[] = "File for $key does not exist at $path.";
+		// Ensure App::$_classMap has entries for all KWiK packages by their short name
+		foreach (array_keys(App::paths()) as $package) {
+			foreach (App::objects($package) as $model_short_name) {
+				App::uses($model_short_name, $package);
 			}
-		}
-
-		if ($errors) {
-			// This is going blow up the logs with each request to the app
-			$count = count($errors);
-			\Cake\Log\CakeLog::error("Unable to load $count model files (see debug log for more info).");
-			\Cake\Log\CakeLog::debug(implode("\n  -", $errors));
 		}
 	}
 
