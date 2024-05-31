@@ -1026,22 +1026,22 @@ class ModifiedAuthor extends Author {
  *
  * @package       Cake.Test.Case.Model
  */
-class Project extends CakeTestModel {
-
-/**
- * name property
- *
- * @var string
- */
-	public $name = 'Project';
-
-/**
- * hasMany property
- *
- * @var array
- */
-	public $hasMany = array('Thread');
-}
+//class Project extends CakeTestModel {
+//
+///**
+// * name property
+// *
+// * @var string
+// */
+//	public $name = 'Project';
+//
+///**
+// * hasMany property
+// *
+// * @var array
+// */
+//	public $hasMany = array('Thread');
+//}
 
 /**
  * Thread class
