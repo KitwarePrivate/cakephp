@@ -90,7 +90,7 @@ class CakeSchema extends CakeObject {
 		parent::__construct();
 
 		if (empty($options['name'])) {
-			$this->name = preg_replace('/schema$/i', '', get_class($this));
+			$this->name = preg_replace('/schema$/i', '', static::getShortName());
 		}
 		if (!empty($options['plugin'])) {
 			$this->plugin = $options['plugin'];
