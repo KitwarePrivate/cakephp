@@ -1,6 +1,7 @@
 <?php
 namespace Cake\Console;
 
+use AllowDynamicProperties;
 use Cake\Core\App;
 use Cake\Error\ConsoleException;
 use Cake\Utility\Inflector;

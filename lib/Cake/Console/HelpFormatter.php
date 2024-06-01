@@ -1,5 +1,7 @@
 <?php
 namespace Cake\Console;
+
+use AllowDynamicProperties;
 use Cake\Core\App;
 use Cake\Utility\CakeText;
 
