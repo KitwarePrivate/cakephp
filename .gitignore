@@ -4,7 +4,12 @@
 /app/tmp
 /lib/Cake/Console/Templates/skel/tmp/
 /plugins
-/vendors
+/vendors/cakephp
+/vendors/phpstan
+/vendors/phpunit
+/vendors/rector
+/vendors/squizlabs
+/vendors/symfony
 /build
 /dist
 /tags
