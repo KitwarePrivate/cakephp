@@ -1,5 +1,8 @@
 <?php
 namespace Cake\Core;
+use Cake\Error\MissingPluginException;
+use Cake\Utility\Inflector;
+
 /**
  * CakePlugin class
  *
@@ -94,7 +97,7 @@ class CakePlugin {
 	public static function load($plugin, $config = array()) {
 		if (is_array($plugin)) {
 			foreach ($plugin as $name => $conf) {
-				list($name, $conf) = (is_numeric($name)) ? array($conf, $config) : array($name, $conf);
+				[$name, $conf] = (is_numeric($name)) ? array($conf, $config) : array($name, $conf);
 				static::load($name, $conf);
 			}
 			return;
