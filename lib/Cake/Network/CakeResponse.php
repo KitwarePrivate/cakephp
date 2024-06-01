@@ -1100,7 +1100,7 @@ class CakeResponse {
 	public function compress() {
 		$compressionEnabled = ini_get("zlib.output_compression") !== '1' &&
 			extension_loaded("zlib") &&
-			(strpos(env('HTTP_ACCEPT_ENCODING'), 'gzip') !== false);
+			(strpos((env('HTTP_ACCEPT_ENCODING') ?? ''), 'gzip') !== false);
 		return $compressionEnabled && ob_start('ob_gzhandler');
 	}
 
@@ -1110,7 +1110,7 @@ class CakeResponse {
  * @return bool
  */
 	public function outputCompressed() {
-		return strpos(env('HTTP_ACCEPT_ENCODING'), 'gzip') !== false
+		return strpos((env('HTTP_ACCEPT_ENCODING') ?? ''), 'gzip') !== false
 			&& (ini_get("zlib.output_compression") === '1' || in_array('ob_gzhandler', ob_list_handlers()));
 	}
 
