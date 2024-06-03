@@ -302,7 +302,11 @@ class ShellDispatcher {
 		$params = array_merge($defaults, array_intersect_key($this->params, $defaults));
 		$isWin = false;
 		foreach ($defaults as $default => $value) {
+<<<<<<< namespace-cakephp
 			if (strpos(($params[$default] ?? ''), '\\') !== false) {
+=======
+			if (strpos((string)$params[$default], '\\') !== false) {
+>>>>>>> master
 				$isWin = true;
 				break;
 			}
