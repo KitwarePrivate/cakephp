@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Utility;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\CakeException;
+use Cake\Log\CakeLog;
+
 /**
  * Framework debugging and PHP error-handling class
  *
@@ -583,11 +589,11 @@ class Debugger {
 			}
 
 			if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
-				$ref = new ReflectionObject($var);
+				$ref = new \ReflectionObject($var);
 
 				$filters = array(
-					ReflectionProperty::IS_PROTECTED => 'protected',
-					ReflectionProperty::IS_PRIVATE => 'private',
+					\ReflectionProperty::IS_PROTECTED => 'protected',
+					\ReflectionProperty::IS_PRIVATE => 'private',
 				);
 				foreach ($filters as $filter => $visibility) {
 					$reflectionProperties = $ref->getProperties($filter);

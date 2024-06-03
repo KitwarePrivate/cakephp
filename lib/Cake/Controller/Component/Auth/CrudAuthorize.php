@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Controller\Component\Auth;
+use Cake\Controller\ComponentCollection;
+use Cake\Core\App;
+use Cake\Network\CakeRequest;
+use Cake\Routing\Router;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)

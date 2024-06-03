@@ -1,4 +1,17 @@
 <?php
+namespace Cake\Routing;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\MissingControllerException;
+use Cake\Error\MissingDispatcherFilterException;
+use Cake\Event\CakeEvent;
+use Cake\Event\CakeEventListener;
+use Cake\Event\CakeEventManager;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Utility\Inflector;
+
 /**
  * Dispatcher takes the URL information, parses it for parameters and
  * tells the involved controllers what to do.
@@ -105,7 +118,7 @@ class Dispatcher implements CakeEventListener {
 				$filter = array('callable' => $filter);
 			}
 			if (is_string($filter['callable'])) {
-				list($plugin, $callable) = pluginSplit($filter['callable'], true);
+				[$plugin, $callable] = pluginSplit($filter['callable'], true);
 				App::uses($callable, $plugin . 'Routing/Filter');
 				if (!class_exists($callable)) {
 					throw new MissingDispatcherFilterException($callable);
@@ -236,7 +249,7 @@ class Dispatcher implements CakeEventListener {
 		if (!$ctrlClass) {
 			return false;
 		}
-		$reflection = new ReflectionClass($ctrlClass);
+		$reflection = new \ReflectionClass($ctrlClass);
 		if ($reflection->isAbstract() || $reflection->isInterface()) {
 			return false;
 		}
@@ -256,10 +269,13 @@ class Dispatcher implements CakeEventListener {
 			$pluginPath = $pluginName . '.';
 		}
 		if (!empty($request->params['controller'])) {
-			$controller = Inflector::camelize($request->params['controller']);
+			$isFQN = str_ends_with($request->params['controller'], 'Controller');
+			$controller = $isFQN
+				? $request->params['controller']
+				: Inflector::camelize($request->params['controller']);
 		}
 		if ($pluginPath . $controller) {
-			$class = $controller . 'Controller';
+			$class = $isFQN ? $controller : $controller . 'Controller';
 			App::uses('AppController', 'Controller');
 			App::uses($pluginName . 'AppController', $pluginPath . 'Controller');
 			App::uses($class, $pluginPath . 'Controller');

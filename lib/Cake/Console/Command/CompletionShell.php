@@ -1,4 +1,8 @@
 <?php
+namespace Cake\Console\Command;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Core\App;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -18,7 +22,7 @@ App::uses('AppShell', 'Console/Command');
 
 /**
  * Provide command completion shells such as bash.
- * 
+ *
  * @package       Cake.Console.Command
  */
 class CompletionShell extends AppShell {
@@ -88,7 +92,7 @@ class CompletionShell extends AppShell {
 
 /**
  * Guess autocomplete from the whole argument string
- * 
+ *
  * @return void
  */
 	public function fuzzy() {

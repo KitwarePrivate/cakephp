@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Model\Behavior;
+use Cake\Core\App;
+use Cake\Model\Model;
+use Cake\Model\ModelBehavior;
+use Cake\Utility\Hash;
+
 /**
  * Behavior for binding management.
  *
@@ -202,7 +208,7 @@ class ContainableBehavior extends ModelBehavior {
 				if ($field === '--primaryKey--') {
 					$field = $Model->primaryKey;
 				} elseif (preg_match('/^.+\.\-\-[^-]+\-\-$/', $field)) {
-					list($modelName, $field) = explode('.', $field);
+					[$modelName, $field] = explode('.', $field);
 					if ($Model->useDbConfig === $Model->{$modelName}->useDbConfig) {
 						$field = $modelName . '.' . (
 							($field === '--primaryKey--') ? $Model->$modelName->primaryKey : $field

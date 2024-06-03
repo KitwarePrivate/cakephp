@@ -1,4 +1,7 @@
 <?php
+namespace Cake\Network\Http;
+use Cake\Core\App;
+
 /**
  * HTTP Response from HttpSocket.
  *

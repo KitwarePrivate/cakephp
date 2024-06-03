@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Cache\Engine;
+
+use Cake\Cache\CacheEngine;
+use Cake\Utility\Inflector;
+
 /**
  * Xcache storage engine for cache.
  *
@@ -95,7 +100,7 @@ class XcacheEngine extends CacheEngine {
  *
  * @param string $key Identifier for the data
  * @param int $offset How much to increment
- * @return New incremented value, false otherwise
+ * @return int New incremented value, false otherwise
  */
 	public function increment($key, $offset = 1) {
 		return xcache_inc($key, $offset);
@@ -107,7 +112,7 @@ class XcacheEngine extends CacheEngine {
  *
  * @param string $key Identifier for the data
  * @param int $offset How much to subtract
- * @return New decremented value, false otherwise
+ * @return int New decremented value, false otherwise
  */
 	public function decrement($key, $offset = 1) {
 		return xcache_dec($key, $offset);

@@ -1,4 +1,8 @@
 <?php
+namespace Cake\Network\Http;
+use Cake\Error\SocketException;
+use Cake\Utility\Inflector;
+
 /**
  * HTTP Response from HttpSocket.
  *
@@ -20,7 +24,7 @@
  *
  * @package       Cake.Network.Http
  */
-class HttpSocketResponse implements ArrayAccess {
+class HttpSocketResponse implements \ArrayAccess {
 
 /**
  * Body content
@@ -155,7 +159,7 @@ class HttpSocketResponse implements ArrayAccess {
 			throw new SocketException(__d('cake_dev', 'Invalid HTTP response.'));
 		}
 
-		list(, $statusLine, $header) = $match;
+		[, $statusLine, $header] = $match;
 		$this->raw = $message;
 		$this->body = (string)substr($message, strlen($match[0]));
 
@@ -284,7 +288,7 @@ class HttpSocketResponse implements ArrayAccess {
 				$value .= preg_replace("/\s+/", ' ', $line);
 				$continuation = true;
 			} elseif (strpos($line, ':') !== false) {
-				list($field, $value) = explode(':', $line, 2);
+				[$field, $value] = explode(':', $line, 2);
 				$field = $this->_unescapeToken($field);
 			}
 
@@ -323,12 +327,12 @@ class HttpSocketResponse implements ArrayAccess {
 			if (count($nameParts) < 2) {
 				$nameParts = array('', $nameParts[0]);
 			}
-			list($name, $value) = $nameParts;
+			[$name, $value] = $nameParts;
 			$cookies[$name] = compact('value');
 
 			foreach ($parts as $part) {
 				if (strpos($part, '=') !== false) {
-					list($key, $value) = explode('=', $part);
+					[$key, $value] = explode('=', $part);
 				} else {
 					$key = $part;
 					$value = true;

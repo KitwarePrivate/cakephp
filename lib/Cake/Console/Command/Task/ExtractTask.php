@@ -1,4 +1,5 @@
 <?php
+namespace Cake\Console\Command\Task;
 /**
  * Language string extractor
  *

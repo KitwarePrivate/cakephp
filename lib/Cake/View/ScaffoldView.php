@@ -1,4 +1,10 @@
 <?php
+namespace Cake\View;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\MissingViewException;
+use Cake\Utility\Inflector;
+
 /**
  * Scaffold.
  *

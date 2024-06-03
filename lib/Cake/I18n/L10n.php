@@ -1,4 +1,9 @@
 <?php
+namespace Cake\I18n;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Network\CakeRequest;
+
 /**
  * Localization
  *

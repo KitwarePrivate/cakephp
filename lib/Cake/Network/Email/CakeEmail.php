@@ -1,4 +1,15 @@
 <?php
+namespace Cake\Network\Email;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\ConfigureException;
+use Cake\Error\SocketException;
+use Cake\Log\CakeLog;
+use Cake\Utility\CakeText;
+use Cake\Utility\File;
+use Cake\Utility\Hash;
+use Cake\View\View;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -353,7 +364,11 @@ class CakeEmail {
 		if ($this->_appCharset !== null) {
 			$this->charset = $this->_appCharset;
 		}
+<<<<<<< namespace-cakephp
+		$this->_domain = preg_replace('/\:\d+$/', '', (env('HTTP_HOST') ?? ''));
+=======
 		$this->_domain = preg_replace('/\:\d+$/', '', (string)env('HTTP_HOST'));
+>>>>>>> master
 		if (empty($this->_domain)) {
 			$this->_domain = php_uname('n');
 		}
@@ -966,7 +981,7 @@ class CakeEmail {
 		if ($this->_transportClass) {
 			return $this->_transportClass;
 		}
-		list($plugin, $transportClassname) = pluginSplit($this->_transportName, true);
+		[$plugin, $transportClassname] = pluginSplit($this->_transportName, true);
 		$transportClassname .= 'Transport';
 		App::uses($transportClassname, $plugin . 'Network/Email');
 		if (!class_exists($transportClassname)) {
@@ -1679,7 +1694,7 @@ class CakeEmail {
 		}
 		$viewClass = $this->_viewRender;
 		if ($viewClass !== 'View') {
-			list($plugin, $viewClass) = pluginSplit($viewClass, true);
+			[$plugin, $viewClass] = pluginSplit($viewClass, true);
 			$viewClass .= 'View';
 			App::uses($viewClass, $plugin . 'View');
 		}
@@ -1695,8 +1710,8 @@ class CakeEmail {
 
 		$View->loadHelpers();
 
-		list($templatePlugin, $template) = pluginSplit($this->_template);
-		list($layoutPlugin, $layout) = pluginSplit($this->_layout);
+		[$templatePlugin, $template] = pluginSplit($this->_template);
+		[$layoutPlugin, $layout] = pluginSplit($this->_layout);
 		if ($templatePlugin) {
 			$View->plugin = $templatePlugin;
 		} elseif ($layoutPlugin) {

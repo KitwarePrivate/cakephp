@@ -1,4 +1,12 @@
 <?php
+namespace Cake\TestSuite;
+use Cake\Core\App;
+use Cake\Error\MissingTestLoaderException;
+use PHPUnit_Framework_Exception;
+use PHPUnit_Framework_Test;
+use PHPUnit_TextUI_Command;
+use PHPUnit_TextUI_TestRunner;
+
 /**
  * TestRunner for CakePHP Test suite.
  *

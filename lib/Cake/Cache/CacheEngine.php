@@ -1,4 +1,5 @@
 <?php
+namespace Cake\Cache;
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -107,7 +108,7 @@ abstract class CacheEngine {
  *
  * @param string $key Identifier for the data
  * @param int $offset How much to add
- * @return New incremented value, false otherwise
+ * @return int New incremented value, false otherwise
  */
 	abstract public function increment($key, $offset = 1);
 
@@ -116,7 +117,7 @@ abstract class CacheEngine {
  *
  * @param string $key Identifier for the data
  * @param int $offset How much to subtract
- * @return New incremented value, false otherwise
+ * @return int New incremented value, false otherwise
  */
 	abstract public function decrement($key, $offset = 1);
 

@@ -1,4 +1,16 @@
 <?php
+namespace Cake\Controller\Component;
+use Cake\Controller\Component;
+use Cake\Controller\Controller;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\AuthSecurityException;
+use Cake\Error\BadRequestException;
+use Cake\Error\SecurityException;
+use Cake\Network\CakeRequest;
+use Cake\Utility\Hash;
+use Cake\Utility\Security;
+
 /**
  * Security Component
  *
@@ -533,7 +545,7 @@ class SecurityComponent extends Component {
 
 		$token = urldecode($check['_Token']['fields']);
 		if (strpos($token, ':')) {
-			list($token, ) = explode(':', $token, 2);
+			[$token, ] = explode(':', $token, 2);
 		}
 
 		return $token;
@@ -569,7 +581,7 @@ class SecurityComponent extends Component {
 		$unlocked = $this->_unlocked($check);
 
 		if (strpos($token, ':')) {
-			list($token, $locked) = explode(':', $token, 2);
+			[$token, $locked] = explode(':', $token, 2);
 		}
 		unset($check['_Token'], $check['_csrfToken']);
 

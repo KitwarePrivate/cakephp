@@ -1,4 +1,6 @@
 <?php
+use Cake\Core\App;
+use Cake\Utility\Debugger;
 /**
  * Prints a stack trace for an exception
  *

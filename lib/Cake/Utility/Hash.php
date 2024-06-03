@@ -1,4 +1,8 @@
 <?php
+namespace Cake\Utility;
+use Cake\Core\App;
+use Cake\Error\CakeException;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -38,7 +42,7 @@ class Hash {
  * @param string|array $path The path being searched for. Either a dot
  *   separated string, or an array of path segments.
  * @param mixed $default The return value when the path does not exist
- * @throws InvalidArgumentException
+ * @throws \InvalidArgumentException
  * @return mixed The value fetched from the array, or null.
  * @link https://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::get
  */
@@ -52,7 +56,7 @@ class Hash {
 			$parts = array($path);
 		} else {
 			if (!is_array($path)) {
-				throw new InvalidArgumentException(__d('cake_dev',
+				throw new \InvalidArgumentException(__d('cake_dev',
 					'Invalid path parameter: %s, should be dot separated path or array.',
 					var_export($path, true)
 				));
@@ -124,7 +128,7 @@ class Hash {
 		foreach ($tokens as $token) {
 			$next = array();
 
-			list($token, $conditions) = static::_splitConditions($token);
+			[$token, $conditions] = static::_splitConditions($token);
 
 			foreach ($context[$_key] as $item) {
 				foreach ((array)$item as $k => $v) {
@@ -271,7 +275,7 @@ class Hash {
 		$token = array_shift($tokens);
 		$nextPath = implode('.', $tokens);
 
-		list($token, $conditions) = static::_splitConditions($token);
+		[$token, $conditions] = static::_splitConditions($token);
 
 		foreach ($data as $k => $v) {
 			if (static::_matchToken($k, $token)) {
@@ -351,7 +355,7 @@ class Hash {
 		$token = array_shift($tokens);
 		$nextPath = implode('.', $tokens);
 
-		list($token, $conditions) = static::_splitConditions($token);
+		[$token, $conditions] = static::_splitConditions($token);
 
 		foreach ($data as $k => $v) {
 			$match = static::_matchToken($k, $token);
@@ -525,7 +529,7 @@ class Hash {
 			}
 
 			if (empty($needle) && !empty($stack)) {
-				list($needle, $data) = array_pop($stack);
+				[$needle, $data] = array_pop($stack);
 			}
 		}
 		return true;
@@ -616,7 +620,7 @@ class Hash {
 			}
 
 			if (empty($data) && !empty($stack)) {
-				list($data, $path) = array_pop($stack);
+				[$data, $path] = array_pop($stack);
 				reset($data);
 			}
 		}
@@ -1077,7 +1081,7 @@ class Hash {
  * @param array $options Options are:
  * @return array of results, nested
  * @see Hash::extract()
- * @throws InvalidArgumentException When providing invalid data.
+ * @throws \InvalidArgumentException When providing invalid data.
  * @link https://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::nest
  */
 	public static function nest(array $data, $options = array()) {
@@ -1121,7 +1125,7 @@ class Hash {
 		}
 
 		if (!$return) {
-			throw new InvalidArgumentException(__d('cake_dev',
+			throw new \InvalidArgumentException(__d('cake_dev',
 				'Invalid data array to nest.'
 			));
 		}

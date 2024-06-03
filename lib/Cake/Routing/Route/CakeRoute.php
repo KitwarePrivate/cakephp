@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Routing\Route;
+use Cake\Core\App;
+use Cake\Routing\Router;
+use Cake\Utility\Hash;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -238,7 +243,7 @@ class CakeRoute {
 		}
 
 		if (isset($route['_args_'])) {
-			list($pass, $named) = $this->_parseArgs($route['_args_'], $route);
+			[$pass, $named] = $this->_parseArgs($route['_args_'], $route);
 			$route['pass'] = array_merge($route['pass'], $pass);
 			$route['named'] = $named;
 			unset($route['_args_']);
@@ -294,7 +299,7 @@ class CakeRoute {
 
 			$separatorIsPresent = strpos($param, $namedConfig['separator']) !== false;
 			if ((!isset($this->options['named']) || !empty($this->options['named'])) && $separatorIsPresent) {
-				list($key, $val) = explode($namedConfig['separator'], $param, 2);
+				[$key, $val] = explode($namedConfig['separator'], $param, 2);
 				$hasRule = isset($rules[$key]);
 				$passIt = (!$hasRule && !$greedy) || ($hasRule && !$this->_matchNamed($val, $rules[$key], $context));
 				if ($passIt) {

@@ -1,4 +1,15 @@
 <?php
+namespace Cake\Model;
+use AppModel;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Core\CakePlugin;
+use Cake\Core\Configure;
+use Cake\Error\CakeException;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\File;
+use Cake\Utility\Inflector;
+
 /**
  * Schema database management for CakePHP.
  *
@@ -79,7 +90,7 @@ class CakeSchema extends CakeObject {
 		parent::__construct();
 
 		if (empty($options['name'])) {
-			$this->name = preg_replace('/schema$/i', '', get_class($this));
+			$this->name = preg_replace('/schema$/i', '', static::getShortName());
 		}
 		if (!empty($options['plugin'])) {
 			$this->plugin = $options['plugin'];
@@ -403,12 +414,12 @@ class CakeSchema extends CakeObject {
  * @param string $table Table name you want returned.
  * @param array $fields Array of field information to generate the table with.
  * @return string Variable declaration for a schema class.
- * @throws Exception
+ * @throws \Exception
  */
 	public function generateTable($table, $fields) {
 		// Valid var name regex (http://www.php.net/manual/en/language.variables.basics.php)
 		if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $table)) {
-			throw new Exception("Invalid table name '{$table}'");
+			throw new \Exception("Invalid table name '{$table}'");
 		}
 
 		$out = "\tpublic \${$table} = array(\n";

@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Model\Datasource\Session;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Model\Model;
+use Cake\Utility\ClassRegistry;
+
 /**
  * Database Session save handler. Allows saving session information into a model.
  *
@@ -128,7 +134,7 @@ class DatabaseSession implements CakeSessionHandlerInterface {
 		);
 		try {
 			return (bool)$this->_model->save($record, $options);
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			return (bool)$this->_model->save($record, $options);
 		}
 	}

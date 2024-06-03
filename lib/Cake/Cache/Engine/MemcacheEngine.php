@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Cache\Engine;
+
+use Cake\Cache\CacheEngine;
+use Cake\Error\CacheException;
+use Cake\Utility\Inflector;
+
 /**
  * Memcache storage engine for cache
  *
@@ -37,7 +43,7 @@ class MemcacheEngine extends CacheEngine {
 /**
  * Memcache wrapper.
  *
- * @var Memcache
+ * @var \Memcache
  */
 	protected $_Memcache = null;
 
@@ -84,9 +90,9 @@ class MemcacheEngine extends CacheEngine {
 		}
 		if (!isset($this->_Memcache)) {
 			$return = false;
-			$this->_Memcache = new Memcache();
+			$this->_Memcache = new \Memcache();
 			foreach ($this->settings['servers'] as $server) {
-				list($host, $port) = $this->_parseServerString($server);
+				[$host, $port] = $this->_parseServerString($server);
 				if ($this->_Memcache->addServer($host, $port, $this->settings['persistent'])) {
 					$return = true;
 				}
@@ -157,7 +163,7 @@ class MemcacheEngine extends CacheEngine {
  *
  * @param string $key Identifier for the data
  * @param int $offset How much to increment
- * @return New incremented value, false otherwise
+ * @return int New incremented value, false otherwise
  * @throws CacheException when you try to increment with compress = true
  */
 	public function increment($key, $offset = 1) {
@@ -174,7 +180,7 @@ class MemcacheEngine extends CacheEngine {
  *
  * @param string $key Identifier for the data
  * @param int $offset How much to subtract
- * @return New decremented value, false otherwise
+ * @return false|int New decremented value, false otherwise
  * @throws CacheException when you try to decrement with compress = true
  */
 	public function decrement($key, $offset = 1) {

@@ -1,4 +1,9 @@
 <?php
+namespace Cake\View\Helper;
+use AppHelper;
+use Cake\Core\App;
+use Cake\Model\Datasource\CakeSession;
+
 /**
  * Session Helper provides access to the Session in the Views.
  *

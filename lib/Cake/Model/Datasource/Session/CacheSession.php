@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Model\Datasource\Session;
+use Cake\Cache\Cache;
+use Cake\Core\App;
+use Cake\Core\Configure;
+
 /**
  * Cache Session save handler. Allows saving session information into Cache.
  *

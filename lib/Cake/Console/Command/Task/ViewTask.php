@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Console\Command\Task;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Console\Shell;
+use Cake\Core\App;
+use Cake\Model\Model;
+use Cake\Utility\Inflector;
+
 /**
  * The View Tasks handles creating and updating view files.
  *
@@ -463,7 +470,7 @@ class ViewTask extends BakeTask {
 
 		foreach ($keys as $type) {
 			foreach ($model->{$type} as $assocKey => $assocData) {
-				list(, $modelClass) = pluginSplit($assocData['className']);
+				[, $modelClass] = pluginSplit($assocData['className']);
 				$associations[$type][$assocKey]['primaryKey'] = $model->{$assocKey}->primaryKey;
 				$associations[$type][$assocKey]['displayField'] = $model->{$assocKey}->displayField;
 				$associations[$type][$assocKey]['foreignKey'] = $assocData['foreignKey'];

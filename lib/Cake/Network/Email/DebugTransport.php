@@ -1,4 +1,7 @@
 <?php
+namespace Cake\Network\Email;
+use Cake\Core\App;
+
 /**
  * Emulates the email sending process for testing purposes
  *

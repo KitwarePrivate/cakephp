@@ -1,4 +1,17 @@
 <?php
+namespace Cake\TestSuite;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\MissingModelException;
+use Cake\Model\ConnectionManager;
+use Cake\Model\Model;
+use Cake\Routing\Router;
+use Cake\TestSuite\Fixture\CakeFixtureManager;
+use Cake\Utility\ClassRegistry;
+use PHPUnit_Framework_TestCase;
+use PHPUnit_Framework_TestResult;
+use PHPUnit_Runner_Version;
+
 /**
  * CakeTestCase file
  *
@@ -73,7 +86,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  *
  * @param PHPUnit_Framework_TestResult $result The test result object
  * @return PHPUnit_Framework_TestResult
- * @throws InvalidArgumentException
+ * @throws \InvalidArgumentException
  */
 	public function run(PHPUnit_Framework_TestResult $result = null) {
 		$level = ob_get_level();
@@ -209,11 +222,11 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  *
  * @return void
  * @see CakeTestCase::$autoFixtures
- * @throws Exception when no fixture manager is available.
+ * @throws \Exception when no fixture manager is available.
  */
 	public function loadFixtures() {
 		if (empty($this->fixtureManager)) {
-			throw new Exception(__d('cake_dev', 'No fixture manager to load the test fixture'));
+			throw new \Exception(__d('cake_dev', 'No fixture manager to load the test fixture'));
 		}
 		$args = func_get_args();
 		foreach ($args as $class) {
@@ -493,7 +506,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
 				continue;
 			}
 
-			list($description, $expressions, $itemNum) = $assertion;
+			[$description, $expressions, $itemNum] = $assertion;
 			foreach ((array)$expressions as $expression) {
 				if (preg_match(sprintf('/^%s/s', $expression), $string, $match)) {
 					$matches = true;
@@ -800,7 +813,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
  * @param bool $callOriginalMethods Not supported.
  * @param string $proxyTarget Not supported.
  * @return object
- * @throws InvalidArgumentException When not supported parameters are set.
+ * @throws \InvalidArgumentException When not supported parameters are set.
  * @deprecated Use `getMockBuilder()` or `createMock()` in new unit tests.
  * @see https://phpunit.de/manual/current/en/test-doubles.html
  */
@@ -823,13 +836,13 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
 					$callAutoload, $cloneArguments, $callOriginalMethods, $proxyTarget);
 		}
 		if ($cloneArguments) {
-			throw new InvalidArgumentException('$cloneArguments parameter is not supported');
+			throw new \InvalidArgumentException('$cloneArguments parameter is not supported');
 		}
 		if ($callOriginalMethods) {
-			throw new InvalidArgumentException('$callOriginalMethods parameter is not supported');
+			throw new \InvalidArgumentException('$callOriginalMethods parameter is not supported');
 		}
 		if ($proxyTarget !== null) {
-			throw new InvalidArgumentException('$proxyTarget parameter is not supported');
+			throw new \InvalidArgumentException('$proxyTarget parameter is not supported');
 		}
 		return $this->_buildMock(
 			$originalClassName,
@@ -855,7 +868,7 @@ abstract class CakeTestCase extends PHPUnit_Framework_TestCase {
 		$defaults = ClassRegistry::config('Model');
 		unset($defaults['ds']);
 
-		list($plugin, $name) = pluginSplit($model, true);
+		[$plugin, $name] = pluginSplit($model, true);
 		App::uses($name, $plugin . 'Model');
 
 		$config = array_merge($defaults, (array)$config, array('name' => $name));

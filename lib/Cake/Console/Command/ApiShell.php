@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Console\Command;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Core\App;
+use Cake\Utility\Inflector;
+
 /**
  * API shell to get CakePHP core method signatures.
  *
@@ -212,7 +217,7 @@ class ApiShell extends AppShell {
 			}
 		}
 
-		$reflection = new ReflectionClass($class);
+		$reflection = new \ReflectionClass($class);
 
 		foreach ($reflection->getMethods() as $method) {
 			if (!$method->isPublic() || strpos($method->getName(), '_') === 0) {

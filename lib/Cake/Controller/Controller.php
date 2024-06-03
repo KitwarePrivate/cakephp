@@ -1,4 +1,30 @@
 <?php
+namespace Cake\Controller;
+use Cake\Controller\Component\AclComponent;
+use Cake\Controller\Component\AuthComponent;
+use Cake\Controller\Component\CookieComponent;
+use Cake\Controller\Component\EmailComponent;
+use Cake\Controller\Component\FlashComponent;
+use Cake\Controller\Component\PaginatorComponent;
+use Cake\Controller\Component\RequestHandlerComponent;
+use Cake\Controller\Component\SecurityComponent;
+use Cake\Controller\Component\SessionComponent;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Error\MissingActionException;
+use Cake\Error\MissingModelException;
+use Cake\Error\PrivateActionException;
+use Cake\Event\CakeEvent;
+use Cake\Event\CakeEventListener;
+use Cake\Event\CakeEventManager;
+use Cake\Model\Model;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Router;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Inflector;
+use Cake\View\View;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -204,7 +230,7 @@ class Controller extends CakeObject implements CakeEventListener {
  *
  * @var string
  */
-	public $viewClass = 'View';
+	public $viewClass = View::class;
 
 /**
  * Instance of the View created during rendering. Won't be set until after
@@ -338,7 +364,7 @@ class Controller extends CakeObject implements CakeEventListener {
 		$this->Components = new ComponentCollection();
 
 		$childMethods = get_class_methods($this);
-		$parentMethods = get_class_methods('Controller');
+		$parentMethods = get_class_methods(self::class);
 
 		$this->methods = array_diff($childMethods, $parentMethods);
 
@@ -371,7 +397,7 @@ class Controller extends CakeObject implements CakeEventListener {
 
 		if (is_array($this->uses)) {
 			foreach ($this->uses as $modelClass) {
-				list($plugin, $class) = pluginSplit($modelClass, true);
+				[$plugin, $class] = pluginSplit($modelClass, true);
 				if ($name === $class) {
 					return $this->loadModel($modelClass);
 				}
@@ -379,7 +405,7 @@ class Controller extends CakeObject implements CakeEventListener {
 		}
 
 		if ($name === $this->modelClass) {
-			list($plugin, $class) = pluginSplit($name, true);
+			[$plugin, $class] = pluginSplit($name, true);
 			if (!$plugin) {
 				$plugin = $this->plugin ? $this->plugin . '.' : null;
 			}
@@ -488,7 +514,7 @@ class Controller extends CakeObject implements CakeEventListener {
  */
 	public function invokeAction(CakeRequest $request) {
 		try {
-			$method = new ReflectionMethod($this, $request->params['action']);
+			$method = new \ReflectionMethod($this, $request->params['action']);
 
 			if ($this->_isPrivateAction($method, $request)) {
 				throw new PrivateActionException(array(
@@ -498,7 +524,7 @@ class Controller extends CakeObject implements CakeEventListener {
 			}
 			return $method->invokeArgs($this, $request->params['pass']);
 
-		} catch (ReflectionException $e) {
+		} catch (\ReflectionException $e) {
 			if ($this->scaffold !== false) {
 				return $this->_getScaffold($request);
 			}
@@ -513,11 +539,11 @@ class Controller extends CakeObject implements CakeEventListener {
  * Check if the request's action is marked as private, with an underscore,
  * or if the request is attempting to directly accessing a prefixed action.
  *
- * @param ReflectionMethod $method The method to be invoked.
+ * @param \ReflectionMethod $method The method to be invoked.
  * @param CakeRequest $request The request to check.
  * @return bool
  */
-	protected function _isPrivateAction(ReflectionMethod $method, CakeRequest $request) {
+	protected function _isPrivateAction(\ReflectionMethod $method, CakeRequest $request) {
 		$privateAction = (
 			$method->name[0] === '_' ||
 			!$method->isPublic() ||
@@ -527,7 +553,7 @@ class Controller extends CakeObject implements CakeEventListener {
 
 		if (!$privateAction && !empty($prefixes)) {
 			if (empty($request->params['prefix']) && strpos($request->params['action'], '_') > 0) {
-				list($prefix) = explode('_', $request->params['action']);
+				[$prefix] = explode('_', $request->params['action']);
 				$privateAction = in_array(strtolower($prefix), $prefixes);
 			}
 		}
@@ -644,7 +670,7 @@ class Controller extends CakeObject implements CakeEventListener {
 		$this->_mergeControllerVars();
 		if ($this->uses) {
 			$this->uses = (array)$this->uses;
-			list(, $this->modelClass) = pluginSplit(reset($this->uses));
+			[, $this->modelClass] = pluginSplit(reset($this->uses));
 		}
 		$this->Components->init($this);
 		return true;
@@ -740,7 +766,7 @@ class Controller extends CakeObject implements CakeEventListener {
 			$this->uses[] = $modelClass;
 		}
 
-		list($plugin, $modelClass) = pluginSplit($modelClass, true);
+		[$plugin, $modelClass] = pluginSplit($modelClass, true);
 
 		$this->{$modelClass} = ClassRegistry::init(array(
 			'class' => $plugin . $modelClass, 'alias' => $modelClass, 'id' => $id
@@ -771,7 +797,7 @@ class Controller extends CakeObject implements CakeEventListener {
 		}
 		$event = new CakeEvent('Controller.beforeRedirect', $this, array($url, $status, $exit));
 
-		list($event->break, $event->breakOn, $event->collectReturn) = array(true, false, true);
+		[$event->break, $event->breakOn, $event->collectReturn] = array(true, false, true);
 		$this->getEventManager()->dispatch($event);
 
 		if ($event->isStopped()) {
@@ -946,7 +972,7 @@ class Controller extends CakeObject implements CakeEventListener {
 
 		if (!empty($this->uses) && is_array($this->uses)) {
 			foreach ($this->uses as $model) {
-				list($plugin, $className) = pluginSplit($model);
+				[$plugin, $className] = pluginSplit($model);
 				$this->request->params['models'][$className] = compact('plugin', 'className');
 			}
 		}
@@ -958,7 +984,7 @@ class Controller extends CakeObject implements CakeEventListener {
 			$currentObject = ClassRegistry::getObject($currentModel);
 			if ($currentObject instanceof Model) {
 				$className = get_class($currentObject);
-				list($plugin) = pluginSplit(App::location($className));
+				[$plugin] = pluginSplit(App::location($className));
 				$this->request->params['models'][$currentObject->alias] = compact('plugin', 'className');
 				$this->View->validationErrors[$currentObject->alias] =& $currentObject->validationErrors;
 			}
@@ -1038,7 +1064,7 @@ class Controller extends CakeObject implements CakeEventListener {
  *        included in the returned conditions
  * @return array|null An array of model conditions
  * @deprecated 3.0.0 Will be removed in 3.0.
- * @throws RuntimeException when unsafe operators are found.
+ * @throws \RuntimeException when unsafe operators are found.
  */
 	public function postConditions($data = array(), $op = null, $bool = 'AND', $exclusive = false) {
 		if (!is_array($data) || empty($data)) {
@@ -1058,11 +1084,11 @@ class Controller extends CakeObject implements CakeEventListener {
 		$arrayOp = is_array($op);
 		foreach ($data as $model => $fields) {
 			if (preg_match($allowedChars, $model)) {
-				throw new RuntimeException("Unsafe operator found in {$model}");
+				throw new \RuntimeException("Unsafe operator found in {$model}");
 			}
 			foreach ($fields as $field => $value) {
 				if (preg_match($allowedChars, $field)) {
-					throw new RuntimeException("Unsafe operator found in {$model}.{$field}");
+					throw new \RuntimeException("Unsafe operator found in {$model}.{$field}");
 				}
 				$key = $model . '.' . $field;
 				$fieldOp = $op;
@@ -1259,9 +1285,9 @@ class Controller extends CakeObject implements CakeEventListener {
  */
 	protected function _getViewObject() {
 		$viewClass = $this->viewClass;
-		if ($this->viewClass !== 'View') {
-			list($plugin, $viewClass) = pluginSplit($viewClass, true);
-			$viewClass = $viewClass . 'View';
+		if ($this->viewClass !== View::class) {
+			[$plugin, $viewClass] = pluginSplit($viewClass, true);
+			$viewClass = str_ends_with($viewClass, 'View') ? $viewClass : $viewClass . 'View';
 			App::uses($viewClass, $plugin . 'View');
 		}
 

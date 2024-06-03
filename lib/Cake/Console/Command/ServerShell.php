@@ -1,4 +1,8 @@
 <?php
+namespace Cake\Console\Command;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Core\App;
+
 /**
  * built-in Server Shell
  *

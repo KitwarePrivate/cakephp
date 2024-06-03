@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Model;
+use Cake\Core\App;
+use Cake\Error\MissingBehaviorException;
+use Cake\Event\CakeEventListener;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\ObjectCollection;
+
 /**
  * BehaviorCollection
  *
@@ -101,6 +108,7 @@ class BehaviorCollection extends ObjectCollection implements CakeEventListener {
  * @throws MissingBehaviorException when a behavior could not be found.
  */
 	public function load($behavior, $config = array()) {
+		$isFqn = str_ends_with($behavior, 'Behavior');
 		if (isset($config['className'])) {
 			$alias = $behavior;
 			$behavior = $config['className'];
@@ -109,12 +117,12 @@ class BehaviorCollection extends ObjectCollection implements CakeEventListener {
 		$priority = isset($config['priority']) ? $config['priority'] : $this->defaultPriority;
 		unset($config['enabled'], $config['className'], $config['priority']);
 
-		list($plugin, $name) = pluginSplit($behavior, true);
+		[$plugin, $name] = pluginSplit($behavior, true);
 		if (!isset($alias)) {
-			$alias = $name;
+			$alias = $isFqn ? $behavior::getShortName() : $name;
 		}
 
-		$class = $name . 'Behavior';
+		$class = $isFqn ? $name : $name . 'Behavior';
 
 		App::uses($class, $plugin . 'Model/Behavior');
 		if (!class_exists($class)) {
@@ -184,7 +192,7 @@ class BehaviorCollection extends ObjectCollection implements CakeEventListener {
  * @return void
  */
 	public function unload($name) {
-		list(, $name) = pluginSplit($name);
+		[, $name] = pluginSplit($name);
 		if (isset($this->_loaded[$name])) {
 			$this->_loaded[$name]->cleanup(ClassRegistry::getObject($this->modelName));
 			parent::unload($name);

@@ -1,4 +1,8 @@
 <?php
+namespace Cake\View\Helper;
+use Cake\Core\App;
+use Cake\Core\Configure;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -213,7 +217,7 @@ class MootoolsEngineHelper extends JsBaseEngineHelper {
 			case 'fadeOut':
 			case 'slideIn':
 			case 'slideOut':
-				list($effectName, $direction) = preg_split('/([A-Z][a-z]+)/', $name, -1, PREG_SPLIT_DELIM_CAPTURE);
+				[$effectName, $direction] = preg_split('/([A-Z][a-z]+)/', $name, -1, PREG_SPLIT_DELIM_CAPTURE);
 				$direction = strtolower($direction);
 				if ($speed) {
 					$effect .= "set(\"$effectName\", {duration:$speed}).";

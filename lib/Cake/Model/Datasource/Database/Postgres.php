@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Model\Datasource\Database;
+use Cake\Core\App;
+use Cake\Error\MissingConnectionException;
+use Cake\Model\Datasource\DboSource;
+use Cake\Model\Model;
+use Cake\Utility\Hash;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -115,12 +122,12 @@ class Postgres extends DboSource {
 		$this->connected = false;
 
 		$flags = $config['flags'] + array(
-			PDO::ATTR_PERSISTENT => $config['persistent'],
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+			\PDO::ATTR_PERSISTENT => $config['persistent'],
+			\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
 		);
 
 		try {
-			$this->_connection = new PDO(
+			$this->_connection = new \PDO(
 				"pgsql:host={$config['host']};port={$config['port']};dbname={$config['database']};sslmode={$config['sslmode']}",
 				$config['login'],
 				$config['password'],
@@ -139,7 +146,7 @@ class Postgres extends DboSource {
 					$this->_execute("SET $key TO $value");
 				}
 			}
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			throw new MissingConnectionException(array(
 				'class' => get_class($this),
 				'message' => $e->getMessage()
@@ -155,7 +162,7 @@ class Postgres extends DboSource {
  * @return bool
  */
 	public function enabled() {
-		return in_array('pgsql', PDO::getAvailableDrivers());
+		return in_array('pgsql', \PDO::getAvailableDrivers());
 	}
 
 /**
@@ -708,7 +715,7 @@ class Postgres extends DboSource {
 		$col = str_replace(')', '', $real);
 
 		if (strpos($col, '(') !== false) {
-			list($col, $limit) = explode('(', $col);
+			[$col, $limit] = explode('(', $col);
 		}
 
 		$floats = array(
@@ -754,7 +761,7 @@ class Postgres extends DboSource {
 	public function length($real) {
 		$col = $real;
 		if (strpos($real, '(') !== false) {
-			list($col, $limit) = explode('(', $real);
+			[$col, $limit] = explode('(', $real);
 		}
 		if ($col === 'uuid') {
 			return 36;
@@ -765,7 +772,7 @@ class Postgres extends DboSource {
 /**
  * resultSet method
  *
- * @param PDOStatement $results The results
+ * @param \PDOStatement $results The results
  * @return void
  */
 	public function resultSet($results) {
@@ -777,7 +784,7 @@ class Postgres extends DboSource {
 		while ($j < $numFields) {
 			$column = $results->getColumnMeta($j);
 			if (strpos($column['name'], '__')) {
-				list($table, $name) = explode('__', $column['name']);
+				[$table, $name] = explode('__', $column['name']);
 				$this->map[$index++] = array($table, $name, $column['native_type']);
 			} else {
 				$this->map[$index++] = array(0, $column['name'], $column['native_type']);
@@ -792,11 +799,11 @@ class Postgres extends DboSource {
  * @return array
  */
 	public function fetchResult() {
-		if ($row = $this->_result->fetch(PDO::FETCH_NUM)) {
+		if ($row = $this->_result->fetch(\PDO::FETCH_NUM)) {
 			$resultRow = array();
 
 			foreach ($this->map as $index => $meta) {
-				list($table, $column, $type) = $meta;
+				[$table, $column, $type] = $meta;
 
 				switch ($type) {
 					case 'bool':

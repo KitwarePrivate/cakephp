@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Routing;
+use Cake\Core\App;
+use Cake\Event\CakeEvent;
+use Cake\Event\CakeEventListener;
+use Cake\Network\CakeResponse;
+use Cake\Utility\Hash;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)

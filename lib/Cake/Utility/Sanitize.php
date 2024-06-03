@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Utility;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Model\ConnectionManager;
+
 /**
  * Washes strings from unwanted noise.
  *

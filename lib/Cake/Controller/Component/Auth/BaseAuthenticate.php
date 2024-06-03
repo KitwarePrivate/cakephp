@@ -1,4 +1,16 @@
 <?php
+namespace Cake\Controller\Component\Auth;
+
+use Cake\Controller\ComponentCollection;
+use Cake\Core\App;
+use Cake\Error\CakeException;
+use Cake\Event\CakeEventListener;
+use Cake\Network\CakeRequest;
+use Cake\Network\CakeResponse;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Hash;
+use Cake\Utility\Security;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -102,14 +114,16 @@ abstract class BaseAuthenticate implements CakeEventListener {
  */
 	protected function _findUser($username, $password = null) {
 		$userModel = $this->settings['userModel'];
-		list(, $model) = pluginSplit($userModel);
+		$model_obj = ClassRegistry::init($userModel);
+		if (!$model_obj) {
+			return false;
+		}
 		$fields = $this->settings['fields'];
-
 		if (is_array($username)) {
 			$conditions = $username;
 		} else {
 			$conditions = array(
-				$model . '.' . $fields['username'] => $username
+				$model_obj->alias . '.' . $fields['username'] => $username
 			);
 		}
 
@@ -119,21 +133,21 @@ abstract class BaseAuthenticate implements CakeEventListener {
 
 		$userFields = $this->settings['userFields'];
 		if ($password !== null && $userFields !== null) {
-			$userFields[] = $model . '.' . $fields['password'];
+			$userFields[] = $model_obj->alias . '.' . $fields['password'];
 		}
 
-		$result = ClassRegistry::init($userModel)->find('first', array(
+		$result = $model_obj->find('first', array(
 			'conditions' => $conditions,
 			'recursive' => $this->settings['recursive'],
 			'fields' => $userFields,
 			'contain' => $this->settings['contain'],
 		));
-		if (empty($result[$model])) {
+		if (empty($result[$model_obj->alias])) {
 			$this->passwordHasher()->hash($password);
 			return false;
 		}
 
-		$user = $result[$model];
+		$user = $result[$model_obj->alias];
 		if ($password !== null) {
 			if (!$this->passwordHasher()->check($password, $user[$fields['password']])) {
 				return false;
@@ -141,7 +155,7 @@ abstract class BaseAuthenticate implements CakeEventListener {
 			unset($user[$fields['password']]);
 		}
 
-		unset($result[$model]);
+		unset($result[$model_obj->alias]);
 		return array_merge($user, $result);
 	}
 
@@ -165,13 +179,13 @@ abstract class BaseAuthenticate implements CakeEventListener {
 			$config = $this->settings['passwordHasher'];
 			unset($config['className']);
 		}
-		list($plugin, $class) = pluginSplit($class, true);
-		$className = $class . 'PasswordHasher';
+		[$plugin, $class] = pluginSplit($class, true);
+		$className = str_ends_with($class, 'PasswordHasher') ? $class : $class . 'PasswordHasher';
 		App::uses($className, $plugin . 'Controller/Component/Auth');
 		if (!class_exists($className)) {
 			throw new CakeException(__d('cake_dev', 'Password hasher class "%s" was not found.', $class));
 		}
-		if (!is_subclass_of($className, 'AbstractPasswordHasher')) {
+		if (!is_subclass_of($className, AbstractPasswordHasher::class)) {
 			throw new CakeException(__d('cake_dev', 'Password hasher must extend AbstractPasswordHasher class.'));
 		}
 		$this->_passwordHasher = new $className($config);

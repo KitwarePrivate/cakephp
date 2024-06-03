@@ -18,6 +18,10 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\I18n\Multibyte;
+
 define('TIME_START', microtime(true));
 
 if (!defined('E_DEPRECATED')) {
@@ -111,7 +115,7 @@ if (!defined('CACHE')) {
  * Path to the vendors directory.
  */
 if (!defined('VENDORS')) {
-	define('VENDORS', ROOT . DS . 'vendors' . DS);
+	define('VENDORS', APP . 'vendors' . DS);
 }
 
 /**
@@ -135,11 +139,51 @@ if (!defined('JS_URL')) {
 	define('JS_URL', 'js/');
 }
 
+// Define an autoloader for short names
+$autoloader = static function ($class) {
+	static $classMap;
+	if (!isset($classMap)) {
+		// VENDORS is defined above, but we don't want the application's vendors directory
+		// we want Cake's vendors directory, so access relative to this file
+		$composer = require_once dirname(__DIR__) . '/../vendors/autoload.php';
+		// First build Cake's class map
+		foreach ($composer->getClassMap() as $fqn => $path) {
+			if (!str_starts_with($fqn, 'Cake')) {
+				continue;
+			}
+			$key = substr($fqn, strrpos($fqn, '\\')+1);
+			$classMap[$key] = [$fqn, $path];
+		}
+		// Ensure App::$_classMap has entries for all KWiK packages by their short name
+		foreach (array_keys(App::paths()) as $package) {
+			foreach (App::objects($package) as $model_short_name) {
+				App::uses($model_short_name, $package);
+			}
+		}
+	}
+
+	if (isset($classMap[$class])) {
+		[$fqn, $path] = $classMap[$class];
+		// If this class has previously been loaded via a PSR4 class loader with an FQN, then we
+		// just need to make sure to alias the short name as an FQN.
+		if (class_exists($fqn, false) || interface_exists($fqn, false)) {
+			return class_alias($fqn, $class, false);
+		}
+
+		// if the FQN does not yet exist, here, we attempt to include the file, then alias the short
+		// name
+		require $path;
+		return class_alias($fqn, $class, false);
+	}
+	return false;
+};
+spl_autoload_register($autoloader);
+
 require CAKE . 'basics.php';
 require CAKE . 'Core' . DS . 'App.php';
-require CAKE . 'Error' . DS . 'exceptions.php';
+// require CAKE . 'Error' . DS . 'exceptions.php';
 
-spl_autoload_register(array('App', 'load'));
+spl_autoload_register([App::class, 'load']);
 
 App::uses('ErrorHandler', 'Error');
 App::uses('Configure', 'Core');

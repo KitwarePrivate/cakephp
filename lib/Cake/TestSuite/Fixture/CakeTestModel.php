@@ -1,4 +1,8 @@
 <?php
+namespace Cake\TestSuite\Fixture;
+use Cake\Core\App;
+use Cake\Model\Model;
+
 /**
  * CakePHP(tm) Tests <https://book.cakephp.org/2.0/en/development/testing.html>
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)

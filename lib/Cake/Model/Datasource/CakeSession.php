@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Model\Datasource;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\CakeSessionException;
+use Cake\Model\Datasource\Session\CakeSessionHandlerInterface;
+use Cake\Utility\Hash;
+
 /**
  * Session class for CakePHP.
  *
@@ -644,7 +651,7 @@ class CakeSession {
  * @throws CakeSessionException
  */
 	protected static function _getHandler($handler) {
-		list($plugin, $class) = pluginSplit($handler, true);
+		[$plugin, $class] = pluginSplit($handler, true);
 		App::uses($class, $plugin . 'Model/Datasource/Session');
 		if (!class_exists($class)) {
 			throw new CakeSessionException(__d('cake_dev', 'Could not load %s to handle the session.', $class));

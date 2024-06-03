@@ -1,4 +1,7 @@
 <?php
+namespace Cake\Event;
+use Cake\Core\App;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -95,12 +98,12 @@ class CakeEventManager {
  * when the listener is called. If $called is an instance of CakeEventListener, this parameter will be ignored
  *
  * @return void
- * @throws InvalidArgumentException When event key is missing or callable is not an
+ * @throws \InvalidArgumentException When event key is missing or callable is not an
  *   instance of CakeEventListener.
  */
 	public function attach($callable, $eventKey = null, $options = array()) {
 		if (!$eventKey && !($callable instanceof CakeEventListener)) {
-			throw new InvalidArgumentException(__d('cake_dev', 'The eventKey variable is required'));
+			throw new \InvalidArgumentException(__d('cake_dev', 'The eventKey variable is required'));
 		}
 		if ($callable instanceof CakeEventListener) {
 			$this->_attachSubscriber($callable);
@@ -125,10 +128,10 @@ class CakeEventManager {
 			$options = array();
 			$method = $function;
 			if (is_array($function) && isset($function['callable'])) {
-				list($method, $options) = $this->_extractCallable($function, $subscriber);
+				[$method, $options] = $this->_extractCallable($function, $subscriber);
 			} elseif (is_array($function) && is_numeric(key($function))) {
 				foreach ($function as $f) {
-					list($method, $options) = $this->_extractCallable($f, $subscriber);
+					[$method, $options] = $this->_extractCallable($f, $subscriber);
 					$this->attach($method, $eventKey, $options);
 				}
 				continue;

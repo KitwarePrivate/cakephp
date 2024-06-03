@@ -1,4 +1,7 @@
 <?php
+namespace Cake\TestSuite\Coverage;
+use Cake\Core\App;
+
 /**
  * Generates code coverage reports in Simple plain text from data obtained from PHPUnit
  *
@@ -56,7 +59,7 @@ class TextCoverageReport extends BaseCoverageReport {
  * @return string
  */
 	public function generateDiff($filename, $fileLines, $coverageData) {
-		list($covered, $total) = $this->_calculateCoveredLines($fileLines, $coverageData);
+		[$covered, $total] = $this->_calculateCoveredLines($fileLines, $coverageData);
 		$percentCovered = round(100 * $covered / $total, 2);
 		return "$filename : $percentCovered%\n";
 	}

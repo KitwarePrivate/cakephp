@@ -1,4 +1,8 @@
 <?php
+namespace Cake\Controller;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)

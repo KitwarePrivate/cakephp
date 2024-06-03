@@ -1,4 +1,10 @@
 <?php
+namespace Cake\View\Helper;
+use AppHelper;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Utility\Inflector;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -109,7 +115,7 @@ class CacheHelper extends AppHelper {
  * @param string $out output to cache
  * @return string view output
  * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/cache.html
- * @throws Exception If debug mode is enabled and writing to cache file fails.
+ * @throws \Exception If debug mode is enabled and writing to cache file fails.
  */
 	public function cache($file, $out) {
 		$cacheTime = 0;
@@ -153,7 +159,7 @@ class CacheHelper extends AppHelper {
 			$cached = $this->_parseOutput($out);
 			try {
 				$this->_writeFile($cached, $cacheTime, $useCallbacks);
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				if (Configure::read('debug')) {
 					throw $e;
 				}

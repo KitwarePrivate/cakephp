@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Utility;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\SocketException;
+use Cake\Error\XmlException;
+use Cake\Network\Http\HttpSocket;
+
 /**
  * XML handling for Cake.
  *
@@ -86,7 +93,7 @@ class Xml {
  *
  * @param string|array $input XML string, a path to a file, a URL or an array
  * @param array $options The options to use
- * @return SimpleXMLElement|DOMDocument SimpleXMLElement or DOMDocument
+ * @return \SimpleXMLElement|\DOMDocument SimpleXMLElement or DOMDocument
  * @throws XmlException
  */
 	public static function build($input, $options = array()) {
@@ -129,7 +136,7 @@ class Xml {
  *
  * @param string $input The input to load.
  * @param array $options The options to use. See Xml::build()
- * @return SimpleXmlElement|DOMDocument
+ * @return \SimpleXmlElement|\DOMDocument
  * @throws XmlException
  */
 	protected static function _loadXml($input, $options) {
@@ -144,12 +151,12 @@ class Xml {
 		}
 		try {
 			if ($options['return'] === 'simplexml' || $options['return'] === 'simplexmlelement') {
-				$xml = new SimpleXMLElement($input, LIBXML_NOCDATA);
+				$xml = new \SimpleXMLElement($input, LIBXML_NOCDATA);
 			} else {
-				$xml = new DOMDocument();
+				$xml = new \DOMDocument();
 				$xml->loadXML($input);
 			}
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$xml = null;
 		}
 		if ($hasDisable && !$options['loadEntities']) {
@@ -197,7 +204,7 @@ class Xml {
  *
  * @param array $input Array with data
  * @param array $options The options to use
- * @return SimpleXMLElement|DOMDocument SimpleXMLElement or DOMDocument
+ * @return \SimpleXMLElement|\DOMDocument SimpleXMLElement or DOMDocument
  * @throws XmlException
  */
 	public static function fromArray($input, $options = array()) {
@@ -221,7 +228,7 @@ class Xml {
 		);
 		$options += $defaults;
 
-		$dom = new DOMDocument($options['version'], $options['encoding']);
+		$dom = new \DOMDocument($options['version'], $options['encoding']);
 		if ($options['pretty']) {
 			$dom->formatOutput = true;
 		}
@@ -229,7 +236,7 @@ class Xml {
 
 		$options['return'] = strtolower($options['return']);
 		if ($options['return'] === 'simplexml' || $options['return'] === 'simplexmlelement') {
-			return new SimpleXMLElement($dom->saveXML());
+			return new \SimpleXMLElement($dom->saveXML());
 		}
 		return $dom;
 	}
@@ -237,8 +244,8 @@ class Xml {
 /**
  * Recursive method to create childs from array
  *
- * @param DOMDocument $dom Handler to DOMDocument
- * @param DOMElement $node Handler to DOMElement (child)
+ * @param \DOMDocument $dom Handler to DOMDocument
+ * @param \DOMElement $node Handler to DOMElement (child)
  * @param array &$data Array of data to append to the $node.
  * @param string $format Either 'attributes' or 'tags'. This determines where nested keys go.
  * @return void
@@ -268,7 +275,7 @@ class Xml {
 							// http://www.w3.org/TR/REC-xml/#syntax
 							// https://bugs.php.net/bug.php?id=36795
 							$child = $dom->createElement($key, '');
-							$child->appendChild(new DOMText($value));
+							$child->appendChild(new \DOMText($value));
 						} else {
 							$child = $dom->createElement($key, $value);
 						}
@@ -338,15 +345,15 @@ class Xml {
 /**
  * Returns this XML structure as an array.
  *
- * @param SimpleXMLElement|DOMDocument|DOMNode $obj SimpleXMLElement, DOMDocument or DOMNode instance
+ * @param \SimpleXMLElement|\DOMDocument|\DOMNode $obj SimpleXMLElement, DOMDocument or DOMNode instance
  * @return array Array representation of the XML structure.
  * @throws XmlException
  */
 	public static function toArray($obj) {
-		if ($obj instanceof DOMNode) {
+		if ($obj instanceof \DOMNode) {
 			$obj = simplexml_import_dom($obj);
 		}
-		if (!($obj instanceof SimpleXMLElement)) {
+		if (!($obj instanceof \SimpleXMLElement)) {
 			throw new XmlException(__d('cake_dev', 'The input is not instance of SimpleXMLElement, DOMDocument or DOMNode.'));
 		}
 		$result = array();
@@ -358,7 +365,7 @@ class Xml {
 /**
  * Recursive method to toArray
  *
- * @param SimpleXMLElement $xml SimpleXMLElement object
+ * @param \SimpleXMLElement $xml SimpleXMLElement object
  * @param array &$parentData Parent array with data
  * @param string $ns Namespace of current child
  * @param array $namespaces List of namespaces in XML

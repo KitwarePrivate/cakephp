@@ -1,4 +1,7 @@
 <?php
+namespace Cake\View;
+use Cake\Core\App;
+
 /**
  * A custom view class that is used for themeing
  *

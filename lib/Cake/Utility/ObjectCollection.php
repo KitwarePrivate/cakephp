@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Utility;
+use Cake\Core\CakeObject;
+use Cake\Error\CakeException;
+use Cake\Event\CakeEvent;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -179,7 +184,7 @@ abstract class ObjectCollection {
 	public function enable($name, $prioritize = true) {
 		$enabled = false;
 		foreach ((array)$name as $object) {
-			list(, $object) = pluginSplit($object);
+			[, $object] = pluginSplit($object);
 			if (isset($this->_loaded[$object]) && !isset($this->_enabled[$object])) {
 				$priority = $this->defaultPriority;
 				if (isset($this->_loaded[$object]->settings['priority'])) {
@@ -223,7 +228,7 @@ abstract class ObjectCollection {
 			$name = array($name => $priority);
 		}
 		foreach ($name as $object => $objectPriority) {
-			list(, $object) = pluginSplit($object);
+			[, $object] = pluginSplit($object);
 			if (isset($this->_loaded[$object])) {
 				if ($objectPriority === null) {
 					$objectPriority = $this->defaultPriority;
@@ -246,7 +251,7 @@ abstract class ObjectCollection {
  */
 	public function disable($name) {
 		foreach ((array)$name as $object) {
-			list(, $object) = pluginSplit($object);
+			[, $object] = pluginSplit($object);
 			unset($this->_enabled[$object]);
 		}
 	}
@@ -261,7 +266,7 @@ abstract class ObjectCollection {
  */
 	public function enabled($name = null) {
 		if (!empty($name)) {
-			list(, $name) = pluginSplit($name);
+			[, $name] = pluginSplit($name);
 			return isset($this->_enabled[$name]);
 		}
 		return array_keys($this->_enabled);
@@ -290,7 +295,7 @@ abstract class ObjectCollection {
  */
 	public function loaded($name = null) {
 		if (!empty($name)) {
-			list(, $name) = pluginSplit($name);
+			[, $name] = pluginSplit($name);
 			return isset($this->_loaded[$name]);
 		}
 		return array_keys($this->_loaded);
@@ -303,7 +308,7 @@ abstract class ObjectCollection {
  * @return void
  */
 	public function unload($name) {
-		list(, $name) = pluginSplit($name);
+		[, $name] = pluginSplit($name);
 		unset($this->_loaded[$name], $this->_enabled[$name]);
 	}
 
@@ -316,7 +321,7 @@ abstract class ObjectCollection {
  */
 	public function set($name = null, $object = null) {
 		if (!empty($name) && !empty($object)) {
-			list(, $name) = pluginSplit($name);
+			[, $name] = pluginSplit($name);
 			$this->_loaded[$name] = $object;
 		}
 		return $this->_loaded;
@@ -337,7 +342,7 @@ abstract class ObjectCollection {
 				$options = (array)$objectName;
 				$objectName = $i;
 			}
-			list(, $name) = pluginSplit($objectName);
+			[, $name] = pluginSplit($objectName);
 			$normal[$name] = array('class' => $objectName, 'settings' => $options);
 		}
 		return $normal;

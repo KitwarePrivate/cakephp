@@ -1,4 +1,12 @@
 <?php
+namespace Cake\Console\Command;
+use Cake\Console\ConsoleOptionParser;
+use Cake\Console\Shell;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Model\Model;
+use Cake\Utility\Inflector;
+
 /**
  * Command-line code generation utility to automate programmer chores.
  *

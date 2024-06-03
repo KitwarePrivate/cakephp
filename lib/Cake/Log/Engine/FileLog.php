@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Log\Engine;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Utility\CakeNumber;
+use Cake\Utility\Hash;
+
 /**
  * File Storage stream for Logging
  *

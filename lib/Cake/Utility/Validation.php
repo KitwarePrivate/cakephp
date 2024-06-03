@@ -1,4 +1,8 @@
 <?php
+namespace Cake\Utility;
+use Cake\Core\App;
+use Cake\Error\CakeException;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)

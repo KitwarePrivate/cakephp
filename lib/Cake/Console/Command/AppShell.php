@@ -1,4 +1,8 @@
 <?php
+namespace Cake\Console\Command;
+use Cake\Console\Shell;
+use Cake\Core\App;
+
 /**
  * AppShell file
  *

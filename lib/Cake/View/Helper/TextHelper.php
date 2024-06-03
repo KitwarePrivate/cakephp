@@ -1,4 +1,11 @@
 <?php
+namespace Cake\View\Helper;
+use AppHelper;
+use Cake\Core\App;
+use Cake\Error\CakeException;
+use Cake\Utility\Hash;
+use Cake\View\View;
+
 /**
  * Text Helper
  *
@@ -51,7 +58,7 @@ class TextHelper extends AppHelper {
 /**
  * CakeText utility instance
  *
- * @var stdClass
+ * @var \stdClass
  */
 	protected $_engine;
 
@@ -70,7 +77,7 @@ class TextHelper extends AppHelper {
 	public function __construct(View $View, $settings = array()) {
 		$settings = Hash::merge(array('engine' => 'CakeText'), $settings);
 		parent::__construct($View, $settings);
-		list($plugin, $engineClass) = pluginSplit($settings['engine'], true);
+		[$plugin, $engineClass] = pluginSplit($settings['engine'], true);
 		App::uses($engineClass, $plugin . 'Utility');
 		if (class_exists($engineClass)) {
 			$this->_engine = new $engineClass($settings);

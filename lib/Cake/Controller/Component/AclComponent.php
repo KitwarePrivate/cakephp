@@ -1,4 +1,13 @@
 <?php
+namespace Cake\Controller\Component;
+use Cake\Controller\Component;
+use Cake\Controller\Component\Acl\AclInterface;
+use Cake\Controller\ComponentCollection;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\CakeException;
+use Cake\Model\Model;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -61,7 +70,7 @@ class AclComponent extends Component {
 		parent::__construct($collection, $settings);
 		$name = Configure::read('Acl.classname');
 		if (!class_exists($name)) {
-			list($plugin, $name) = pluginSplit($name, true);
+			[$plugin, $name] = pluginSplit($name, true);
 			App::uses($name, $plugin . 'Controller/Component/Acl');
 			if (!class_exists($name)) {
 				throw new CakeException(__d('cake_dev', 'Could not find %s.', $name));

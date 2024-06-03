@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Cache\Engine;
+
+use Cake\Cache\CacheEngine;
+use Cake\Utility\Inflector;
+
 /**
  * APC storage engine for cache.
  *
@@ -100,7 +105,7 @@ class ApcEngine extends CacheEngine {
  *
  * @param string $key Identifier for the data
  * @param int $offset How much to increment
- * @return New incremented value, false otherwise
+ * @return int New incremented value, false otherwise
  */
 	public function increment($key, $offset = 1) {
 		$func = $this->_apcExtension . '_inc';
@@ -112,7 +117,7 @@ class ApcEngine extends CacheEngine {
  *
  * @param string $key Identifier for the data
  * @param int $offset How much to subtract
- * @return New decremented value, false otherwise
+ * @return int New decremented value, false otherwise
  */
 	public function decrement($key, $offset = 1) {
 		$func = $this->_apcExtension . '_dec';
@@ -142,8 +147,8 @@ class ApcEngine extends CacheEngine {
 			return true;
 		}
 		$func = $this->_apcExtension . '_delete';
-		if (class_exists('APCIterator', false)) {
-			$iterator = new APCIterator(
+		if (class_exists('\APCIterator', false)) {
+			$iterator = new \APCIterator(
 				'user',
 				'/^' . preg_quote($this->settings['prefix'], '/') . '/',
 				APC_ITER_NONE
@@ -204,12 +209,13 @@ class ApcEngine extends CacheEngine {
  */
 	public function clearGroup($group) {
 		$func = $this->_apcExtension . '_inc';
+		$success = true;
 		$func($this->settings['prefix'] . $group, 1, $success);
 		return $success;
 	}
 
 /**
- * Write data for key into cache if it doesn't exist already. 
+ * Write data for key into cache if it doesn't exist already.
  * If it already exists, it fails and returns false.
  *
  * @param string $key Identifier for the data.

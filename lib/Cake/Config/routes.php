@@ -14,6 +14,11 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use Cake\Core\App;
+use Cake\Core\CakePlugin;
+use Cake\Routing\Router;
+use Cake\Utility\Inflector;
+
 /**
  * Connects the default, built-in routes, including prefix and plugin routes. The following routes are created
  * in the order below:

@@ -1,4 +1,7 @@
 <?php
+namespace Cake\Model\Validator;
+use Cake\Core\App;
+
 /**
  * CakeValidationSet.
  *
@@ -27,7 +30,7 @@ App::uses('CakeValidationRule', 'Model/Validator');
  * @package       Cake.Model.Validator
  * @link          https://book.cakephp.org/2.0/en/data-validation.html
  */
-class CakeValidationSet implements ArrayAccess, IteratorAggregate, Countable {
+class CakeValidationSet implements \ArrayAccess, \IteratorAggregate, \Countable {
 
 /**
  * Holds the CakeValidationRule objects
@@ -352,10 +355,10 @@ class CakeValidationSet implements ArrayAccess, IteratorAggregate, Countable {
 /**
  * Returns an iterator for each of the rules to be applied
  *
- * @return ArrayIterator
+ * @return \ArrayIterator
  */
-	public function getIterator(): Traversable {
-		return new ArrayIterator($this->_rules);
+	public function getIterator(): \Traversable {
+		return new \ArrayIterator($this->_rules);
 	}
 
 /**

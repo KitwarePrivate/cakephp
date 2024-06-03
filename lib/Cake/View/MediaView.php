@@ -1,4 +1,7 @@
 <?php
+namespace Cake\View;
+use Cake\Core\App;
+
 /**
  * Methods to display or download any type of file
  *

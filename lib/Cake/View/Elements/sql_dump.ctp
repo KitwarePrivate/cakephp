@@ -16,6 +16,8 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use Cake\Core\Configure;
+
 if (!class_exists('ConnectionManager') || Configure::read('debug') < 2) {
 	return false;
 }

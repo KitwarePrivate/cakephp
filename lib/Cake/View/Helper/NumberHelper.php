@@ -1,4 +1,12 @@
 <?php
+namespace Cake\View\Helper;
+use AppHelper;
+use Cake\Core\App;
+use Cake\Error\CakeException;
+use Cake\Utility\CakeNumber;
+use Cake\Utility\Hash;
+use Cake\View\View;
+
 /**
  * Number Helper.
  *
@@ -55,7 +63,7 @@ class NumberHelper extends AppHelper {
 	public function __construct(View $View, $settings = array()) {
 		$settings = Hash::merge(array('engine' => 'CakeNumber'), $settings);
 		parent::__construct($View, $settings);
-		list($plugin, $engineClass) = pluginSplit($settings['engine'], true);
+		[$plugin, $engineClass] = pluginSplit($settings['engine'], true);
 		App::uses($engineClass, $plugin . 'Utility');
 		if (class_exists($engineClass)) {
 			$this->_engine = new $engineClass($settings);

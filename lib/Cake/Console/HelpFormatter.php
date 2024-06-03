@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Console;
+
+use AllowDynamicProperties;
+use Cake\Core\App;
+use Cake\Utility\CakeText;
+
 /**
  * HelpFormatter
  *
@@ -175,11 +181,11 @@ class HelpFormatter {
  * Get the help as an xml string.
  *
  * @param bool $string Return the SimpleXml object or a string. Defaults to true.
- * @return string|SimpleXmlElement See $string
+ * @return string|\SimpleXmlElement See $string
  */
 	public function xml($string = true) {
 		$parser = $this->_parser;
-		$xml = new SimpleXmlElement('<shell></shell>');
+		$xml = new \SimpleXmlElement('<shell></shell>');
 		$xml->addChild('command', $parser->command());
 		$xml->addChild('description', $parser->description());
 

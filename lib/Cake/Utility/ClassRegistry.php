@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Utility;
+use Cake\Core\App;
+use Cake\Error\CakeException;
+use Cake\Model\ConnectionManager;
+use Cake\Model\Model;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -123,7 +129,7 @@ class ClassRegistry {
 				$settings += $defaults;
 				$class = $settings['class'];
 
-				list($plugin, $class) = pluginSplit($class);
+				[$plugin, $class] = pluginSplit($class);
 				if ($plugin) {
 					$pluginPath = $plugin . '.';
 					$settings['plugin'] = $plugin;
@@ -145,7 +151,7 @@ class ClassRegistry {
 				App::uses($class, $pluginPath . 'Model');
 
 				if (class_exists($class) || interface_exists($class)) {
-					$reflection = new ReflectionClass($class);
+					$reflection = new \ReflectionClass($class);
 					if ($reflection->isAbstract() || $reflection->isInterface()) {
 						throw new CakeException(__d('cake_dev', 'Cannot create instance of %s, as it is abstract or is an interface', $class));
 					}

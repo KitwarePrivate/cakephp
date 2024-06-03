@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Model\Behavior;
+use Cake\Core\App;
+use Cake\Model\Model;
+use Cake\Model\ModelBehavior;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Hash;
+
 /**
  * ACL behavior class.
  *

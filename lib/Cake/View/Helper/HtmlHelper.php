@@ -1,4 +1,14 @@
 <?php
+namespace Cake\View\Helper;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\ConfigureException;
+use Cake\Network\CakeResponse;
+use Cake\Utility\File;
+use Cake\Utility\Inflector;
+use Cake\View\View;
+
 /**
  * Html Helper class file.
  *
@@ -30,7 +40,7 @@ App::uses('File', 'Utility');
  * @package       Cake.View.Helper
  * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/html.html
  */
-class HtmlHelper extends AppHelper {
+class HtmlHelper extends \AppHelper {
 
 /**
  * Reference to the Response object
@@ -548,7 +558,7 @@ class HtmlHelper extends AppHelper {
  */
 	public function script($url, $options = array()) {
 		if (is_bool($options)) {
-			list($inline, $options) = array($options, array());
+			[$inline, $options] = array($options, array());
 			$options['inline'] = $inline;
 		}
 		$options += array('block' => null, 'inline' => true, 'once' => true);
@@ -795,7 +805,7 @@ class HtmlHelper extends AppHelper {
 				);
 			}
 			$startText += array('url' => '/', 'text' => __d('cake', 'Home'));
-			list($url, $text) = array($startText['url'], $startText['text']);
+			[$url, $text] = array($startText['url'], $startText['text']);
 			unset($startText['url'], $startText['text']);
 			array_unshift($crumbs, array($text, $url, $startText + array('escape' => $escape)));
 		}
@@ -829,7 +839,7 @@ class HtmlHelper extends AppHelper {
  * @param string $path Path to the image file, relative to the app/webroot/img/ directory.
  * @param array $options Array of HTML attributes. See above for special options.
  * @return string completed img tag
- * @throws InvalidArgumentException - if the image isn't on disk and you have requested the base64 output
+ * @throws \InvalidArgumentException - if the image isn't on disk and you have requested the base64 output
  * @link https://book.cakephp.org/2.0/en/core-libraries/helpers/html.html#HtmlHelper::image
  */
 	public function image($path, $options = array()) {
@@ -850,7 +860,7 @@ class HtmlHelper extends AppHelper {
 			$fullPath = WWW_ROOT . $path;
 			$file = new File($fullPath, false);
 			if (!$file->exists() || !$file->readable()) {
-				throw new InvalidArgumentException(__d('cake', 'Unable to find the requested image to output as base64!'));
+				throw new \InvalidArgumentException(__d('cake', 'Unable to find the requested image to output as base64!'));
 			}
 
 			$base64 = base64_encode($file->read());

@@ -1,4 +1,11 @@
 <?php
+namespace Cake\Network\Http;
+use Cake\Core\App;
+use Cake\Error\SocketException;
+use Cake\Network\CakeSocket;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+
 /**
  * HTTP Socket connection class.
  *
@@ -404,7 +411,7 @@ class HttpSocket extends CakeSocket {
 			$this->disconnect();
 		}
 
-		list($plugin, $responseClass) = pluginSplit($this->responseClass, true);
+		[$plugin, $responseClass] = pluginSplit($this->responseClass, true);
 		App::uses($responseClass, $plugin . 'Network/Http');
 		if (!class_exists($responseClass)) {
 			throw new SocketException(__d('cake_dev', 'Class %s not found.', $this->responseClass));
@@ -623,7 +630,7 @@ class HttpSocket extends CakeSocket {
 			return;
 		}
 		$method = key($this->_auth);
-		list($plugin, $authClass) = pluginSplit($method, true);
+		[$plugin, $authClass] = pluginSplit($method, true);
 		$authClass = Inflector::camelize($authClass) . 'Authentication';
 		App::uses($authClass, $plugin . 'Network/Http');
 
@@ -653,7 +660,7 @@ class HttpSocket extends CakeSocket {
 		if (empty($this->_proxy['method']) || !isset($this->_proxy['user'], $this->_proxy['pass'])) {
 			return;
 		}
-		list($plugin, $authClass) = pluginSplit($this->_proxy['method'], true);
+		[$plugin, $authClass] = pluginSplit($this->_proxy['method'], true);
 		$authClass = Inflector::camelize($authClass) . 'Authentication';
 		App::uses($authClass, $plugin . 'Network/Http');
 
@@ -836,7 +843,7 @@ class HttpSocket extends CakeSocket {
 
 			foreach ($items as $item) {
 				if (strpos($item, '=') !== false) {
-					list($key, $value) = explode('=', $item, 2);
+					[$key, $value] = explode('=', $item, 2);
 				} else {
 					$key = $item;
 					$value = null;

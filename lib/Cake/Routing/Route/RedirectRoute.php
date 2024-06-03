@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Routing\Route;
+use Cake\Core\App;
+use Cake\Network\CakeResponse;
+use Cake\Routing\Router;
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)

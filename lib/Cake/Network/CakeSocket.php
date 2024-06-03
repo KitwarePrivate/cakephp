@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Network;
+use Cake\Core\App;
+use Cake\Error\SocketException;
+use Cake\Utility\Validation;
+
 /**
  * CakePHP Socket connection class.
  *
@@ -184,7 +189,7 @@ class CakeSocket {
 
 		$hasProtocol = strpos($this->config['host'], '://') !== false;
 		if ($hasProtocol) {
-			list($this->config['protocol'], $this->config['host']) = explode('://', $this->config['host']);
+			[$this->config['protocol'], $this->config['host']] = explode('://', $this->config['host']);
 		}
 		$scheme = null;
 		if (!empty($this->config['protocol'])) {
@@ -490,19 +495,19 @@ class CakeSocket {
  * @param string $clientOrServer Can be one of 'client', 'server'. Default is 'client'.
  * @param bool $enable Enable or disable encryption. Default is true (enable)
  * @return bool True on success
- * @throws InvalidArgumentException When an invalid encryption scheme is chosen.
+ * @throws \InvalidArgumentException When an invalid encryption scheme is chosen.
  * @throws SocketException When attempting to enable SSL/TLS fails.
  * @see stream_socket_enable_crypto
  */
 	public function enableCrypto($type, $clientOrServer = 'client', $enable = true) {
 		if (!array_key_exists($type . '_' . $clientOrServer, $this->_encryptMethods)) {
-			throw new InvalidArgumentException(__d('cake_dev', 'Invalid encryption scheme chosen'));
+			throw new \InvalidArgumentException(__d('cake_dev', 'Invalid encryption scheme chosen'));
 		}
 		$enableCryptoResult = false;
 		try {
 			$enableCryptoResult = stream_socket_enable_crypto($this->connection, $enable,
 				$this->_encryptMethods[$type . '_' . $clientOrServer]);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->setLastError(null, $e->getMessage());
 			throw new SocketException($e->getMessage());
 		}

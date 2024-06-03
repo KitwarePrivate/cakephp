@@ -1,4 +1,14 @@
 <?php
+namespace Cake\Console;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\CakeException;
+use Cake\Error\MissingShellException;
+use Cake\Error\MissingShellMethodException;
+use Cake\Utility\Debugger;
+use Cake\Utility\Inflector;
+
 /**
  * ShellDispatcher file
  *
@@ -250,7 +260,7 @@ class ShellDispatcher {
  * @throws MissingShellException when errors are encountered.
  */
 	protected function _getShell($shell) {
-		list($plugin, $shell) = pluginSplit($shell, true);
+		[$plugin, $shell] = pluginSplit($shell, true);
 
 		$plugin = Inflector::camelize($plugin);
 		$class = Inflector::camelize($shell) . 'Shell';
@@ -292,7 +302,11 @@ class ShellDispatcher {
 		$params = array_merge($defaults, array_intersect_key($this->params, $defaults));
 		$isWin = false;
 		foreach ($defaults as $default => $value) {
+<<<<<<< namespace-cakephp
+			if (strpos(($params[$default] ?? ''), '\\') !== false) {
+=======
 			if (strpos((string)$params[$default], '\\') !== false) {
+>>>>>>> master
 				$isWin = true;
 				break;
 			}

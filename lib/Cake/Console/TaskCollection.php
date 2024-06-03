@@ -1,4 +1,10 @@
 <?php
+namespace Cake\Console;
+use Cake\Console\Command\AppShell;
+use Cake\Core\App;
+use Cake\Error\MissingTaskException;
+use Cake\Utility\ObjectCollection;
+
 /**
  * Task collection is used as a registry for loaded tasks and handles loading
  * and constructing task class objects.
@@ -72,7 +78,7 @@ class TaskCollection extends ObjectCollection {
 			$alias = $task;
 			$task = $settings['className'];
 		}
-		list($plugin, $name) = pluginSplit($task, true);
+		[$plugin, $name] = pluginSplit($task, true);
 		if (!isset($alias)) {
 			$alias = $name;
 		}

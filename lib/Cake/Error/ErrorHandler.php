@@ -1,4 +1,13 @@
 <?php
+namespace Cake\Error;
+
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Log\CakeLog;
+use Cake\Routing\Router;
+use Cake\Utility\Debugger;
+use ParseError;
+
 /**
  * ErrorHandler class
  *
@@ -109,7 +118,7 @@ class ErrorHandler {
  * This will either use custom exception renderer class if configured,
  * or use the default ExceptionRenderer.
  *
- * @param Exception|ParseError $exception The exception to render.
+ * @param \Exception|ParseError $exception The exception to render.
  * @return void
  * @see http://php.net/manual/en/function.set-exception-handler.php
  */
@@ -119,13 +128,13 @@ class ErrorHandler {
 
 		$renderer = isset($config['renderer']) ? $config['renderer'] : 'ExceptionRenderer';
 		if ($renderer !== 'ExceptionRenderer') {
-			list($plugin, $renderer) = pluginSplit($renderer, true);
+			[$plugin, $renderer] = pluginSplit($renderer, true);
 			App::uses($renderer, $plugin . 'Error');
 		}
 		try {
 			$error = new $renderer($exception);
 			$error->render();
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			set_error_handler(Configure::read('Error.handler')); // Should be using configured ErrorHandler
 			Configure::write('Error.trace', false); // trace is useless here since it's internal
 			$message = sprintf("[%s] %s\n%s", // Keeping same message format
@@ -142,7 +151,7 @@ class ErrorHandler {
 /**
  * Generates a formatted error message
  *
- * @param Exception $exception Exception instance
+ * @param \Exception $exception Exception instance
  * @return string Formatted message
  */
 	protected static function _getMessage($exception) {
@@ -169,7 +178,7 @@ class ErrorHandler {
 /**
  * Handles exception logging
  *
- * @param Exception|ParseError $exception The exception to render.
+ * @param \Exception|ParseError $exception The exception to render.
  * @param array $config An array of configuration for logging.
  * @return bool
  */
@@ -207,7 +216,7 @@ class ErrorHandler {
 		if (error_reporting() === 0) {
 			return false;
 		}
-		list($error, $log) = static::mapErrorCode($code);
+		[$error, $log] = static::mapErrorCode($code);
 		if ($log === LOG_ERR) {
 			return static::handleFatalError($code, $description, $file, $line);
 		}

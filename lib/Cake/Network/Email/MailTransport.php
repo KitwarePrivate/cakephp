@@ -1,4 +1,8 @@
 <?php
+namespace Cake\Network\Email;
+use Cake\Core\App;
+use Cake\Error\SocketException;
+
 /**
  * Send mail using mail() function
  *

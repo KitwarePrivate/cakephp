@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Console\Command\Task;
+use Cake\Console\Command\AppShell;
+use Cake\Core\App;
+use Cake\Utility\Folder;
+
 /**
  * Template Task can generate templated output Used in other Tasks
  *

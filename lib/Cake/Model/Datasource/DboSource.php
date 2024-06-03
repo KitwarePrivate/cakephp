@@ -1,4 +1,19 @@
 <?php
+namespace Cake\Model\Datasource;
+use Cake\Cache\Cache;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\Error\CakeException;
+use Cake\Error\MissingConnectionException;
+use Cake\Model\CakeSchema;
+use Cake\Model\ConnectionManager;
+use Cake\Model\Model;
+use Cake\Utility\CakeText;
+use Cake\Utility\ClassRegistry;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+use Cake\View\View;
+
 /**
  * Dbo Source
  *
@@ -109,7 +124,7 @@ class DboSource extends DataSource {
 /**
  * Result
  *
- * @var array|PDOStatement
+ * @var array|\PDOStatement
  */
 	protected $_result = null;
 
@@ -309,7 +324,7 @@ class DboSource extends DataSource {
  * @return bool Always true
  */
 	public function disconnect() {
-		if ($this->_result instanceof PDOStatement) {
+		if ($this->_result instanceof \PDOStatement) {
 			$this->_result->closeCursor();
 		}
 		$this->_connection = null;
@@ -320,7 +335,7 @@ class DboSource extends DataSource {
 /**
  * Get the underlying connection object.
  *
- * @return PDO
+ * @return \PDO
  */
 	public function getConnection() {
 		return $this->_connection;
@@ -332,7 +347,7 @@ class DboSource extends DataSource {
  * @return string The database version
  */
 	public function getVersion() {
-		return $this->_connection->getAttribute(PDO::ATTR_SERVER_VERSION);
+		return $this->_connection->getAttribute(\PDO::ATTR_SERVER_VERSION);
 	}
 
 /**
@@ -381,12 +396,12 @@ class DboSource extends DataSource {
 
 		switch ($column) {
 			case 'binary':
-				return $this->_connection->quote($data, PDO::PARAM_LOB);
+				return $this->_connection->quote($data, \PDO::PARAM_LOB);
 			case 'boolean':
-				return $this->_connection->quote($this->boolean($data, true), PDO::PARAM_BOOL);
+				return $this->_connection->quote($this->boolean($data, true), \PDO::PARAM_BOOL);
 			case 'string':
 			case 'text':
-				return $this->_connection->quote($data, PDO::PARAM_STR);
+				return $this->_connection->quote($data, \PDO::PARAM_STR);
 			default:
 				if ($data === '') {
 					return $null ? 'NULL' : '""';
@@ -412,10 +427,10 @@ class DboSource extends DataSource {
  * are not sanitized or escaped.
  *
  * @param string $identifier A SQL expression to be used as an identifier
- * @return stdClass An object representing a database identifier to be used in a query
+ * @return \stdClass An object representing a database identifier to be used in a query
  */
 	public function identifier($identifier) {
-		$obj = new stdClass();
+		$obj = new \stdClass();
 		$obj->type = 'identifier';
 		$obj->value = $identifier;
 		return $obj;
@@ -426,10 +441,10 @@ class DboSource extends DataSource {
  * are not sanitized or escaped.
  *
  * @param string $expression An arbitrary SQL expression to be inserted into a query.
- * @return stdClass An object representing a database expression to be used in a query
+ * @return \stdClass An object representing a database expression to be used in a query
  */
 	public function expression($expression) {
-		$obj = new stdClass();
+		$obj = new \stdClass();
 		$obj->type = 'expression';
 		$obj->value = $expression;
 		return $obj;
@@ -484,7 +499,7 @@ class DboSource extends DataSource {
  * @param array $prepareOptions Options to be used in the prepare statement
  * @return mixed PDOStatement if query executes with no problem, true as the result of a successful, false on error
  * query returning no rows, such as a CREATE statement, false otherwise
- * @throws PDOException
+ * @throws \PDOException
  */
 	protected function _execute($sql, $params = array(), $prepareOptions = array()) {
 		$sql = trim($sql);
@@ -498,7 +513,7 @@ class DboSource extends DataSource {
 
 		try {
 			$query = $this->_connection->prepare($sql, $prepareOptions);
-			$query->setFetchMode(PDO::FETCH_LAZY);
+			$query->setFetchMode(\PDO::FETCH_LAZY);
 			if (!$query->execute($params)) {
 				$this->_result = $query;
 				$query->closeCursor();
@@ -511,7 +526,7 @@ class DboSource extends DataSource {
 				}
 			}
 			return $query;
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			// PDOException::getCode() returns a string, however, this code is contained in
 			// PDOException::getMessage(), e.g.: SQLSTATE[42S02]: Base table or view not found: ...
 			$cake_pdo_exception = new \CakePDOException($e->getMessage(), 0, $e);
@@ -527,10 +542,10 @@ class DboSource extends DataSource {
 /**
  * Returns a formatted error message from previous database operation.
  *
- * @param PDOStatement $query the query to extract the error from if any
+ * @param \PDOStatement $query the query to extract the error from if any
  * @return string Error message with error number
  */
-	public function lastError(PDOStatement $query = null) {
+	public function lastError(\PDOStatement $query = null) {
 		if ($query) {
 			$error = $query->errorInfo();
 		} else {
@@ -655,7 +670,7 @@ class DboSource extends DataSource {
 /**
  * Builds a map of the columns contained in a result
  *
- * @param PDOStatement $results The results to format.
+ * @param \PDOStatement $results The results to format.
  * @return void
  */
 	public function resultSet($results) {
@@ -766,7 +781,7 @@ class DboSource extends DataSource {
 					continue;
 				}
 
-				list($alias, $virtual) = explode($this->virtualFieldSeparator, $field);
+				[$alias, $virtual] = explode($this->virtualFieldSeparator, $field);
 
 				if (!ClassRegistry::isKeySet($alias)) {
 					return;
@@ -973,7 +988,7 @@ class DboSource extends DataSource {
 		} else {
 			try {
 				$connected = $this->_connection->query('SELECT 1');
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$connected = false;
 			}
 		}
@@ -987,7 +1002,7 @@ class DboSource extends DataSource {
  * @return bool True if the result is valid else false
  */
 	public function hasResult() {
-		return $this->_result instanceof PDOStatement;
+		return $this->_result instanceof \PDOStatement;
 	}
 
 /**
@@ -1442,7 +1457,7 @@ class DboSource extends DataSource {
 			$habtmAssocData = $Model->hasAndBelongsToMany[$association];
 			$foreignKey = $habtmAssocData['foreignKey'];
 			$joinKeys = array($foreignKey, $habtmAssocData['associationForeignKey']);
-			list($with, $habtmFields) = $Model->joinModel($habtmAssocData['with'], $joinKeys);
+			[$with, $habtmFields] = $Model->joinModel($habtmAssocData['with'], $joinKeys);
 			$habtmFieldsCount = count($habtmFields);
 
 			// Filter
@@ -1908,7 +1923,7 @@ class DboSource extends DataSource {
 
 				if (isset($assocData['with']) && !empty($assocData['with'])) {
 					$joinKeys = array($assocData['foreignKey'], $assocData['associationForeignKey']);
-					list($with, $joinFields) = $Model->joinModel($assocData['with'], $joinKeys);
+					[$with, $joinFields] = $Model->joinModel($assocData['with'], $joinKeys);
 
 					$joinTbl = $Model->{$with};
 					$joinAlias = $joinTbl;
@@ -2277,7 +2292,7 @@ class DboSource extends DataSource {
 			foreach ($conditions as $field => $value) {
 				$originalField = $field;
 				if (strpos($field, '.') !== false) {
-					list(, $field) = explode('.', $field);
+					[, $field] = explode('.', $field);
 					$field = ltrim($field, $this->startQuote);
 					$field = rtrim($field, $this->endQuote);
 				}
@@ -2920,7 +2935,7 @@ class DboSource extends DataSource {
 		if (strpos($key, ' ') === false) {
 			$operator = '=';
 		} else {
-			list($key, $operator) = explode(' ', $key, 2);
+			[$key, $operator] = explode(' ', $key, 2);
 
 			if (!preg_match($operatorMatch, trim($operator)) && strpos($operator, ' ') !== false) {
 				$key = $key . ' ' . $operator;
@@ -3134,7 +3149,7 @@ class DboSource extends DataSource {
 					$key = '(' . $this->_quoteFields($Model->getVirtualField($key)) . ')';
 				}
 
-				list($alias) = pluginSplit($key);
+				[$alias] = pluginSplit($key);
 
 				if ($alias !== $Model->alias && is_object($Model->{$alias}) && $Model->{$alias}->isVirtualField($key)) {
 					$key = '(' . $this->_quoteFields($Model->{$alias}->getVirtualField($key)) . ')';
@@ -3320,11 +3335,11 @@ class DboSource extends DataSource {
 		$fields = implode(', ', array_map(array(&$this, 'name'), $fields));
 
 		$pdoMap = array(
-			'integer' => PDO::PARAM_INT,
-			'float' => PDO::PARAM_STR,
-			'boolean' => PDO::PARAM_BOOL,
-			'string' => PDO::PARAM_STR,
-			'text' => PDO::PARAM_STR
+			'integer' => \PDO::PARAM_INT,
+			'float' => \PDO::PARAM_STR,
+			'boolean' => \PDO::PARAM_BOOL,
+			'string' => \PDO::PARAM_STR,
+			'text' => \PDO::PARAM_STR
 		);
 		$columnMap = array();
 

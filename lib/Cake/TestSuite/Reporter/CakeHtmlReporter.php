@@ -1,4 +1,16 @@
 <?php
+namespace Cake\TestSuite\Reporter;
+use Cake\Core\App;
+use Cake\Core\Configure;
+use Cake\TestSuite\Coverage\HtmlCoverageReport;
+use Cake\Utility\Inflector;
+use PHPUnit_Framework_AssertionFailedError;
+use PHPUnit_Framework_Test;
+use PHPUnit_Framework_TestCase;
+use PHPUnit_Framework_TestResult;
+use PHPUnit_Framework_TestSuite;
+use PHPUnit_Util_Diff;
+
 /**
  * CakeHtmlReporter
  *
@@ -209,7 +221,7 @@ class CakeHtmlReporter extends CakeBaseReporter {
 		if (!empty($this->params['case'])) {
 			$query['case'] = $this->params['case'];
 		}
-		list($show, $query) = $this->_getQueryLink();
+		[$show, $query] = $this->_getQueryLink();
 
 		echo "<p><a href='" . $this->baseUrl() . $show . "'>Run more tests</a> | <a href='" . $this->baseUrl() . $query . "&amp;show_passes=1'>Show Passes</a> | \n";
 		echo "<a href='" . $this->baseUrl() . $query . "&amp;debug=1'>Enable Debug Output</a> | \n";
@@ -281,7 +293,7 @@ class CakeHtmlReporter extends CakeBaseReporter {
 			if (class_exists('PHPUnit_Util_Diff')) {
 				$diffs = PHPUnit_Util_Diff::diff($expectedMsg, $actualMsg);
 			} elseif (class_exists('SebastianBergmann\Diff\Differ')) {
-				$differ = new SebastianBergmann\Diff\Differ();
+				$differ = new \SebastianBergmann\Diff\Differ();
 				$diffs = $differ->diff($expectedMsg, $actualMsg);
 			}
 
@@ -291,7 +303,7 @@ class CakeHtmlReporter extends CakeBaseReporter {
 		echo "</pre></div>\n";
 		echo "<div class='msg'>" . __d('cake_dev', 'Test case: %s', $testName) . "</div>\n";
 		if (strpos($className, "PHPUnit_") === false) {
-			list($show, $query) = $this->_getQueryLink();
+			[$show, $query] = $this->_getQueryLink();
 			echo "<div class='msg'><a href='" . $this->baseUrl() . $query . "&amp;filter=" . $test->getName() . "'>" . __d('cake_dev', 'Rerun only this test: %s', $testName) . "</a></div>\n";
 		}
 		echo "<div class='msg'>" . __d('cake_dev', 'Stack trace:') . '<br />' . $trace . "</div>\n";
@@ -323,7 +335,7 @@ class CakeHtmlReporter extends CakeBaseReporter {
 /**
  * Paints a PHP exception.
  *
- * @param Exception $message Exception to display.
+ * @param \Exception $message Exception to display.
  * @param mixed $test The test that failed.
  * @return void
  */
@@ -381,10 +393,10 @@ class CakeHtmlReporter extends CakeBaseReporter {
 /**
  * Gets a formatted stack trace.
  *
- * @param Exception $e Exception to get a stack trace for.
+ * @param \Exception $e Exception to get a stack trace for.
  * @return string Generated stack trace.
  */
-	protected function _getStackTrace(Exception $e) {
+	protected function _getStackTrace(\Exception $e) {
 		$trace = $e->getTrace();
 		$out = array();
 		foreach ($trace as $frame) {
@@ -414,7 +426,7 @@ class CakeHtmlReporter extends CakeBaseReporter {
 
 /**
  * Returns the query string formatted for ouput in links
- * 
+ *
  * @return string
  */
 	protected function _getQueryLink() {

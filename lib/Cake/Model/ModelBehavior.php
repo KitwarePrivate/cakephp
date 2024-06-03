@@ -1,4 +1,7 @@
 <?php
+namespace Cake\Model;
+use Cake\Core\CakeObject;
+
 /**
  * Model behaviors base class.
  *

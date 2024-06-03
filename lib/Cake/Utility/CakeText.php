@@ -1,4 +1,7 @@
 <?php
+namespace Cake\Utility;
+use Cake\Core\Configure;
+
 /**
  * String handling methods.
  *

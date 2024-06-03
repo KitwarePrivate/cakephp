@@ -1,4 +1,8 @@
 <?php
+namespace Cake\Log\Engine;
+use Cake\Core\App;
+use Cake\Log\CakeLogInterface;
+
 /**
  * Base Log Engine class
  *

@@ -1,4 +1,14 @@
 <?php
+namespace Cake\Controller\Component\Acl;
+use Cake\Configure\PhpReader;
+use Cake\Controller\Component;
+use Cake\Controller\Component\AclComponent;
+use Cake\Core\App;
+use Cake\Core\CakeObject;
+use Cake\Error\AclException;
+use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+
 /**
  * PHP configuration based AclInterface implementation
  *
@@ -244,7 +254,7 @@ class PhpAco {
 		$stack = array(array($root, 0));
 
 		while (!empty($stack)) {
-			list($root, $level) = array_pop($stack);
+			[$root, $level] = array_pop($stack);
 
 			if (empty($path[$level])) {
 				$path[$level] = array();
@@ -434,7 +444,7 @@ class PhpAro {
 		$stack = array(array($aro, 0));
 
 		while (!empty($stack)) {
-			list($element, $depth) = array_pop($stack);
+			[$element, $depth] = array_pop($stack);
 			$aros[$depth][] = $element;
 
 			foreach ($this->_tree as $node => $children) {
@@ -456,7 +466,7 @@ class PhpAro {
  */
 	public function resolve($aro) {
 		foreach ($this->map as $aroGroup => $map) {
-			list ($model, $field) = explode('/', $map, 2);
+			[$model, $field] = explode('/', $map, 2);
 			$mapped = '';
 
 			if (is_array($aro)) {
@@ -473,7 +483,7 @@ class PhpAro {
 				if (strpos($aro, '/') === false) {
 					$mapped = $aroGroup . '/' . $aro;
 				} else {
-					list($aroModel, $aroValue) = explode('/', $aro, 2);
+					[$aroModel, $aroValue] = explode('/', $aro, 2);
 
 					$aroModel = Inflector::camelize($aroModel);
 

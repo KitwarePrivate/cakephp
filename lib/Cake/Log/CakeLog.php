@@ -1,4 +1,9 @@
 <?php
+namespace Cake\Log;
+
+use Cake\Core\App;
+use Cake\Error\CakeLogException;
+
 /**
  * Logging.
  *

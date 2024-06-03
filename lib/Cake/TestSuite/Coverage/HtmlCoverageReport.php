@@ -1,4 +1,7 @@
 <?php
+namespace Cake\TestSuite\Coverage;
+use Cake\Core\App;
+
 /**
  * PHP5
  *
@@ -86,7 +89,7 @@ HTML;
 		$output = '';
 		$diff = array();
 
-		list($covered, $total) = $this->_calculateCoveredLines($fileLines, $coverageData);
+		[$covered, $total] = $this->_calculateCoveredLines($fileLines, $coverageData);
 		$this->_covered += $covered;
 		$this->_total += $total;
 
@@ -101,7 +104,7 @@ HTML;
 				$coveringTests = array();
 				foreach ($coverageData[$lineno] as $test) {
 					$class = (is_array($test) && isset($test['id'])) ? $test['id'] : $test;
-					$testReflection = new ReflectionClass(current(explode('::', $class)));
+					$testReflection = new \ReflectionClass(current(explode('::', $class)));
 					$this->_testNames[] = $this->_guessSubjectName($testReflection);
 					$coveringTests[] = $class;
 				}
@@ -127,13 +130,13 @@ HTML;
 /**
  * Guess the class name the test was for based on the test case filename.
  *
- * @param ReflectionClass $testReflection The class to reflect
+ * @param \ReflectionClass $testReflection The class to reflect
  * @return string Possible test subject name.
  */
 	protected function _guessSubjectName($testReflection) {
 		$basename = basename($testReflection->getFilename());
 		if (strpos($basename, '.test') !== false) {
-			list($subject, ) = explode('.', $basename, 2);
+			[$subject, ] = explode('.', $basename, 2);
 			return $subject;
 		}
 		$subject = str_replace('Test.php', '', $basename);
@@ -202,7 +205,7 @@ HTML;
 	public function coverageHeader($filename, $percent) {
 		$hash = md5($filename);
 		$filename = basename($filename);
-		list($file) = explode('.', $filename);
+		[$file] = explode('.', $filename);
 		$display = in_array($file, $this->_testNames) ? 'block' : 'none';
 		$primary = $display === 'block' ? 'primary' : '';
 		return <<<HTML
