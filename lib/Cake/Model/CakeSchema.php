@@ -370,7 +370,7 @@ class CakeSchema extends CakeObject {
 			get_object_vars($this), $options
 		);
 
-		$out = "class {$options['name']}Schema extends " . self::class . " {\n\n";
+		$out = "class {$options['name']}Schema extends \\" . self::class . " {\n\n";
 
 		if ($options['path'] !== $this->path) {
 			$out .= "\tpublic \$path = '{$options['path']}';\n\n";
