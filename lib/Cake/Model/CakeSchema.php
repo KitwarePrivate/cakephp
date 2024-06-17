@@ -370,7 +370,7 @@ class CakeSchema extends CakeObject {
 			get_object_vars($this), $options
 		);
 
-		$out = "class {$options['name']}Schema extends CakeSchema {\n\n";
+		$out = "class {$options['name']}Schema extends " . self::class . " {\n\n";
 
 		if ($options['path'] !== $this->path) {
 			$out .= "\tpublic \$path = '{$options['path']}';\n\n";
@@ -398,7 +398,7 @@ class CakeSchema extends CakeObject {
 		$out .= "}\n";
 
 		$file = new File($options['path'] . DS . $options['file'], true);
-		$content = "<?php \n{$out}";
+		$content = "<?php\n{$out}";
 		if ($file->write($content)) {
 			return $content;
 		}
